@@ -87,6 +87,8 @@ stations:[
   ['<b>7 to 8</b>','Cloud, Terraform, Kubernetes, observability','Engineering: cloud to observability. AI: LLMOps','Project 2 deployed in a cloud with Terraform'],
   ['<b>9 to 10</b>','Machine learning, vision, MLOps','AI: machine learning, deep learning, vision, MLOps. Data: Kafka','<b>Portfolio project 3</b> (model service with lifecycle)'],
   ['<b>11 to 12</b>','Polish, interviews, applications','Career: all stations','Applications sent every week. Mock interviews done']])}
+ <h4>Security beside it</h4>
+ <p>The Security line runs in parallel, about four hours a week, from month 3 or 4. It turns your data and AI skills into a specialisation: detection engineering, or AI security. Its last station has its own six-month plan and two projects.</p>
  <h4>Start applying earlier than feels comfortable</h4>
  <p>After month 6 you have two real projects. Send the first applications then. Interviews are the fastest feedback on what the market wants, and one early offer changes everything.</p>
  <h4>Use your current job</h4>

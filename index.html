@@ -8,10 +8,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Barlow+Semi+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-/* Layout idea: a transit map. Five learning lines (AI, Engineering, Data, Deutsch, Career) with stations; you ride each line stop by stop. */
+/* Layout idea: a transit map. Six learning lines (AI, Engineering, Data, Security, Deutsch, Career) with stations; you ride each line stop by stop. */
 :root{
   --bg:#F3F4EF; --surface:#FFFFFF; --ink:#16212B; --muted:#56626E; --rule:#D3D8D0; --accent:#1D4ED8;
-  --lf:#0B8A78; --lo:#6A48D0; --ld:#B97F00; --lk:#CE3558; --lc:#2F6FB2; --good:#1B8749; --bad:#BF3A2B;
+  --lf:#0B8A78; --lo:#6A48D0; --ld:#B97F00; --lk:#CE3558; --lc:#2F6FB2; --lx:#C2410C; --good:#1B8749; --bad:#BF3A2B;
   --soft:#E9ECE5; --code:#F7F8F4; --ck:#6A48D0; --cs:#0B7A5E; --cn:#B0600A; --cc:#7B8791; --cf:#2F6FB2;
   --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
   --body:"Atkinson Hyperlegible",Verdana,Arial,sans-serif;
@@ -21,14 +21,14 @@
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#10161C; --surface:#19222B; --ink:#E9EDF0; --muted:#9BA8B4; --rule:#2D3A45; --accent:#86ABFF;
-    --lf:#3CC9B4; --lo:#A78FFF; --ld:#F2B93B; --lk:#FF7391; --lc:#6FB2F2; --good:#4CCB85; --bad:#FF8170; --soft:#212C36;
+    --lf:#3CC9B4; --lo:#A78FFF; --ld:#F2B93B; --lk:#FF7391; --lc:#6FB2F2; --lx:#FF9152; --good:#4CCB85; --bad:#FF8170; --soft:#212C36;
     --code:#141C24; --ck:#B9A6FF; --cs:#6FD9B8; --cn:#F2B56B; --cc:#7C8A97; --cf:#8CC4F5;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#10161C; --surface:#19222B; --ink:#E9EDF0; --muted:#9BA8B4; --rule:#2D3A45; --accent:#86ABFF;
-  --lf:#3CC9B4; --lo:#A78FFF; --ld:#F2B93B; --lk:#FF7391; --lc:#6FB2F2; --good:#4CCB85; --bad:#FF8170; --soft:#212C36;
+  --lf:#3CC9B4; --lo:#A78FFF; --ld:#F2B93B; --lk:#FF7391; --lc:#6FB2F2; --lx:#FF9152; --good:#4CCB85; --bad:#FF8170; --soft:#212C36;
   --code:#141C24; --ck:#B9A6FF; --cs:#6FD9B8; --cn:#F2B56B; --cc:#7C8A97; --cf:#8CC4F5;
   color-scheme:dark;
 }
@@ -61,7 +61,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backgroun
 .nav a:hover{background:var(--soft)}
 .nav a[aria-current="page"]{background:var(--surface);border-color:var(--rule)}
 .badge{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--c,var(--ink));color:var(--bg);font-family:var(--display);font-weight:700;font-size:.95rem;flex:none}
-.c-f{--c:var(--lf)} .c-o{--c:var(--lo)} .c-d{--c:var(--ld)} .c-k{--c:var(--lk)} .c-c{--c:var(--lc)} .c-s{--c:var(--ink)} .c-n{--c:var(--ink)}
+.c-f{--c:var(--lf)} .c-o{--c:var(--lo)} .c-d{--c:var(--ld)} .c-k{--c:var(--lk)} .c-c{--c:var(--lc)} .c-x{--c:var(--lx)} .c-s{--c:var(--ink)} .c-n{--c:var(--ink)}
 
 /* views */
 .view{display:none;padding:26px 0 96px}
@@ -343,6 +343,7 @@ select{border:1.5px solid var(--rule);border-radius:8px;padding:7px 10px;backgro
 .tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
 .tab{font-family:var(--display);font-weight:600;font-size:1.05rem;background:transparent;border:1.5px solid var(--rule);border-radius:99px;padding:6px 14px;cursor:pointer;white-space:nowrap}
 .tab.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.hidden-inj{color:var(--muted);font-family:var(--mono);font-size:.78rem;background:repeating-linear-gradient(45deg,transparent 0 6px,color-mix(in srgb,var(--bad) 10%,transparent) 6px 12px);border-radius:4px;padding:0 3px}
 .gloss{margin:0;display:flex;flex-direction:column;gap:8px}
 .gloss dt{font-family:var(--display);font-weight:700;font-size:1.1rem;display:flex;gap:8px;align-items:center}
 .gloss dt .badge{width:22px;height:22px;font-size:.78rem}
@@ -377,6 +378,7 @@ footer{border-top:1px solid var(--rule);padding:18px 0;color:var(--muted);font-s
   <section class="view" id="v-ai"></section>
   <section class="view" id="v-eng"></section>
   <section class="view" id="v-data"></section>
+  <section class="view" id="v-sec"></section>
   <section class="view" id="v-deutsch"></section>
   <section class="view" id="v-pro"></section>
   <section class="view" id="v-train"></section>
@@ -410,6 +412,7 @@ footer{border-top:1px solid var(--rule);padding:18px 0;color:var(--muted);font-s
 <script src="c-deutsch0.js"></script>
 <script src="c-vocab.js"></script>
 <script src="c-pro.js"></script>
+<script src="c-sec.js"></script>
 <script src="widgets.js"></script>
 <script src="widgets-de.js"></script>
 <script src="app.js"></script>
