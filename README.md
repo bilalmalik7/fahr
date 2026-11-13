@@ -11,7 +11,7 @@ Static site, no build step. Open `index.html` or deploy the folder as it is.
 - `c-data.js`, `c-data2.js` – data line
 - `c-deutsch0.js`, `c-deutsch1.js`, `c-deutsch2.js`, `c-vocab.js` – German line, flashcard decks, verbs
 - `c-pro.js` – career line and glossary
-- `c-sec.js` – security line
+- `c-sec.js`, `c-sec2.js` – security line, AI security track
 - `widgets.js`, `widgets-de.js` – interactive parts
 - `app.js` – routing, progress, exercises, spaced repetition, sound, tutor
 - `weekly.js` – "This week in AI" items (replaced every week by a scheduled task)

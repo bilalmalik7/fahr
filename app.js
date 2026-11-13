@@ -129,7 +129,7 @@ function renderTrack(k){
 }
 function goStation(k,id){renderTrack(k);const d=$('#st-'+id);if(d){d.open=true;openStation(d);setTimeout(()=>d.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'}),40)}}
 function nextStation(k){const s=T[k].stations.find(s=>!P[s.id])||T[k].stations[0];location.hash=k+'-'+s.id}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-next]');if(b)nextStation(b.dataset.next)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-next]');if(b&&T[b.dataset.next])nextStation(b.dataset.next)});
 
 /* ---------- Claude features: tutor, voice ---------- */
 let AI=null,TTS=null;

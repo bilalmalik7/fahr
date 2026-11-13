@@ -387,7 +387,7 @@ def test_red_team():
  {t:'mcq',q:'Someone makes your chatbot generate 200,000 tokens per request in a loop. Which risk?',o:['Unbounded consumption','Prompt injection only','Supply chain'],a:0,w:'Token budgets, rate limits and timeouts.'},
  {t:'mcq',q:'Where should your AI red-team attacks live?',o:['As a test suite that runs in CI on every change','In a document nobody opens','Only in your head'],a:0,w:'Same as evals.'}]},
 
-{id:'S10',min:30,t:'The rules: what a security engineer in Germany must know',sum:'GDPR, NIS2, DORA, CRA, AI Act, BSI, ISO 27001, TISAX',
+{id:'S10',sec:'Rules and practice',min:30,t:'The rules: what a security engineer in Germany must know',sum:'GDPR, NIS2, DORA, CRA, AI Act, BSI, ISO 27001, TISAX',
  body:`<p>You do not need to be a lawyer. You need to know which rules apply to your employer, because they decide what gets budget and what you will be asked to build.</p>
  ${tbl(['Rule','Who','What it means for engineers'],[
   ['<b>GDPR</b> (DSGVO)','Everyone with personal data','Protect personal data, collect only what is needed, report breaches within 72 hours, be able to delete data'],
@@ -414,7 +414,7 @@ def test_red_team():
  {t:'mcq',q:'Which rule makes SBOMs and vulnerability handling a legal duty for products with software?',o:['The Cyber Resilience Act','The GDPR','ISO 9001'],a:0,w:'Phased in until December 2027.'},
  {t:'mcq',q:'What is ISO/IEC 27001?',o:['The standard for an information security management system','A programming language','An antivirus product'],a:0,w:'Companies get certified against it.'}]},
 
-{id:'S11',sec:'Get there',min:25,t:'Practice labs and certificates',sum:'Where to train legally, and which certificates are worth it',
+{id:'S11',min:25,t:'Practice labs and certificates',sum:'Where to train legally, and which certificates are worth it',
  body:`<p>Security is learned by doing, in safe places built for it.</p>
  ${tbl(['Platform','Good for','Cost'],[
   [a('TryHackMe','https://tryhackme.com/'),'Guided rooms from zero. Start here: Pre Security, then SOC Level 1 or Cyber Security 101','Free part, low monthly fee'],
@@ -443,7 +443,7 @@ def test_red_team():
  {t:'mcq',q:'Why not take CISSP now?',o:['It requires about five years of security work experience','It is too easy','It is only for developers'],a:0,w:'A later step.'},
  {t:'mcq',q:'Where may you legally practise attacking web applications?',o:['In labs built for it, such as the PortSwigger Academy','On your employer\'s shop without asking','On any public website'],a:0,w:'Permission first, always.'}]},
 
-{id:'S12',min:60,t:'Your six-month security plan, and two projects',sum:'Alongside the AI line, not instead of it',
+{id:'S12',sec:'Get there',min:60,t:'Your six-month security plan, and two projects',sum:'Alongside the AI line, not instead of it',
  body:`<p>This plan runs beside the AI and Engineering lines, in about four hours a week. It does not replace them: your value is the combination.</p>
  ${tbl(['Month','Security work','Proof'],[
   ['1','Foundations, networks and the web. TryHackMe Pre Security. OverTheWire Bandit','Threat model of your own RAG project'],
