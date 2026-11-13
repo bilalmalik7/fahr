@@ -1,316 +1,262 @@
+// App shell: routing, progress, exercises, spaced repetition, sound, tutor, start page, train page, news.
 (function(){
 'use strict';
 const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>Array.from((r||document).querySelectorAll(s));
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-const T=window.TRACKS, ORDER=['fabric','devops','deutsch','ai'];
-const VIEWS=['start','fabric','devops','deutsch','ai','news'];
+const T=window.TRACKS, ORDER=['ai','eng','data','deutsch','pro'].filter(k=>T[k]);
+const VIEWS=['start'].concat(ORDER,['train','news']);
+const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 
 /* ---------- progress (this browser only) ---------- */
-const KEY='fahrplan-v1'; let P={};
+const KEY='fahrplan-v1';let P={};
 try{P=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){P={}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){} paintProgress()}
-function totals(k){let done=0,all=0;T[k].stations.forEach(s=>{all++;if(P[s.id])done++;s.ex.forEach((_,i)=>{all++;if(P[s.id+':'+i])done++})});return{done,all,pct:all?Math.round(done/all*100):0}}
-function paintProgress(){ORDER.forEach(k=>{const t=totals(k);$$('[data-pct="'+k+'"]').forEach(e=>e.textContent=t.pct+'%');$$('[data-bar="'+k+'"]').forEach(e=>e.style.width=t.pct+'%');$$('[data-cnt="'+k+'"]').forEach(e=>e.textContent=t.done+' of '+t.all+' steps done')});
-  $$('details.st').forEach(d=>d.classList.toggle('done',!!P[d.dataset.id]))}
+if(!P._||typeof P._!=='object')P._={};
+const M=P._;M.srs=M.srs||{};M.notes=M.notes||{};M.xp=M.xp||0;
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}paintProgress()}
+function touchStreak(){const d=today();if(M.day===d)return;M.streak=M.day===d-1?(M.streak||0)+1:1;M.day=d}
+function addXP(n){M.xp+=n;touchStreak();save()}
+function totals(k){let done=0,all=0;T[k].stations.forEach(s=>{all++;if(P[s.id])done++;(s.ex||[]).forEach((_,i)=>{all++;if(P[s.id+':'+i])done++})});return{done,all,pct:all?Math.round(done/all*100):0}}
+function stationsDone(){let n=0,a=0;ORDER.forEach(k=>T[k].stations.forEach(s=>{a++;if(P[s.id])n++}));return[n,a]}
+function paintProgress(){
+  ORDER.forEach(k=>{const t=totals(k);$$('[data-pct="'+k+'"]').forEach(e=>e.textContent=t.pct+'%');$$('[data-bar="'+k+'"]').forEach(e=>e.style.width=t.pct+'%');$$('[data-cnt="'+k+'"]').forEach(e=>e.textContent=t.done+' of '+t.all+' steps done');
+    $$('[data-ring="'+k+'"]').forEach(e=>e.style.strokeDashoffset=String(126-126*t.pct/100))});
+  $$('details.st').forEach(d=>d.classList.toggle('done',!!P[d.dataset.id]));
+  const sd=stationsDone();$$('[data-stat="xp"]').forEach(e=>e.textContent=M.xp);$$('[data-stat="level"]').forEach(e=>e.textContent=Math.floor(M.xp/250)+1);
+  $$('[data-stat="streak"]').forEach(e=>e.textContent=(M.day>=today()-1?M.streak||0:0));$$('[data-stat="done"]').forEach(e=>e.textContent=sd[0]+' / '+sd[1]);
+}
+
+/* ---------- spaced repetition (Leitner boxes) ---------- */
+const GAP=[0,1,3,7,16,35];
+const srs={box:k=>(M.srs[k]||[0])[0],due:k=>{const v=M.srs[k];return !v||v[1]<=today()},
+  grade(k,ok){const b=ok?Math.min(5,srs.box(k)+1):1;M.srs[k]=[b,today()+GAP[b]];touchStreak();save()}};
+function dueCards(){let n=0;Object.keys(window.DECKS).forEach(k=>window.DECKS[k].cards.forEach((c,i)=>{if(srs.box(k+':'+i)>0&&srs.due(k+':'+i))n++}));return n}
+
+/* ---------- syntax colours ---------- */
+const KW={py:'def return if elif else for while in not and or import from as with try except raise class lambda None True False await async yield pass break continue is',
+ sql:'select from where group by order join left right inner outer full on as and or not null is in insert into values update set delete create table view procedure begin end commit transaction merge using when matched then with over partition distinct top limit union all case else having desc asc index extension primary key generated always stored exists if',
+ yaml:'true false null',sh:'export cd echo if then fi for do done',txt:''};
+function hl(code,lang){
+  const kw=new Set((KW[lang]||'').split(' ')),sqlish=lang==='sql';
+  const re=lang==='sql'?/(--[^\n]*)|('(?:[^'\n]|'')*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)/g
+    :lang==='txt'?/(\u0000)|(\u0000)|(\u0000)|(\u0000)/g
+    :/(#[^\n]*)|("(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(\b\d+(?:\.\d+)?\b)|([A-Za-z_][A-Za-z0-9_]*)/g;
+  let out='',last=0,mt;
+  while((mt=re.exec(code))){out+=esc(code.slice(last,mt.index));last=re.lastIndex;
+    if(mt[1])out+='<i class="c">'+esc(mt[1])+'</i>';else if(mt[2])out+='<i class="s">'+esc(mt[2])+'</i>';else if(mt[3])out+='<i class="n">'+mt[3]+'</i>';
+    else{const w=mt[4];out+=kw.has(sqlish?w.toLowerCase():w)?'<i class="k">'+w+'</i>':(code[last]==='('&&lang==='py'?'<i class="f">'+w+'</i>':w)}}
+  return out+esc(code.slice(last));
+}
+function paintCode(root){$$('pre[data-l]',root).forEach(p=>{if(p.dataset.hl)return;p.dataset.hl=1;const c=$('code',p);if(c&&!c.children.length)c.innerHTML=hl(c.textContent,p.dataset.l)})}
+
+/* ---------- mascot, toast, confetti ---------- */
+function mascot(mood){
+  const mouth={idle:'M22 41 Q30 45 38 41',happy:'M20 39 Q30 50 40 39',cheer:'M20 38 Q30 53 40 38 Z',think:'M24 43 H36',sad:'M22 45 Q30 39 38 45'}[mood||'idle'];
+  return '<svg class="mascot m-'+(mood||'idle')+'" viewBox="0 0 60 64" aria-hidden="true"><rect x="18" y="2" width="24" height="7" rx="3" fill="var(--ink)"/><rect x="8" y="8" width="44" height="46" rx="12" fill="var(--c,var(--lk))"/><rect x="13" y="14" width="34" height="18" rx="6" fill="var(--surface)"/>'
+   +'<g class="eyes"><circle cx="23" cy="23" r="3.4" fill="var(--ink)"/><circle cx="37" cy="23" r="3.4" fill="var(--ink)"/></g><path d="'+mouth+'" fill="'+(mood==='cheer'?'var(--surface)':'none')+'" stroke="var(--surface)" stroke-width="2.6" stroke-linecap="round"/><circle cx="15" cy="48" r="2.6" fill="var(--ld)"/><circle cx="45" cy="48" r="2.6" fill="var(--ld)"/><rect x="14" y="56" width="10" height="6" rx="3" fill="var(--ink)"/><rect x="36" y="56" width="10" height="6" rx="3" fill="var(--ink)"/></svg>';
+}
+let toastT;
+function toast(mood,text){const t=$('#toast');if(!t)return;t.innerHTML=mascot(mood)+'<span>'+esc(text)+'</span>';t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
+function cheer(){if(reduce)return;const c=$('#confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;c.hidden=false;
+  const col=['#0B8A78','#6A48D0','#B97F00','#CE3558','#2F6FB2'],ps=Array.from({length:90},()=>({x:innerWidth/2,y:innerHeight*0.6,vx:(Math.random()-0.5)*14,vy:-Math.random()*15-4,s:4+Math.random()*5,c:col[Math.floor(Math.random()*5)],r:Math.random()*6}));
+  let f=0;(function step(){x.clearRect(0,0,c.width,c.height);ps.forEach(p=>{p.vy+=0.45;p.x+=p.vx;p.y+=p.vy;p.r+=0.2;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/2,p.s,p.s*0.6);x.restore()});if(++f<90)requestAnimationFrame(step);else c.hidden=true})()}
+const GOOD=['Richtig!','Genau!','Sehr gut!','Stark!','Perfekt!'],TRY=['Not yet. Try again.','Almost. Look again.','Nicht ganz. One more try.'];
 
 /* ---------- exercises ---------- */
-function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function exHTML(sid,ex,i){
-  const id=sid+':'+i, head='<p class="q">'+esc(ex.q)+'</p>';
-  let inner='';
-  if(ex.t==='mcq') inner='<div class="opts">'+ex.o.map((o,j)=>'<button type="button" class="opt" data-j="'+j+'">'+esc(o)+'</button>').join('')+'</div>';
-  if(ex.t==='fill') inner='<div class="fill"><label class="small muted" for="in-'+id+'">Your answer</label><input id="in-'+id+'" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn" data-check>Check</button></div>';
-  if(ex.t==='order') inner='<div class="tiles ans" aria-label="Your answer"></div><div class="tiles pool"></div><div class="row"><button type="button" class="btn ghost" data-reset>Start again</button></div>';
-  return '<div class="ex'+(P[id]?' ok':'')+'" data-ex="'+id+'" data-sid="'+sid+'" data-i="'+i+'">'+head+inner+'<p class="fb'+(P[id]?' good':'')+'" aria-live="polite">'+(P[id]?'Done. '+esc(ex.w):'')+'</p></div>';
+let RV=[];
+function exHTML(sid,ex,i,rv){
+  const id=rv?'R:'+i:sid+':'+i,was=!rv&&P[id];let inner='';
+  if(ex.t==='mcq'){const idx=ex.o.map((_,j)=>j),ord=ex.o.some(o=>o.length>14)?shuffle(idx):idx;inner='<div class="opts">'+ord.map(j=>'<button type="button" class="opt" data-j="'+j+'">'+esc(ex.o[j])+'</button>').join('')+'</div>'}
+  if(ex.t==='fill')inner='<div class="fill"><label class="small muted" for="in-'+id+'">Your answer</label><input id="in-'+id+'" autocomplete="off" autocapitalize="off" spellcheck="false"><button type="button" class="btn" data-check>Check</button></div>';
+  if(ex.t==='order')inner='<div class="tiles ans" aria-label="Your answer"></div><div class="tiles pool"></div><div class="row"><button type="button" class="btn ghost" data-reset>Start again</button></div>';
+  return '<div class="ex'+(was?' ok':'')+'" data-ex="'+id+'"'+(rv?' data-rv="'+i+'"':' data-sid="'+sid+'" data-i="'+i+'"')+'><p class="q">'+esc(ex.q)+'</p>'+(ex.c||'')+inner+'<p class="fb'+(was?' good':'')+'" aria-live="polite">'+(was?'Done. '+esc(ex.w):'')+'</p></div>';
 }
-function findEx(el){const box=el.closest('.ex');const st=stationById(box.dataset.sid);return{box,ex:st.ex[+box.dataset.i],id:box.dataset.ex}}
 function stationById(id){for(const k of ORDER){const s=T[k].stations.find(s=>s.id===id);if(s)return s}}
-function right(box,id,ex){box.classList.add('ok');const fb=$('.fb',box);fb.className='fb good';fb.textContent='Correct. '+ex.w;P[id]=1;save()}
-function wrong(box,msg){const fb=$('.fb',box);fb.className='fb no';fb.textContent=msg}
+function trackOf(id){return ORDER.find(k=>T[k].stations.some(s=>s.id===id))}
+function findEx(el){const box=el.closest('.ex');if(box.dataset.rv!==undefined)return{box,ex:RV[+box.dataset.rv].ex,id:null};return{box,ex:stationById(box.dataset.sid).ex[+box.dataset.i],id:box.dataset.ex}}
+function right(box,id,ex){const first=!box.classList.contains('ok');box.classList.add('ok','pulse');setTimeout(()=>box.classList.remove('pulse'),600);const fb=$('.fb',box);fb.className='fb good';fb.textContent='Correct. '+ex.w;
+  if(id){if(!P[id]){P[id]=1;addXP(10)}}else if(first){M.xp+=4;touchStreak();save();reviewScore()}
+  if(first)toast('happy',GOOD[Math.floor(Math.random()*GOOD.length)])}
+function wrong(box,msg){const fb=$('.fb',box);fb.className='fb no';fb.textContent=msg||TRY[Math.floor(Math.random()*TRY.length)];box.classList.add('shake');setTimeout(()=>box.classList.remove('shake'),450);if(box.dataset.rv!==undefined)box.dataset.miss=1}
 function setupOrder(box,ex){const pool=$('.pool',box),ans=$('.ans',box);ans.innerHTML='';pool.innerHTML=shuffle(ex.items.map((t,i)=>i)).map(i=>'<button type="button" class="tile" data-k="'+i+'">'+esc(ex.items[i])+'</button>').join('')}
 document.addEventListener('click',e=>{
   const opt=e.target.closest('.opt');
   if(opt){const {box,ex,id}=findEx(opt);$$('.opt',box).forEach(b=>b.classList.remove('wrong','right'));
-    if(+opt.dataset.j===ex.a){opt.classList.add('right');right(box,id,ex)}else{opt.classList.add('wrong');wrong(box,'Not this one. Try again.')}return}
-  if(e.target.closest('[data-check]')){const {box,ex,id}=findEx(e.target);const v=$('input',box).value.trim().toLowerCase().replace(/[."]/g,'');
+    if(+opt.dataset.j===ex.a){opt.classList.add('right');right(box,id,ex)}else{opt.classList.add('wrong');wrong(box)}return}
+  if(e.target.closest('[data-check]')){const {box,ex,id}=findEx(e.target);const v=$('input',box).value.trim().toLowerCase().replace(/[."?!]/g,'');
     if(!v){wrong(box,'Type an answer first.');return}
     if(ex.a.indexOf(v)>-1)right(box,id,ex);else wrong(box,'Not yet. Read the text above again and try once more.');return}
   const tile=e.target.closest('.tile');
-  if(tile){const {box,ex,id}=findEx(tile);const pool=$('.pool',box),ans=$('.ans',box);
-    (tile.parentNode===pool?ans:pool).appendChild(tile);
-    if(!pool.children.length){const ok=$$('.tile',ans).every((t,i)=>ex.items[+t.dataset.k]===ex.items[i]);if(ok)right(box,id,ex);else wrong(box,'The order is not right yet. Click a tile to move it back.')}
-    return}
+  if(tile){const {box,ex,id}=findEx(tile);const pool=$('.pool',box),ans=$('.ans',box);(tile.parentNode===pool?ans:pool).appendChild(tile);
+    if(!pool.children.length){const ok=$$('.tile',ans).every((t,i)=>ex.items[+t.dataset.k]===ex.items[i]);if(ok)right(box,id,ex);else wrong(box,'The order is not right yet. Click a tile to move it back.')}return}
   if(e.target.closest('[data-reset]')){const {box,ex}=findEx(e.target);setupOrder(box,ex);$('.fb',box).textContent='';return}
 });
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('.fill input')){e.preventDefault();$('[data-check]',e.target.parentNode).click()}});
-document.addEventListener('change',e=>{if(e.target.matches('[data-done]')){if(e.target.checked)P[e.target.dataset.done]=1;else delete P[e.target.dataset.done];save()}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.matches('.ex .fill input')){e.preventDefault();$('[data-check]',e.target.parentNode).click()}});
+document.addEventListener('change',e=>{if(e.target.matches('[data-done]')){const id=e.target.dataset.done;if(e.target.checked){if(!P[id]){P[id]=1;addXP(30);toast('cheer','Station done!');cheer()}}else{delete P[id];save()}}});
+document.addEventListener('input',e=>{if(e.target.matches('[data-note]')){M.notes[e.target.dataset.note]=e.target.value;try{localStorage.setItem(KEY,JSON.stringify(P))}catch(_){}}});
 
 /* ---------- track view ---------- */
-function stationHTML(k,s){
-  const tr=T[k];
-  return '<details class="st" id="st-'+s.id+'" data-id="'+s.id+'"><summary><span class="no">'+s.id+'</span><span class="stt">'+esc(s.t)+'</span><span class="sum">'+esc(s.sum)+'</span></summary><div class="stb">'
-   +'<div class="explain">'+s.body+'</div>'
-   +(s.know?'<div class="know"><b>'+(k==='ai'?'In your world: ':'You already know this: ')+'</b>'+s.know+'</div>':'')
+function label(k,i){return T[k].letter+(i+1)}
+function stationInner(k,s){
+  return '<div class="explain">'+s.body+'</div>'
+   +(s.know?'<div class="know"><b>You already know this: </b>'+s.know+'</div>':'')
    +(s.widget?'<div class="widget" data-w="'+s.widget+'"></div>':'')
-   +(s.ex.length?'<div><h4>Check yourself</h4></div><div class="exs">'+s.ex.map((x,i)=>exHTML(s.id,x,i)).join('')+'</div>':'')
-   +(s.do&&s.do.length?'<div class="do"><h4>Now do it for real</h4><ol>'+s.do.map(d=>'<li>'+d+'</li>').join('')+'</ol><label class="chk"><input type="checkbox" data-done="'+s.id+'"'+(P[s.id]?' checked':'')+'>I did this</label></div>':'')
-   +(s.links&&s.links.length?'<div class="links">'+s.links.map(l=>'<a href="'+l[1]+'" target="_blank" rel="noopener">'+esc(l[0])+' &#8599;</a>').join('')+'</div>':'')
-   +'</div></details>';
+   +(s.after?'<div class="explain">'+s.after+'</div>':'')
+   +(s.key&&s.key.length?'<div class="keys"><h4>Remember</h4><ul>'+s.key.map(x=>'<li>'+x+'</li>').join('')+'</ul></div>':'')
+   +(s.ex&&s.ex.length?'<div><h4>Check yourself</h4></div><div class="exs">'+s.ex.map((x,i)=>exHTML(s.id,x,i)).join('')+'</div>':'')
+   +'<div class="do"><h4>'+(s.do&&s.do.length?'Now do it for real':'Finished?')+'</h4>'+(s.do&&s.do.length?'<ol>'+s.do.map(d=>'<li>'+d+'</li>').join('')+'</ol>':'')+'<label class="chk"><input type="checkbox" data-done="'+s.id+'"'+(P[s.id]?' checked':'')+'>'+(s.do&&s.do.length?'I did this':'I understood this')+'</label></div>'
+   +'<details class="reveal"><summary>My notes</summary><label class="small muted" for="note-'+s.id+'">Saved in this browser</label><textarea id="note-'+s.id+'" data-note="'+s.id+'" placeholder="Write what you want to remember, in your own words.">'+esc(M.notes[s.id]||'')+'</textarea></details>'
+   +(s.links&&s.links.length?'<div class="links"><span class="muted small">Go deeper:</span>'+s.links.map(l=>'<a href="'+l[1]+'" target="_blank" rel="noopener">'+esc(l[0])+' &#8599;</a>').join('')+'</div>':'');
 }
+function mountWidgets(root){$$('.widget',root).forEach(m=>{if(m.dataset.on)return;m.dataset.on=1;const f=window.WIDGETS[m.dataset.w];if(f){try{f(m,m.dataset.a)}catch(err){m.textContent='This interactive part could not start.';console.error(err)}}});
+  $$('.lesetext',root).forEach(l=>{if(l.dataset.on||l.closest('.widget'))return;l.dataset.on=1;const b=document.createElement('button');b.className='say';b.type='button';b.setAttribute('aria-label','Listen');b.dataset.say=l.textContent;b.innerHTML='&#9654;';l.prepend(b)});
+  paintCode(root)}
+function openStation(d){if(d.dataset.built)return;d.dataset.built=1;const k=d.dataset.k,s=stationById(d.dataset.id),b=$('.stb',d);b.innerHTML=stationInner(k,s);
+  $$('.ex',b).forEach(box=>{const ex=s.ex[+box.dataset.i];if(ex.t==='order')setupOrder(box,ex)});mountWidgets(b)}
+const built={};
 function renderTrack(k){
-  const tr=T[k], v=$('#v-'+k);
-  v.innerHTML='<div class="stack c-'+tr.c+'"><div class="linehead"><span class="badge c-'+tr.c+'">'+tr.letter+'</span><div><h1>'+esc(tr.name)+'</h1><p class="muted">'+esc(tr.goal)+'</p></div></div>'
-   +'<p class="lead">'+esc(tr.intro)+'</p>'
-   +'<div class="card prog c-'+tr.c+'"><div class="row" style="justify-content:space-between"><span class="pct" data-pct="'+k+'">0%</span><span class="muted small" data-cnt="'+k+'"></span></div><div class="bar"><i data-bar="'+k+'"></i></div><div class="row"><button class="btn line" type="button" data-next="'+k+'">Go to my next station</button></div></div>'
-   +'<div class="line">'+tr.stations.map(s=>stationHTML(k,s)).join('')+'</div></div>';
-  $$('.ex',v).forEach(box=>{const st=stationById(box.dataset.sid),ex=st.ex[+box.dataset.i];if(ex.t==='order')setupOrder(box,ex)});
-  $$('.widget',v).forEach(m=>{const f=WIDGETS[m.dataset.w];if(f)f(m)});
+  if(built[k])return;built[k]=1;const tr=T[k],v=$('#v-'+k);let html='',mins=0;
+  tr.stations.forEach((s,i)=>{mins+=s.min||20;
+    if(s.sec)html+='<h3 class="chapter"><span>'+esc(s.sec)+'</span></h3>';
+    html+='<details class="st" id="st-'+s.id+'" data-id="'+s.id+'" data-k="'+k+'"><summary><span class="no">'+label(k,i)+'</span><span class="stt">'+esc(s.t)+'</span><span class="sum">'+esc(s.sum)+(s.min?' · '+s.min+' min':'')+'</span></summary><div class="stb"></div></details>'});
+  v.innerHTML='<div class="stack c-'+tr.c+'"><div class="linehead"><span class="badge c-'+tr.c+'">'+tr.letter+'</span><div><h1>'+esc(tr.name)+'</h1><p class="muted">'+esc(tr.goal)+'</p></div></div><p class="lead">'+esc(tr.intro)+'</p>'
+   +'<div class="card prog c-'+tr.c+'"><div class="row" style="justify-content:space-between"><span class="pct" data-pct="'+k+'">0%</span><span class="muted small"><span data-cnt="'+k+'"></span> · '+tr.stations.length+' stations · about '+Math.round(mins/60)+' hours of reading and practice</span></div><div class="bar"><i data-bar="'+k+'"></i></div><div class="row"><button class="btn line" type="button" data-next="'+k+'">Go to my next station</button></div></div>'
+   +'<div class="line">'+html+'</div></div>';
+  $$('details.st',v).forEach(d=>d.addEventListener('toggle',()=>{if(d.open)openStation(d)}));
+  paintProgress();
 }
-function nextStation(k){const s=T[k].stations.find(s=>!P[s.id])||T[k].stations[0];if(location.hash!=='#'+k)location.hash=k;setTimeout(()=>{const d=$('#st-'+s.id);if(d){d.open=true;d.scrollIntoView({block:'start'})}},60)}
+function goStation(k,id){renderTrack(k);const d=$('#st-'+id);if(d){d.open=true;openStation(d);setTimeout(()=>d.scrollIntoView({block:'start',behavior:reduce?'auto':'smooth'}),40)}}
+function nextStation(k){const s=T[k].stations.find(s=>!P[s.id])||T[k].stations[0];location.hash=k+'-'+s.id}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-next]');if(b)nextStation(b.dataset.next)});
-
-/* ---------- widgets ---------- */
-const WIDGETS={};
-
-WIDGETS.flow=function(m){
-  const N=[['Sources','ERP, files, sensors','Where data is born. For you: Business Central, SQL databases, CSV files from customers.'],
-   ['Ingest','Pipeline, Dataflow, Eventstream','Brings data in. A pipeline copies on a schedule. A dataflow cleans with clicks. An eventstream catches live events.'],
-   ['Store','OneLake: Lakehouse, Warehouse','Everything is saved in OneLake as Delta tables. Bronze is raw, Silver is clean, Gold is ready for reports.'],
-   ['Transform','Notebook, T-SQL, KQL','Clean, join and sum the data. Spark notebooks for big data, T-SQL in the warehouse, KQL for live data.'],
-   ['Serve','Semantic model, Power BI','The model defines measures like hatch rate. Reports read from it. This is what the customer sees.']];
-  m.innerHTML='<div class="flow">'+N.map((n,i)=>(i?'<span class="pipe" aria-hidden="true"></span>':'')+'<button type="button" class="node" data-n="'+i+'" aria-pressed="'+(i===0)+'"><b>'+n[0]+'</b><span>'+n[1]+'</span></button>').join('')+'</div><p class="out" style="margin-top:10px">'+N[0][2]+'</p>';
-  m.addEventListener('click',e=>{const b=e.target.closest('.node');if(!b)return;$$('.node',m).forEach(x=>x.setAttribute('aria-pressed',x===b));$('.out',m).textContent=N[+b.dataset.n][2]});
-};
-
-WIDGETS.medallion=function(m){
-  const RAW=[['Nord','2026-11-02','1000','850'],['Nord','2026-11-02','1000','850'],['Süd','02.11.2026','1200',''],['süd ','2026-11-03','1100','968'],['West','2026-11-03','abc','700'],['Nord','2026-11-03','900','774']];
-  const STEPS=[['names','Clean the names','df = df.withColumn("hatchery", initcap(trim("hatchery")))'],
-   ['dates','Use one date format','df = df.withColumn("date", coalesce(to_date("date","yyyy-MM-dd"), to_date("date","dd.MM.yyyy")))'],
-   ['nums','Turn text into numbers','df = df.withColumn("eggs_set", col("eggs_set").cast("int")).withColumn("hatched", col("hatched").cast("int"))'],
-   ['dedupe','Remove duplicate rows','df = df.dropDuplicates()'],
-   ['nulls','Remove rows with missing numbers','df = df.dropna(subset=["eggs_set","hatched"])']];
-  const on={};
-  m.innerHTML='<div class="stack" style="gap:12px"><div class="row">'+STEPS.map(s=>'<label class="chk" style="font-size:.98rem"><input type="checkbox" data-step="'+s[0]+'">'+s[1]+'</label>').join('')+'</div>'
-   +'<div class="tbl" data-t></div><pre data-code><code># your notebook code appears here</code></pre><p class="out" data-msg></p>'
-   +'<div class="row"><button class="btn line" type="button" data-gold disabled>Build the Gold table</button></div><div class="tbl" data-g></div></div>';
-  const num=v=>/^\d+$/.test(v);
-  function compute(){
-    let rows=RAW.map(r=>r.slice());
-    if(on.names)rows.forEach(r=>{const s=r[0].trim();r[0]=s.charAt(0).toUpperCase()+s.slice(1).toLowerCase()});
-    if(on.dates)rows.forEach(r=>{const x=r[1].match(/^(\d\d)\.(\d\d)\.(\d{4})$/);if(x)r[1]=x[3]+'-'+x[2]+'-'+x[1]});
-    if(on.nums)rows.forEach(r=>{[2,3].forEach(c=>{if(!num(r[c]))r[c]='null'})});
-    if(on.dedupe){const seen={};rows=rows.filter(r=>{const k=r.join('|');if(seen[k])return false;seen[k]=1;return true})}
-    if(on.nulls)rows=rows.filter(r=>r[2]!=='null'&&r[3]!=='null'&&r[2]!==''&&r[3]!=='');
-    return rows;
-  }
-  function paint(){
-    const rows=compute(),seen={};let bad=0;
-    const body=rows.map(r=>{const k=r.join('|'),dup=seen[k];seen[k]=1;
-      const flags=[dup||r[0]!==r[0].trim()||r[0].charAt(0)!==r[0].charAt(0).toUpperCase(),dup||!/^\d{4}-\d\d-\d\d$/.test(r[1]),dup||!num(r[2]),dup||!num(r[3])];
-      return '<tr>'+r.map((c,i)=>{if(flags[i])bad++;return '<td class="'+(flags[i]?'bad ':'')+(i>1?'num':'')+'">'+(c===''?'(empty)':esc(c))+'</td>'}).join('')+'</tr>'}).join('');
-    $('[data-t]',m).innerHTML='<table><tr><th>hatchery</th><th>date</th><th>eggs_set</th><th>hatched</th></tr>'+body+'</table>';
-    const code=STEPS.filter(s=>on[s[0]]).map(s=>s[2]).join('\n');
-    $('[data-code] code',m).textContent=code||'# your notebook code appears here';
-    const any=STEPS.some(s=>on[s[0]]);
-    $('[data-msg]',m).textContent=bad===0?'Silver is clean: '+rows.length+' good rows. Now build Gold.':(any?bad+' problem cells left. Which step fixes them?':'This is Bronze: raw data with '+bad+' problem cells. Switch on a step.');
-    $('[data-gold]',m).disabled=bad!==0;if(bad!==0)$('[data-g]',m).innerHTML='';
-  }
-  m.addEventListener('change',e=>{const s=e.target.dataset.step;if(s){on[s]=e.target.checked;paint()}});
-  $('[data-gold]',m).addEventListener('click',()=>{const g={};compute().forEach(r=>{g[r[0]]=g[r[0]]||[0,0];g[r[0]][0]+=+r[2];g[r[0]][1]+=+r[3]});
-    $('[data-g]',m).innerHTML='<table><tr><th>hatchery</th><th>eggs_set</th><th>hatched</th><th>hatch rate</th></tr>'+Object.keys(g).map(k=>'<tr><td>'+esc(k)+'</td><td class="num">'+g[k][0]+'</td><td class="num">'+g[k][1]+'</td><td class="num">'+(g[k][1]/g[k][0]*100).toFixed(1)+' %</td></tr>').join('')+'</table><pre><code>gold = df.groupBy("hatchery").agg(sum("eggs_set"), sum("hatched"))</code></pre>'});
-  paint();
-};
-
-WIDGETS.incremental=function(m){
-  let src,day,wm,target,moved;
-  function reset(){src=[{id:1,d:1},{id:2,d:1},{id:3,d:1},{id:4,d:1}];day=1;wm=0;target=0;moved=0;paint('The source has 4 rows. The target is empty.')}
-  function paint(msg){
-    m.innerHTML='<div class="card stack" style="gap:12px"><h4>Full load or incremental load?</h4>'
-     +'<div class="row"><span>Source rows: <b>'+src.length+'</b></span><span>Target rows: <b>'+target+'</b></span><span>Watermark: <b>day '+wm+'</b></span><span>Rows moved in total: <b>'+moved+'</b></span></div>'
-     +'<div class="chips">'+src.map(r=>'<span class="chip"'+(r.d>wm?' style="outline:2px solid var(--c)"':'')+'>row '+r.id+' · day '+r.d+'</span>').join('')+'</div>'
-     +'<div class="row"><button class="btn ghost" type="button" data-a="new">Next day: 2 new rows arrive</button><button class="btn" type="button" data-a="full">Run full load</button><button class="btn line" type="button" data-a="inc">Run incremental load</button><button class="btn ghost" type="button" data-a="reset">Reset</button></div>'
-     +'<p class="out">'+msg+'</p></div>';
-  }
-  m.addEventListener('click',e=>{const a=e.target.dataset.a;if(!a)return;
-    if(a==='reset')return reset();
-    if(a==='new'){day++;src.push({id:src.length+1,d:day},{id:src.length+2,d:day});return paint('Day '+day+': 2 new rows are in the source. They have a frame because they are newer than the watermark.')}
-    if(a==='full'){moved+=src.length;target=src.length;wm=day;return paint('Full load copied all '+src.length+' rows again. Simple, but slow when the table is big.')}
-    if(a==='inc'){const n=src.filter(r=>r.d>wm).length;moved+=n;target+=n;wm=day;return paint(n?'Incremental load copied only '+n+' new rows and moved the watermark to day '+day+'.':'Nothing newer than the watermark. 0 rows copied.')}
-  });
-  reset();
-};
-
-WIDGETS.cicd=function(m){
-  const S=[['Commit','You save a change'],['Pull request','A colleague reviews'],['Build and test','Automatic checks'],['Dev','First deploy'],['Test','Users try it'],['Production','Customers use it']];
-  m.innerHTML='<div class="card stack" style="gap:12px"><div class="stages">'+S.map((s,i)=>'<div class="stage" data-s="'+i+'">'+s[0]+'<small>'+s[1]+'</small></div>').join('')+'</div>'
-   +'<div class="row"><button class="btn line" type="button" data-go>Push a change</button><label class="chk" style="font-size:.98rem"><input type="checkbox" data-bug>Put a bug in the code</label><button class="btn" type="button" data-ok hidden>Approve for Production</button></div><p class="out" aria-live="polite">Press the button and watch the change travel.</p></div>';
-  const st=$$('.stage',m),out=$('.out',m),go=$('[data-go]',m),ok=$('[data-ok]',m);let approve;
-  go.addEventListener('click',async()=>{
-    go.disabled=true;ok.hidden=true;st.forEach(x=>x.className='stage');const bug=$('[data-bug]',m).checked;
-    for(let i=0;i<S.length;i++){
-      if(i===5){out.textContent='Test passed. A human must approve the last step.';ok.hidden=false;await new Promise(r=>approve=r);ok.hidden=true}
-      st[i].classList.add('run');out.textContent=S[i][0]+' is running ...';await sleep(700);st[i].classList.remove('run');
-      if(i===2&&bug){st[i].classList.add('fail');out.textContent='A test failed. The pipeline stopped. Production was never touched. Fix the bug and push again.';go.disabled=false;return}
-      st[i].classList.add('pass');
-    }
-    out.textContent='Done. The same steps run for every change, so releases are boring and safe.';go.disabled=false;
-  });
-  ok.addEventListener('click',()=>approve&&approve());
-};
-
-/* tiny search engine for the RAG demo */
-const DOCS=['Hatch rate is the number of hatched chicks divided by the eggs set, times 100. A normal hatch rate is 80 to 88 percent.',
- 'Eggs stay in the setter for 18 days at 37.8 degrees Celsius. Then they move to the hatcher for 3 days.',
- 'If the hatch rate falls below 75 percent, check the temperature log and the age of the eggs first.',
- 'The nightly pipeline loads data from the ERP system into the lakehouse at 02:00. If it fails, the report shows old data.',
- 'Eggs older than 10 days have a lower hatch rate. Store eggs at 16 to 18 degrees before setting.',
- 'To give a new user access to the reports, add the user to the Viewer role in the workspace.'];
-const STOP='a an the is are of to in on at for and or if it its my our your i we you they then from with into have has do does how what why when which who be as by this that not no than before first then them long many much'.split(' ');
-function toks(s){return s.toLowerCase().replace(/[^a-z0-9äöüß ]/g,' ').split(/\s+/).filter(w=>w&&STOP.indexOf(w)<0).map(w=>w.length>3?w.replace(/(ing|ed|es|s)$/,''):w)}
-function vec(s){const v={};toks(s).forEach(w=>v[w]=(v[w]||0)+1);return v}
-function cos(a,b){let d=0,na=0,nb=0;for(const k in a){na+=a[k]*a[k];if(b[k])d+=a[k]*b[k]}for(const k in b)nb+=b[k]*b[k];return na&&nb?d/Math.sqrt(na*nb):0}
-WIDGETS.rag=function(m){
-  const QS=['What is a normal hatch rate?','Why does my report show old data?','How long do eggs stay in the setter?','How do I give a new colleague access?'];
-  m.innerHTML='<div class="card stack" style="gap:14px"><label for="ragq"><b>Your question</b></label><div class="fill"><input id="ragq" style="flex:1 1 260px" value="'+QS[0]+'"><button class="btn line" type="button" data-run>Search</button></div>'
-   +'<div class="row">'+QS.map(q=>'<button class="btn ghost small" type="button" data-q="'+esc(q)+'">'+esc(q)+'</button>').join('')+'</div>'
-   +'<div class="steps"><div><h3>The question becomes numbers</h3><p class="small muted">Real systems use an embedding model. This demo simply counts the important words.</p><div class="chips" data-v></div></div>'
-   +'<div><h3>Search: compare with every chunk</h3><div class="stack" style="gap:8px" data-c></div></div>'
-   +'<div><h3>Build the prompt</h3><pre data-p style="white-space:pre-wrap"></pre></div>'
-   +'<div><h3>The model answers</h3><p class="no-ai small muted">The model would now answer using only the two chunks above, and name them as sources. Open this page inside Claude to see a live answer here.</p><div class="row needs-ai"><button class="btn" type="button" data-ans>Ask the model with these chunks</button></div><div class="out" data-a aria-live="polite"></div></div></div></div>';
-  let prompt='';
-  function run(){
-    const q=$('#ragq',m).value.trim();if(!q)return;const qv=vec(q);
-    $('[data-v]',m).innerHTML=Object.keys(qv).map(w=>'<span class="chip">'+esc(w)+': '+qv[w]+'</span>').join('')||'<span class="muted small">No important words found. Try a longer question.</span>';
-    const sc=DOCS.map((d,i)=>({i,s:cos(qv,vec(d))})).sort((a,b)=>b.s-a.s);const top=sc.filter(x=>x.s>0).slice(0,2);
-    $('[data-c]',m).innerHTML=sc.map(x=>'<div class="chunk'+(top.indexOf(x)>-1?' top':'')+'"><span>'+(top.indexOf(x)>-1?'<b>Chosen. </b>':'')+'Chunk '+(x.i+1)+': '+esc(DOCS[x.i])+'</span><span class="sc">'+x.s.toFixed(2)+'</span><span class="sbar"><i style="width:'+Math.round(x.s*100)+'%"></i></span></div>').join('');
-    prompt=top.length?'Answer the question using only the sources. If the sources do not contain the answer, say you do not know. Name the source number.\n\n'+top.map(x=>'Source '+(x.i+1)+': '+DOCS[x.i]).join('\n')+'\n\nQuestion: '+q:'';
-    $('[data-p]',m).textContent=prompt||'No chunk matched. A good RAG system now says: "I do not know."';
-    $('[data-a]',m).textContent='';
-  }
-  m.addEventListener('click',e=>{if(e.target.dataset.q){$('#ragq',m).value=e.target.dataset.q;run()}if(e.target.closest('[data-run]'))run();
-    if(e.target.closest('[data-ans]')){if(!prompt){$('[data-a]',m).textContent='I do not know. No source matched the question.';return}askAI(prompt+'\n\nAnswer in two or three short sentences of simple English. Plain text only.',$('[data-a]',m))}});
-  $('#ragq',m).addEventListener('keydown',e=>{if(e.key==='Enter')run()});
-  run();
-};
-
-WIDGETS.conv=function(m){
-  const N=14,O=12,K={'Vertical edges':[-1,0,1,-2,0,2,-1,0,1],'Horizontal edges':[-1,-2,-1,0,0,0,1,2,1],'Blur':[1,1,1,1,1,1,1,1,1].map(x=>x/9),'Sharpen':[0,-1,0,-1,5,-1,0,-1,0]};
-  m.innerHTML='<div class="card stack" style="gap:12px"><div class="row"><label for="kern"><b>Filter</b></label><select id="kern">'+Object.keys(K).map(k=>'<option>'+k+'</option>').join('')+'</select><button class="btn line" type="button" data-play>Play</button><button class="btn ghost" type="button" data-shape>Square</button><button class="btn ghost" type="button" data-clear>Clear</button></div>'
-   +'<div class="row" style="align-items:flex-start"><div><p class="small muted">Image (click to draw)</p><canvas width="224" height="224" data-in aria-label="Input image, click to draw"></canvas></div><div><p class="small muted">What the filter sees</p><canvas width="224" height="224" data-out aria-label="Filter output"></canvas></div></div><p class="out small" data-calc></p></div>';
-  const ci=$('[data-in]',m),co=$('[data-out]',m),xi=ci.getContext('2d'),xo=co.getContext('2d');let img,pos=O*O,timer=null;
-  function square(){img=new Array(N*N).fill(0);for(let y=4;y<10;y++)for(let x=4;x<10;x++)img[y*N+x]=1}
-  function kern(){return K[$('#kern',m).value]}
-  function val(p){const k=kern(),oy=Math.floor(p/O),ox=p%O;let s=0;for(let y=0;y<3;y++)for(let x=0;x<3;x++)s+=img[(oy+y)*N+ox+x]*k[y*3+x];return s}
-  function draw(){
-    const cs=224/N;for(let i=0;i<N*N;i++){xi.fillStyle=img[i]?'#f2f2f2':'#1b1b1b';xi.fillRect((i%N)*cs,Math.floor(i/N)*cs,cs-1,cs-1)}
-    const os=224/O,edge=$('#kern',m).selectedIndex<2;xo.fillStyle='#000';xo.fillRect(0,0,224,224);
-    for(let p=0;p<Math.min(pos,O*O);p++){const v=val(p),b=Math.max(0,Math.min(1,edge?Math.abs(v)/4:v));const g=Math.round(27+b*215);xo.fillStyle='rgb('+g+','+g+','+g+')';xo.fillRect((p%O)*os,Math.floor(p/O)*os,os-1,os-1)}
-    if(pos<O*O){const ox=pos%O,oy=Math.floor(pos/O);xi.strokeStyle='#ff5a7a';xi.lineWidth=3;xi.strokeRect(ox*cs+1,oy*cs+1,cs*3-3,cs*3-3);$('[data-calc]',m).textContent='Window at column '+(ox+1)+', row '+(oy+1)+': multiply 9 pixels by the 9 filter numbers and add them = '+val(pos).toFixed(2)}
-    else $('[data-calc]',m).textContent='Bright output pixels are places where the filter found its pattern.';
-  }
-  function stop(){if(timer){clearInterval(timer);timer=null}}
-  function play(){stop();if(reduce){pos=O*O;draw();return}pos=0;draw();timer=setInterval(()=>{pos++;draw();if(pos>=O*O)stop()},22)}
-  ci.addEventListener('click',e=>{const r=ci.getBoundingClientRect(),x=Math.floor((e.clientX-r.left)/r.width*N),y=Math.floor((e.clientY-r.top)/r.height*N);if(x<0||y<0||x>=N||y>=N)return;stop();img[y*N+x]=img[y*N+x]?0:1;pos=O*O;draw()});
-  $('[data-play]',m).addEventListener('click',play);
-  $('[data-shape]',m).addEventListener('click',()=>{stop();square();pos=O*O;draw()});
-  $('[data-clear]',m).addEventListener('click',()=>{stop();img=new Array(N*N).fill(0);pos=O*O;draw()});
-  $('#kern',m).addEventListener('change',()=>{stop();pos=O*O;draw()});
-  square();draw();
-};
-
-WIDGETS.flash=function(m){
-  const F=window.FLASH;let i=0,back=false;
-  function paint(){const c=F[i];m.innerHTML='<div class="stack" style="gap:10px"><button type="button" class="flash" data-flip><span class="w" lang="de">'+esc(back?c[1]:c[0])+'</span>'+(back?'<span lang="de">'+esc(c[2])+'</span>':'<span class="muted small">Click to see the meaning</span>')+'</button>'
-   +'<div class="row"><button class="btn ghost" type="button" data-prev>Back</button><button class="btn line" type="button" data-nx>Next card</button><button class="say" type="button" data-say="'+esc(c[0]+'. '+c[2])+'" aria-label="Listen">&#9654;</button><span class="muted small">Card '+(i+1)+' of '+F.length+'</span></div></div>'}
-  m.addEventListener('click',e=>{if(e.target.closest('[data-flip]')){back=!back;paint()}else if(e.target.closest('[data-nx]')){i=(i+1)%F.length;back=false;paint()}else if(e.target.closest('[data-prev]')){i=(i+F.length-1)%F.length;back=false;paint()}});
-  paint();
-};
-
-WIDGETS.coach=function(m){
-  const TASKS=['You are ill and cannot come to work tomorrow. Write to your team lead, Frau Becker.','You want to move a meeting with a customer, Herr Schmidt, from Monday to Wednesday.','You need access to a database. Ask the IT department politely.','A colleague helped you with a difficult problem. Thank him and offer your help in return.'];
-  m.innerHTML='<div class="card stack" style="gap:10px"><h4>Writing coach</h4><label for="ctask">Choose a task</label><select id="ctask">'+TASKS.map(t=>'<option>'+esc(t)+'</option>').join('')+'</select>'
-   +'<label for="ctext">Write about 60 words in German</label><textarea id="ctext" lang="de" spellcheck="false" placeholder="Sehr geehrte Frau Becker, ..."></textarea>'
-   +'<div class="row needs-ai"><button class="btn line" type="button" data-chk>Check my German</button></div>'
-   +'<div class="no-ai small muted">Check it yourself: 1. Anrede with a comma? 2. Is the verb in position 2? 3. In weil/dass sentences, is the verb at the end? 4. Polite form (Könnten Sie ...)? 5. Closing line? Open this page inside Claude to get corrections here.</div>'
-   +'<div class="out" data-o aria-live="polite"></div></div>';
-  $('[data-chk]',m).addEventListener('click',()=>{const t=$('#ctext',m).value.trim(),o=$('[data-o]',m);if(t.length<15){o.textContent='Write a few sentences first.';return}
-    askAI('You are a kind German teacher. The learner is at level A2 and wants to reach B1. The learner reads English at a simple level, so explain in very simple English with short sentences. Plain text only, no markdown.\n\nTask: '+$('#ctask',m).value+'\n\nLearner text:\n'+t+'\n\nAnswer in this form:\nCORRECTED TEXT: (the full text in correct German)\nYOUR 3 MOST IMPORTANT MISTAKES: (for each: wrong -> right, and one short reason)\nWHAT YOU DID WELL: (one sentence)\nLEVEL OF THIS TEXT: (A2, A2+, B1 or B1+)',o)});
-};
 
 /* ---------- Claude features: tutor, voice ---------- */
 let AI=null,TTS=null;
-async function askAI(prompt,out){
+async function askAI(prompt,out,cb){
   if(!AI){out.textContent='The tutor is not available in this view.';return}
   out.textContent='Thinking ...';
-  try{const r=await AI(prompt,{cache:false,onText:x=>{if(x&&x.text)out.textContent=x.text}});if(r&&r.text)out.textContent=r.text}
+  try{const r=await AI(prompt,{cache:false,onText:x=>{if(x&&x.text&&!cb)out.textContent=x.text}});const t=r&&r.text||'';if(cb)cb(t);else if(t)out.textContent=t}
   catch(e){if(e&&e.code==='not_granted'){document.body.classList.remove('has-ai');out.textContent='The tutor is switched off for this page.'}
     else out.textContent=e&&e.code==='rate_limited'?'Too many questions right now. Wait a minute and try again.':'The tutor could not answer. Try again in a moment.'}
 }
+const synth=window.speechSynthesis;let deVoice=null;
+function pickVoice(){try{const v=synth.getVoices();deVoice=v.find(x=>/^de[-_]DE/i.test(x.lang))||v.find(x=>/^de/i.test(x.lang))||null;if(deVoice&&!TTS)document.body.classList.add('has-tts')}catch(e){}}
+function speak(text,o){o=o||{};text=String(text).replace(/\s+/g,' ').slice(0,1900);
+  if(TTS)return TTS.speak(text,{language:'de',rate:o.rate||0.9,voice:o.voice}).catch(err=>{if(err&&err.code==='not_granted'){TTS=null;document.body.classList.remove('has-tts');pickVoice()}throw err});
+  return new Promise((res,rej)=>{if(!synth||!deVoice)return rej(new Error('no voice'));synth.cancel();const u=new SpeechSynthesisUtterance(text);u.voice=deVoice;u.lang=deVoice.lang;u.rate=o.rate||0.9;u.onend=()=>res();u.onerror=()=>rej(new Error('speech'));synth.speak(u)})}
+function stopSpeak(){try{if(TTS)TTS.stop();else if(synth)synth.cancel()}catch(e){}}
 function initClaude(){
+  if(synth){pickVoice();try{synth.onvoiceschanged=pickVoice}catch(e){}}
   if(!(window.claude&&typeof window.claude.use==='function'))return;
   window.claude.use('sample').then(s=>{if(s){AI=s;document.body.classList.add('has-ai')}}).catch(()=>{});
   window.claude.use('tts').then(t=>{if(t){TTS=t;document.body.classList.add('has-tts')}}).catch(()=>{});
 }
-document.addEventListener('click',e=>{const b=e.target.closest('.say');if(b&&TTS){e.stopPropagation();TTS.speak(b.dataset.say,{language:'de',rate:0.9}).catch(err=>{if(err&&err.code==='not_granted')document.body.classList.remove('has-tts')})}});
+document.addEventListener('click',e=>{const b=e.target.closest('.say');if(b){e.stopPropagation();e.preventDefault();b.classList.add('on');speak(b.dataset.say).catch(()=>{}).then(()=>b.classList.remove('on'))}});
 function initTutor(){
   const box=$('#tutor'),out=$('#tutorOut');
   $('#tutorBtn').addEventListener('click',()=>{box.classList.add('on');$('#tutorQ').focus()});
   $('#tutorClose').addEventListener('click',()=>box.classList.remove('on'));
   $('#tutorAsk').addEventListener('click',()=>{const q=$('#tutorQ').value.trim();if(!q){out.textContent='Type a question first.';return}
-    askAI('You are a patient tutor on a learning site about Microsoft Fabric (DP-700), Azure DevOps, German (A2 to B1) and AI basics. The learner is a BI developer who knows SQL Server, SSIS and SSAS well. English is not his first language: use very simple English, short sentences, and one small example. When it helps, compare with SQL Server, SSIS or SSAS. Maximum 150 words. Plain text only, no markdown.\n\nQuestion: '+q,out)});
+    const v=(location.hash||'').replace('#','').split('-'),st=v[1]&&stationById(v[1]);
+    askAI('You are a patient tutor on a learning site with five lines: AI engineering (LLMs, RAG, agents, computer vision, MLOps), engineering core (Python, Docker, CI/CD, cloud, Terraform, Kubernetes), data platform engineering (Spark, Delta, dbt, Airflow, Kafka), German (A2 to B1), and career. The learner is a BI developer who knows SQL Server, SSIS and data modelling well and is moving into AI and data engineering. English is not his first language: use very simple English, short sentences, and one small example. When it helps, compare with SQL or BI work. Maximum 170 words. Plain text only, no markdown.'+(st?'\n\nThe learner is reading the station: '+st.t+'.':'')+'\n\nQuestion: '+q,out)});
 }
 
 /* ---------- start view ---------- */
-function renderStart(){
-  const plan=[['1','Fabric basics, lakehouse, first pipeline (F1–F3)','Git basics (O1)','Office words, Perfekt (D0–D1)','How an LLM works (K1)'],
-   ['2','Dataflows, notebooks, PySpark (F4–F5)','Azure DevOps tour (O2)','Nebensätze, Relativsätze (D2–D3)','Embeddings (K2)'],
-   ['3','Medallion, loading patterns, warehouse (F6–F7)','CI/CD pipelines (O3)','Konjunktiv II, Passiv (D4–D5)','RAG (K3)'],
-   ['4','Real-time, security, monitoring (F8–F10)','CI/CD in Fabric (O4)','Adjectives, prepositions, zu (D6–D8)','Computer vision (K4)'],
-   ['5','Project and practice tests (F11–F12). Take DP-700','Use Git for your project','Writing and speaking (D9–D10)','Agents (K5)'],
-   ['6','Keep the project alive, add streaming','Deployment pipeline for the project','Mock exams (D11). Take B1','Testing, RAG project (K6–K7)']];
-  const week=[['Mon','Fabric: read one station, do the questions','45 min'],['Tue','German: one grammar station, 5 flashcards','30 min'],['Wed','Fabric: hands-on in your trial workspace','60 min'],['Thu','German: writing coach or speaking','30 min'],['Fri','German: 5 flashcards, one video','20 min'],['Sat','Fabric or DevOps lab, long session','120 min'],['Sun','AI: one station, then "This week"','45 min']];
-  $('#v-start').innerHTML='<div class="stack"><div class="hero"><div><h1>Tori\'s Fahrplan</h1><p class="lead" style="margin-top:10px">Four lines, one destination: a certified Fabric data engineer who speaks German at B1 and can build AI systems. Ride each line one station at a time.</p></div>'
-   +'<div class="map">'+mapSVG()+'</div></div>'
-   +'<div class="grid g4">'+ORDER.map(k=>{const t=T[k];return '<div class="card prog c-'+t.c+'"><div class="row"><span class="badge c-'+t.c+'">'+t.letter+'</span><h3>'+esc(t.name)+'</h3></div><span class="pct" data-pct="'+k+'">0%</span><div class="bar"><i data-bar="'+k+'"></i></div><span class="muted small" data-cnt="'+k+'"></span><button class="btn line" type="button" data-next="'+k+'">Next station</button></div>'}).join('')+'</div>'
-   +'<div class="card stack" style="gap:12px"><h2>Your six months</h2><p class="muted">About 6 hours a week next to your job. Every station has three parts: understand it, check yourself, do it for real.</p><div class="tbl"><table><tr><th>Month</th><th><span class="tag c-f">Fabric</span></th><th><span class="tag c-o">DevOps</span></th><th><span class="tag c-d">Deutsch</span></th><th><span class="tag c-k">AI</span></th></tr>'
-   +plan.map(r=>'<tr><td class="num"><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td><td>'+r[3]+'</td><td>'+r[4]+'</td></tr>').join('')+'</table></div></div>'
-   +'<div class="grid g2"><div class="card stack" style="gap:12px"><h2>Your week</h2><div class="tbl"><table>'+week.map(r=>'<tr><td><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td class="num muted">'+r[2]+'</td></tr>').join('')+'</table></div></div>'
-   +'<div class="card stack" style="gap:12px"><h2>Three honest rules</h2><ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:8px"><li><b>Doing beats watching.</b> A station counts only when you tick "I did this".</li><li><b>German every day.</b> Twenty minutes daily is better than two hours on Sunday. B1 in six months is realistic. B2 comes after that.</li><li><b>One exam at a time.</b> DP-700 in month 5, B1 in month 6. Book the date early so you have a deadline.</li></ol></div></div>'
-   +'<div class="card news stack" style="gap:8px"><h2>New this week</h2><p>'+esc((window.WEEKLY&&window.WEEKLY.items[0]&&window.WEEKLY.items[0].title)||'')+'</p><div class="row"><a class="btn" href="#news" style="text-decoration:none">Read this week\'s AI news</a></div></div></div>';
-}
+const PLAN=[['pro','deutsch'],['ai','deutsch'],['eng','deutsch'],['ai','deutsch'],['data','deutsch'],['eng','deutsch'],['ai','pro']];   // Sunday first
+function nextOf(k){const i=T[k].stations.findIndex(s=>!P[s.id]);const j=i<0?0:i;return{s:T[k].stations[j],lab:label(k,j)}}
 function mapSVG(){
-  const lines=[['f','M30 40 H300 Q360 40 400 75 L440 110 H650','Fabric'],['o','M30 86 H250 Q310 86 350 100 L380 110 H650','DevOps'],['d','M30 134 H250 Q310 134 350 120 L380 110 H650','Deutsch'],['k','M30 180 H300 Q360 180 400 145 L440 110 H650','AI']];
-  const col={f:'var(--lf)',o:'var(--lo)',d:'var(--ld)',k:'var(--lk)'};
-  let s='<svg viewBox="0 0 720 220" role="img" aria-label="Map with four learning lines that meet at one destination">';
-  lines.forEach((l,i)=>{s+='<path id="ln'+i+'" d="'+l[1]+'" fill="none" stroke="'+col[l[0]]+'" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>';
-    const y=[40,86,134,180][i];[70,130,190,250].forEach(x=>{s+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="var(--surface)" stroke="'+col[l[0]]+'" stroke-width="3"/>'});
-    s+='<text x="30" y="'+(y-12)+'" font-size="15">'+l[2]+'</text>';
-    s+='<circle r="7" fill="'+col[l[0]]+'" stroke="var(--surface)" stroke-width="2" class="train"><animateMotion dur="'+(7+i*1.3)+'s" repeatCount="indefinite" begin="'+(i*0.8)+'s"><mpath href="#ln'+i+'"/></animateMotion></circle>'});
-  s+='<circle cx="650" cy="110" r="15" fill="var(--surface)" stroke="var(--ink)" stroke-width="5"/><text x="650" y="150" text-anchor="middle" font-size="17">Ziel</text><text x="650" y="168" text-anchor="middle" class="lbl">DP-700 · B1 · AI</text><text x="545" y="98" text-anchor="middle" class="lbl">6 months</text></svg>';
-  return s;
+  const ys=[30,72,114,156,198],col={ai:'var(--lk)',eng:'var(--lo)',data:'var(--lf)',deutsch:'var(--ld)',pro:'var(--lc)'};
+  let s='<svg viewBox="0 0 720 232" role="img" aria-label="Map with five learning lines that meet at one destination">';
+  ORDER.forEach((k,i)=>{const y=ys[i],d='M28 '+y+' H'+(300-Math.abs(i-2)*18)+' Q'+(360-Math.abs(i-2)*10)+' '+y+' '+(410-Math.abs(i-2)*6)+' '+(y+(114-y)*0.55)+' L460 114 H650',t=totals(k);
+    s+='<path id="ln'+i+'" d="'+d+'" fill="none" stroke="'+col[k]+'" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" class="draw" style="animation-delay:'+(i*120)+'ms"/>';
+    for(let n=0;n<6;n++){const x=70+n*38;s+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="'+((n+1)/6<=t.pct/100+0.001?col[k]:'var(--surface)')+'" stroke="'+col[k]+'" stroke-width="3"/>'}
+    s+='<text x="28" y="'+(y-11)+'" font-size="13.5">'+esc(T[k].name)+'</text><circle r="7" fill="'+col[k]+'" stroke="var(--surface)" stroke-width="2" class="train"><animateMotion dur="'+(8+i*1.1)+'s" repeatCount="indefinite" begin="'+(i*0.7)+'s"><mpath href="#ln'+i+'"/></animateMotion></circle>'});
+  return s+'<circle cx="650" cy="114" r="15" fill="var(--surface)" stroke="var(--ink)" stroke-width="5"/><circle cx="650" cy="114" r="5" fill="var(--ink)" class="pulse2"/><text x="650" y="150" text-anchor="middle" font-size="17">Ziel</text><text x="650" y="168" text-anchor="middle" class="lbl">AI engineer · B1</text><text x="555" y="102" text-anchor="middle" class="lbl">12 months</text></svg>';
 }
+function renderStart(){
+  const h=new Date().getHours(),greet=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend',plan=PLAN[new Date().getDay()],due=dueCards(),sd=stationsDone();
+  const todayRows=plan.map(k=>{const n=nextOf(k);return '<a class="trow c-'+T[k].c+'" href="#'+k+'-'+n.s.id+'"><span class="badge c-'+T[k].c+'">'+T[k].letter+'</span><span><b>'+esc(n.s.t)+'</b><small>'+n.lab+' · '+esc(T[k].name)+' · '+(n.s.min||20)+' min</small></span></a>'}).join('')
+    +'<a class="trow c-d" href="#train"><span class="badge c-d">5</span><span><b>'+(due?due+' German cards are due':'Five minutes of German cards')+'</b><small>Flashcards with spaced repetition</small></span></a>';
+  $('#v-start').innerHTML='<div class="stack"><div class="hero"><div class="hello c-k">'+mascot(sd[0]?'happy':'idle')+'<div><p class="bubble">'+greet+'! '+(M.streak>1&&M.day>=today()-1?'Day '+M.streak+' in a row. Keep the train moving.':sd[0]?'Good to see you again. One station today is enough.':'Welcome on board. Start with the first station of the AI line.')+'</p><h1>Tori\'s Fahrplan</h1></div></div>'
+   +'<p class="lead">Five lines, one destination: an engineer who can build and run AI systems, works like a professional, and speaks German at B1. Ride each line one station at a time.</p><div class="map">'+mapSVG()+'</div></div>'
+   +'<div class="grid g2"><div class="card stack" style="gap:10px"><h2>Today</h2>'+todayRows+'</div>'
+   +'<div class="card stack" style="gap:12px"><h2>Your numbers</h2><div class="nums"><div><b data-stat="streak">0</b><span>days in a row</span></div><div><b data-stat="xp">0</b><span>points</span></div><div><b data-stat="level">1</b><span>level</span></div><div><b data-stat="done">0</b><span>stations done</span></div></div><p class="small muted">A correct answer gives 10 points, a finished station 30. Any practice keeps the streak alive.</p></div></div>'
+   +'<div class="grid g5">'+ORDER.map(k=>{const t=T[k];return '<a class="card linecard c-'+t.c+'" href="#'+k+'"><svg viewBox="0 0 48 48" class="ring" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--soft)" stroke-width="6"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c)" stroke-width="6" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="126" transform="rotate(-90 24 24)" data-ring="'+k+'"/><text x="24" y="29" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">'+t.letter+'</text></svg><h3>'+esc(t.name)+'</h3><span class="pct" data-pct="'+k+'">0%</span><span class="muted small">'+t.stations.length+' stations</span></a>'}).join('')+'</div>'
+   +'<div class="card stack" style="gap:12px"><h2>Your twelve months</h2><p class="muted">About 10 hours a week next to your job. Each phase ends with something you can show.</p><div class="tbl"><table><tr><th>Months</th><th>Build</th><th>Proof</th></tr>'
+   +[['1 to 2','Python every day. Shell, Git, tests. How models work','A tested Python package on GitHub'],['3 to 4','Docker, APIs, calling models, first RAG','A RAG API that starts with one command'],['5 to 6','RAG quality, agents, evals. dbt, Spark, Airflow','Portfolio projects 1 and 2'],['7 to 8','Cloud, Terraform, Kubernetes, LLMOps','Project 2 deployed in a cloud'],['9 to 10','Machine learning, vision, MLOps','Portfolio project 3'],['11 to 12','Interviews and applications. B1 exam','Applications every week']].map(r=>'<tr><td class="num"><b>'+r[0]+'</b></td><td>'+r[1]+'</td><td>'+r[2]+'</td></tr>').join('')
+   +'</table></div><div class="row"><a class="btn" href="#pro-C2" style="text-decoration:none">Open the full roadmap</a><a class="btn ghost" href="#pro-C1" style="text-decoration:none">See the job market data</a></div></div>'
+   +'<div class="grid g2"><div class="card stack" style="gap:12px"><h2>Three rules</h2><ol class="plain"><li><b>Build more than you read.</b> A station counts when you tick "I did this".</li><li><b>German every day.</b> Five minutes of cards daily beat two hours on Sunday.</li><li><b>Finish and publish.</b> Three finished projects on GitHub open more doors than any certificate.</li></ol></div>'
+   +'<div class="card news stack" style="gap:8px"><h2>New this week</h2><p>'+esc((window.WEEKLY&&window.WEEKLY.items[0]&&window.WEEKLY.items[0].title)||'')+'</p><div class="row"><a class="btn" href="#news" style="text-decoration:none">Read this week\'s AI news</a></div></div></div>'
+   +'<details class="card reveal"><summary>Settings and backup</summary><div class="stack" style="gap:12px;margin-top:12px"><div class="row"><span>Colours</span><button class="btn ghost" type="button" data-theme="light">Light</button><button class="btn ghost" type="button" data-theme="dark">Dark</button><button class="btn ghost" type="button" data-theme="">Like my device</button></div>'
+   +'<p class="small muted">Your progress is saved in this browser only. To move it to another device, copy the text below and paste it there.</p><label class="small" for="bk">Backup text</label><textarea id="bk" spellcheck="false" style="min-height:70px"></textarea><div class="row"><button class="btn ghost" type="button" data-bk="out">Show my backup</button><button class="btn ghost" type="button" data-bk="copy">Copy</button><button class="btn" type="button" data-bk="in">Load the text above</button></div><p class="fb" data-bkmsg aria-live="polite"></p></div></details></div>';
+  paintProgress();
+}
+document.addEventListener('click',e=>{
+  const th=e.target.closest('[data-theme]');if(th){const v=th.dataset.theme;if(v)document.documentElement.setAttribute('data-theme',v);else document.documentElement.removeAttribute('data-theme');M.theme=v;save();return}
+  const bk=e.target.closest('[data-bk]');if(!bk)return;const ta=$('#bk'),msg=$('[data-bkmsg]');
+  if(bk.dataset.bk==='out'){ta.value=JSON.stringify(P);ta.select();msg.textContent='Copy this text and keep it.'}
+  if(bk.dataset.bk==='copy'){ta.value=ta.value||JSON.stringify(P);ta.select();(navigator.clipboard?navigator.clipboard.writeText(ta.value):Promise.reject()).then(()=>msg.textContent='Copied.',()=>msg.textContent='Select the text and copy it by hand.')}
+  if(bk.dataset.bk==='in'){try{const o=JSON.parse(ta.value);if(!o||typeof o!=='object')throw 0;localStorage.setItem(KEY,JSON.stringify(o));msg.textContent='Loaded. The page restarts now.';setTimeout(()=>location.reload(),700)}catch(_){msg.className='fb no';msg.textContent='This is not a valid backup text.'}}
+});
+
+/* ---------- train view ---------- */
+let trainTab='review';
+function reviewScore(){const boxes=$$('#v-train .ex[data-rv]');if(!boxes.length)return;const ok=boxes.filter(b=>b.classList.contains('ok')),clean=ok.filter(b=>!b.dataset.miss).length,el=$('[data-rvscore]');
+  if(el)el.textContent=ok.length+' of '+boxes.length+' answered · '+clean+' right at the first try';
+  if(ok.length===boxes.length&&!el.dataset.fin){el.dataset.fin=1;toast(clean>=boxes.length*0.8?'cheer':'happy',clean+' of '+boxes.length+' at the first try');if(clean>=boxes.length*0.8)cheer()}}
+function newReview(){const on=$$('#v-train [data-rvline]:checked').map(x=>x.value),pool=[];
+  ORDER.filter(k=>on.includes(k)).forEach(k=>T[k].stations.forEach(s=>{const seen=P[s.id]||(s.ex||[]).some((_,i)=>P[s.id+':'+i]);(s.ex||[]).forEach(ex=>pool.push({ex,s,k,seen}))}));
+  const seen=pool.filter(p=>p.seen);RV=shuffle(seen.length>=10?seen:pool).slice(0,10);
+  $('[data-rvlist]').innerHTML=RV.length?'<p class="muted small" data-rvscore></p>'+RV.map((r,i)=>'<div class="c-'+T[r.k].c+'"><a class="small rvsrc" href="#'+r.k+'-'+r.s.id+'">'+esc(T[r.k].name)+' · '+esc(r.s.t)+'</a>'+exHTML('',r.ex,i,true)+'</div>').join(''):'<p class="muted">Choose at least one line.</p>';
+  $$('#v-train .ex[data-rv]').forEach(box=>{const ex=RV[+box.dataset.rv].ex;if(ex.t==='order')setupOrder(box,ex)});paintCode($('#v-train'));reviewScore()}
+function renderTrain(){
+  const tabs=[['review','Mixed review'],['cards','Flashcards'],['verbs','Verbs'],['artikel','der die das'],['gloss','Glossary'],['search','Search']];
+  let body='';
+  if(trainTab==='review')body='<div class="card stack" style="gap:12px"><h2>Ten questions, mixed</h2><p class="muted">Pulling answers out of memory is what makes them stay. The questions come from stations you have started. If you have not started yet, from all stations.</p><div class="row">'+ORDER.map(k=>'<label class="chk" style="font-size:.98rem"><input type="checkbox" data-rvline value="'+k+'" checked>'+esc(T[k].name)+'</label>').join('')+'</div><div class="row"><button class="btn line" type="button" data-rvnew>New round</button></div></div><div class="exs" data-rvlist></div>';
+  if(trainTab==='cards')body='<div class="c-d"><h2>German flashcards</h2><p class="muted">'+Object.keys(window.DECKS).length+' decks. A card you know moves up a box and comes back later: after 1, 3, 7, 16 and 35 days.</p><div class="widget" data-w="cards"></div></div>';
+  if(trainTab==='verbs')body='<div class="c-d"><h2>Irregular verbs</h2><p class="muted">'+window.VERBS.length+' verbs. Type the Präteritum and the Perfekt.</p><div class="widget" data-w="verbs"></div><h2 style="margin-top:22px">Dictation</h2><div class="widget" data-w="diktat"></div></div>';
+  if(trainTab==='artikel')body='<div class="c-d"><h2>der, die oder das?</h2><p class="muted">Nouns from all decks. How many in a row?</p><div class="widget" data-w="artikel"></div></div>';
+  if(trainTab==='gloss')body='<div class="card stack" style="gap:12px"><h2>Glossary</h2><label class="small" for="gq">Find a word</label><input id="gq" class="wide" autocomplete="off" placeholder="for example: idempotent"><dl class="gloss" data-gl></dl></div>';
+  if(trainTab==='search')body='<div class="card stack" style="gap:12px"><h2>Search all stations</h2><label class="small" for="sq">Search for</label><input id="sq" class="wide" autocomplete="off" placeholder="for example: watermark, Docker, Konjunktiv"><div class="stack" style="gap:8px" data-sr></div></div>';
+  $('#v-train').innerHTML='<div class="stack c-n"><div class="linehead"><span class="badge c-n">T</span><div><h1>Train</h1><p class="muted">Short practice that makes things stay. Five to ten minutes a day.</p></div></div><div class="tabs" role="tablist">'+tabs.map(t=>'<button type="button" role="tab" aria-selected="'+(t[0]===trainTab)+'" class="tab'+(t[0]===trainTab?' on':'')+'" data-tab="'+t[0]+'">'+t[1]+'</button>').join('')+'</div>'+body+'</div>';
+  mountWidgets($('#v-train'));
+  if(trainTab==='review')newReview();
+  if(trainTab==='gloss')paintGloss('');
+}
+function paintGloss(q){q=q.toLowerCase();const L={K:'k',E:'o',P:'f',C:'c',D:'d'};$('[data-gl]').innerHTML=window.GLOSS.slice().sort((a,b)=>a[0].localeCompare(b[0])).filter(g=>!q||(g[0]+' '+g[1]).toLowerCase().includes(q)).map(g=>'<div class="c-'+(L[g[2]]||'n')+'"><dt><span class="badge c-'+(L[g[2]]||'n')+'">'+g[2]+'</span>'+esc(g[0])+'</dt><dd>'+esc(g[1])+'</dd></div>').join('')||'<p class="muted">Nothing found.</p>'}
+let IDX=null;
+function search(q){q=q.trim().toLowerCase();const out=$('[data-sr]');if(q.length<3){out.innerHTML='<p class="muted small">Type at least three letters.</p>';return}
+  if(!IDX){IDX=[];ORDER.forEach(k=>T[k].stations.forEach((s,i)=>IDX.push({k,s,lab:label(k,i),txt:(s.t+' '+s.sum+' '+(s.body+(s.after||'')).replace(/<[^>]+>/g,' ')).replace(/&[a-z]+;/g,' ')})))}
+  const hits=IDX.map(x=>{const l=x.txt.toLowerCase(),p=l.indexOf(q);return p<0?null:{x,p,title:(x.s.t+' '+x.s.sum).toLowerCase().includes(q)}}).filter(Boolean).sort((a,b)=>b.title-a.title).slice(0,25);
+  out.innerHTML=hits.map(h=>{const a=Math.max(0,h.p-60),sn=h.x.txt.slice(a,h.p+q.length+90);return '<a class="trow c-'+T[h.x.k].c+'" href="#'+h.x.k+'-'+h.x.s.id+'"><span class="badge c-'+T[h.x.k].c+'">'+T[h.x.k].letter+'</span><span><b>'+esc(h.x.s.t)+'</b><small>'+h.x.lab+' · …'+esc(sn)+'…</small></span></a>'}).join('')||'<p class="muted">Nothing found.</p>'}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-tab]');if(t){trainTab=t.dataset.tab;renderTrain()}if(e.target.closest('[data-rvnew]'))newReview()});
+document.addEventListener('input',e=>{if(e.target.id==='gq')paintGloss(e.target.value);if(e.target.id==='sq')search(e.target.value)});
 
 /* ---------- news view ---------- */
 function newsCard(n){return '<article class="card news stack" style="gap:10px"><h3>'+esc(n.title)+'</h3><dl><dt>What happened</dt><dd>'+esc(n.what)+'</dd><dt>Why you care</dt><dd>'+esc(n.why)+'</dd><dt>Try it</dt><dd>'+esc(n.tryit)+'</dd></dl>'+(n.url?'<div class="links"><a href="'+esc(n.url)+'" target="_blank" rel="noopener">Source: '+esc(n.source||'link')+' &#8599;</a></div>':'')+'</article>'}
 function renderNews(){
-  const W=window.WEEKLY||{items:[],archive:[]};
-  $('#v-news').innerHTML='<div class="stack c-n"><div class="linehead"><span class="badge c-n">N</span><div><h1>This week in AI</h1><p class="muted">Updated '+esc(W.updated||'')+'. New items arrive every Monday.</p></div></div>'
-   +'<p class="lead">A few news items, each explained in simple words, with one small thing to try. News sites wrote the reports; the numbers in them are their claims.</p>'
-   +(W.items||[]).map(newsCard).join('')
-   +((W.archive||[]).length?'<h2>Earlier weeks</h2>'+W.archive.map(a=>'<details class="card"><summary><b>'+esc(a.updated||'')+'</b></summary><div class="stack" style="margin-top:12px">'+(a.items||[]).map(newsCard).join('')+'</div></details>').join(''):'')
-   +'</div>';
+  const Wk=window.WEEKLY||{items:[],archive:[]};
+  $('#v-news').innerHTML='<div class="stack c-n"><div class="linehead"><span class="badge c-n">N</span><div><h1>This week in AI</h1><p class="muted">Updated '+esc(Wk.updated||'')+'. New items arrive every Monday.</p></div></div>'
+   +'<p class="lead">A few news items, each explained in simple words, with one small thing to try. News sites wrote the reports; the numbers in them are their claims.</p>'+(Wk.items||[]).map(newsCard).join('')
+   +((Wk.archive||[]).length?'<h2>Earlier weeks</h2>'+Wk.archive.map(a=>'<details class="card"><summary><b>'+esc(a.updated||'')+'</b></summary><div class="stack" style="margin-top:12px">'+(a.items||[]).map(newsCard).join('')+'</div></details>').join(''):'')+'</div>';
 }
 
 /* ---------- routing ---------- */
+let curView='';
 function route(){
-  let v=(location.hash||'').replace('#','');if(VIEWS.indexOf(v)<0)v='start';
+  const parts=(location.hash||'').replace('#','').split('-');let v=parts[0];if(VIEWS.indexOf(v)<0)v='start';
+  if(ORDER.includes(v))renderTrack(v);if(v==='start')renderStart();if(v==='train'&&v!==curView)renderTrain();
   VIEWS.forEach(x=>$('#v-'+x).classList.toggle('on',x===v));
   $$('.nav a').forEach(a=>{if(a.getAttribute('href')==='#'+v)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
+  if(parts[1]&&ORDER.includes(v))goStation(v,parts[1]);else if(v!==curView)window.scrollTo(0,0);
+  curView=v;const tb=$('#tutorBtn');if(tb)tb.dataset.v=v;
 }
-renderStart();ORDER.forEach(renderTrack);renderNews();paintProgress();route();
-window.addEventListener('hashchange',()=>{route();window.scrollTo(0,0)});
+window.APP={$,$$,esc,hl,sleep,reduce,askAI,speak,stopSpeak,srs,addXP,cheer,toast,save,today,meta:M};
+if(M.theme)document.documentElement.setAttribute('data-theme',M.theme);
+$('.nav').innerHTML='<a href="#start"><span class="badge c-s">S</span>Start</a>'+ORDER.map(k=>'<a href="#'+k+'"><span class="badge c-'+T[k].c+'">'+T[k].letter+'</span>'+esc({ai:'AI',eng:'Engineering',data:'Data',deutsch:'Deutsch',pro:'Career'}[k])+'</a>').join('')+'<a href="#train"><span class="badge c-n">T</span>Train</a><a href="#news"><span class="badge c-n">N</span>This week</a>';
+renderNews();route();
+window.addEventListener('hashchange',route);
 if(reduce)$$('animateMotion').forEach(a=>a.remove());
 initTutor();initClaude();
 })();
