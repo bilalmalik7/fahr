@@ -222,6 +222,55 @@ textarea:focus{outline:none}
 #summaryBox{width:100%;min-height:140px;font-family:var(--f-mono);font-size:13px;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:var(--bg)}
 .tiny{font-size:13px;color:var(--muted)}
 .linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}
+.field{display:flex;flex-direction:column;gap:6px;margin:4px 0 14px;max-width:360px}
+.field label{font-weight:600;font-size:15px}
+.field input,.field select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.field input:focus,.field select:focus{outline:2px solid var(--accent);outline-offset:1px}
+.ownerbox{margin-top:28px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:20px}
+.ownerbox h2{font-size:20px;margin-bottom:4px}
+.att{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
+.att th{font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:8px;border-bottom:1.5px solid var(--ink)}
+.att td{padding:9px 8px;border-bottom:1px solid var(--line)}
+.att td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.badge{font:600 11px/1 var(--f-mono);padding:4px 8px;border-radius:999px;background:var(--bg);color:var(--muted);white-space:nowrap}
+.badge.ok{background:var(--ok-soft);color:var(--ok)}.badge.run{background:var(--accent-soft);color:var(--accent)}
+.result{display:flex;flex-direction:column;gap:22px;max-width:900px}
+.rcard{position:relative;background:var(--paper);border:1.5px solid var(--ink);border-radius:14px;padding:26px;box-shadow:var(--shadow);overflow:hidden}
+.rcard::after{content:"";position:absolute;inset:8px;border:1px solid var(--line);border-radius:9px;pointer-events:none}
+.rcard .who{font:800 clamp(28px,5vw,40px)/1.1 var(--f-display);margin:4px 0}
+.rcard .meta2{color:var(--muted);font-size:14px}
+.rgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.rs{border:1px solid var(--line);border-radius:10px;padding:12px}
+.rs small{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.rs b{font:500 24px/1.3 var(--f-mono);font-variant-numeric:tabular-nums}
+.rs .bar{height:6px;border-radius:3px;background:var(--line);margin-top:6px;overflow:hidden}
+.rs .bar i{display:block;height:100%;background:var(--accent);animation:grow 1.2s cubic-bezier(.2,.7,.2,1) both}
+.rs .bar i.lo{background:var(--warn)}
+@keyframes grow{from{width:6%!important}}
+.rtotal{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.rtotal .big{font:500 34px/1 var(--f-mono)}
+.seal2{width:84px;height:84px;border-radius:50%;border:3px solid var(--ok);color:var(--ok);display:grid;place-items:center;text-align:center;font:700 11px/1.2 var(--f-mono);letter-spacing:.06em;transform:rotate(-10deg);animation:stamp .5s .6s cubic-bezier(.3,1.6,.5,1) both;margin-left:auto}
+.seal2.fail{border-color:var(--bad);color:var(--bad)}
+.rsec{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.rsec h2{font-size:19px;margin-bottom:10px}
+.rsec p{margin:0 0 8px}
+.mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+.mk div{border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-family:var(--f-mono);font-size:14px;display:flex;justify-content:space-between;gap:6px}
+.mk .y{background:var(--ok-soft);border-color:transparent;color:var(--ok)}
+.mk .n{background:#fdecec;border-color:transparent;color:var(--bad)}
+:root[data-theme="dark"] .mk .n{background:#3a1d1b}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .mk .n{background:#3a1d1b}}
+.fx{display:flex;flex-direction:column;gap:8px}
+.fx div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px 14px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.fx s{color:var(--muted);text-decoration-color:var(--bad)}
+.fx b{color:var(--ok)}
+.fx small{grid-column:1/-1;color:var(--muted);font-size:13px}
+.lst{margin:0;padding-left:20px}
+.lst li{margin-bottom:5px}
+.model2{background:var(--ok-soft);border-radius:8px;padding:12px 14px;white-space:pre-wrap}
+.spin{width:18px;height:18px;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;display:inline-block;vertical-align:-3px;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (max-width:640px){.rgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.fx div{grid-template-columns:1fr}}
 footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 @media (max-width:860px){
@@ -248,7 +297,7 @@ footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;jus
       <div><b>Modellprüfung Deutsch A2</b><small>Übungsportal · Prüfungssimulation</small></div>
     </div>
     <div class="meta">
-      <span class="chip cand">Kandidat/in Nr. 2611‑0437</span>
+      <span class="chip cand" id="candChip">Kandidat/in: –</span>
       <span class="timer" id="timer" hidden>30:00</span>
     </div>
   </div>
@@ -263,16 +312,17 @@ footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;jus
     <div class="welcome">
       <div class="eyebrow">Herzlich willkommen</div>
       <h1>Ihre Prüfung auf Niveau A2</h1>
-      <p>Guten Tag! Ich bin <b>Frau Weber</b> und begleite Sie heute als Prüferin durch diese Modellprüfung. Die Prüfung hat vier Teile. Bearbeiten Sie die Teile in der Reihenfolge und geben Sie jeden Teil am Ende ab.</p>
+      <p>Guten Tag! Ich bin <b>Frau Weber</b> und begleite Sie heute als Prüferin durch diese Modellprüfung. Die Prüfung hat vier Teile. Bearbeiten Sie die Teile in der Reihenfolge und geben Sie jeden Teil am Ende ab. Am Ende bekommen Sie automatisch Ihre Bewertung.</p>
       <ul class="rules">
         <li>Bitte benutzen Sie kein Wörterbuch und keine Übersetzungsprogramme.</li>
         <li>Die Hörtexte hören Sie <b>zweimal</b>. Schalten Sie bitte den Ton ein.</li>
         <li>Nach der Abgabe können Sie die Antworten eines Teils nicht mehr ändern.</li>
         <li>Im Teil Sprechen können Sie tippen oder, wenn verfügbar, das Mikrofon benutzen.</li>
       </ul>
+      <div class="field"><label for="candName">Ihr Vorname</label><input id="candName" autocomplete="given-name" placeholder="z. B. Sara" maxlength="40"></div>
       <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-        <button class="btn" id="startBtn">Prüfung beginnen</button>
-        <span class="sync" id="sync"><i></i><span>Verbindung zur Prüferin wird hergestellt …</span></span>
+        <button class="btn" id="startBtn" disabled>Prüfung beginnen</button>
+        <span class="sync" id="sync"><i></i><span>Verbindung wird hergestellt …</span></span>
       </div>
     </div>
     <div class="plan" aria-label="Ablauf">
@@ -281,6 +331,11 @@ footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;jus
       <div><span class="n">03</span><span><b>Schreiben</b><small>1 E‑Mail · 30–40 Wörter</small></span><span class="min">30 Min.</span></div>
       <div><span class="n">04</span><span><b>Sprechen</b><small>3 Teile mit der Prüferin</small></span><span class="min">15 Min.</span></div>
     </div>
+  </div>
+  <div class="ownerbox" id="ownerBox" hidden>
+    <h2>Ergebnisse aller Teilnehmer</h2>
+    <p class="tiny">Nur Sie als Besitzer sehen diese Liste.</p>
+    <div class="tw" style="overflow-x:auto"><table class="att"><thead><tr><th>Name</th><th>Datum</th><th>Status</th><th>Punkte</th><th></th></tr></thead><tbody id="attRows"><tr><td colspan="5" class="tiny">Ergebnisse werden geladen …</td></tr></tbody></table></div>
   </div>
 </section>
 
@@ -376,15 +431,10 @@ footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;jus
 
 <!-- ENDE -->
 <section class="panel" id="p-ende">
-  <div class="endcard">
-    <div class="eyebrow">Prüfung beendet</div>
-    <h1>Vielen Dank! Sie haben alle Teile bearbeitet.</h1>
-    <p>Ihre Antworten sind gespeichert. Frau Weber wertet die Prüfung jetzt aus.</p>
-    <ul class="endlist" id="endlist"></ul>
-    <div class="chatcue">Gehen Sie zurück in den Chat und schreiben Sie <code>Fertig</code>. Dann bekommen Sie Ihre ausführliche Bewertung.</div>
-    <p class="tiny" id="endsync"></p>
+  <div class="result" id="resultBox"></div>
+  <div class="rsec" style="max-width:900px;margin-top:22px">
     <details>
-      <summary class="tiny" style="cursor:pointer">Antworten als Text anzeigen (falls die Übertragung nicht klappt)</summary>
+      <summary class="tiny" style="cursor:pointer">Alle Antworten als Text (zum Kopieren und Weiterschicken)</summary>
       <div style="margin-top:10px"><button class="btn ghostb" id="copyBtn">Antworten kopieren</button> <span class="tiny" id="copyMsg"></span></div>
       <textarea id="summaryBox" readonly aria-label="Alle Antworten als Text"></textarea>
     </details>
@@ -402,7 +452,8 @@ footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;jus
 const ORDER=['intro','lesen','hoeren','schreiben','sprechen','ende'];
 const NAMES={intro:'Start',lesen:'Lesen',hoeren:'Hören',schreiben:'Schreiben',sprechen:'Sprechen',ende:'Ende'};
 const MINUTES={lesen:30,hoeren:30,schreiben:30,sprechen:15};
-const KEY='a2-modellpruefung-v1';
+const KEY='a2-modellpruefung-v2';
+const SOL=JSON.parse(atob('eyJsZXNlbiI6eyIxIjoiUiIsIjIiOiJGIiwiMyI6IlIiLCI0IjoiYiIsIjUiOiJiIiwiNiI6ImEiLCI3IjoiYyJ9LCJob2VyZW4iOnsiMSI6ImIiLCIyIjoiYiIsIjMiOiJiIiwiNCI6ImEiLCI1IjoiRiIsIjYiOiJiIn19'));
 
 const RF=[['R','Richtig'],['F','Falsch']];
 const LESEN_Q=[
@@ -448,7 +499,7 @@ const T3=[
 ];
 
 /* ---------- state ---------- */
-const fresh=()=>({view:'intro',ans:{lesen:{},hoeren:{},schreiben:{text:''},sprechen:{}},done:{},plays:{},start:{},used:{},sent:{}});
+const fresh=()=>({name:'',result:null,view:'intro',ans:{lesen:{},hoeren:{},schreiben:{text:''},sprechen:{}},done:{},plays:{},start:{},used:{},sent:{}});
 let S=fresh();
 try{const raw=localStorage.getItem(KEY); if(raw){const o=JSON.parse(raw); if(o&&o.ans) S=Object.assign(fresh(),o);}}catch(e){}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
@@ -523,19 +574,25 @@ $$('[data-submit]').forEach(el=>{const sec=el.dataset.submit;el.innerHTML=`<div 
 $('#steps').innerHTML=ORDER.filter(s=>s!=='intro'&&s!=='ende').map((s,i)=>`<button class="step" data-go="${s}"><div class="rail"><i></i></div><span><em>0${i+1}</em>${NAMES[s]}</span></button>`).join('');
 function canGo(s){
   if(s==='intro') return true;
+  if(s==='ende'&&viewing) return true;
   const i=ORDER.indexOf(s);
   for(let k=1;k<i&&k<5;k++){ if(!S.done[ORDER[k]]) return false; }
   return true;
 }
 function go(s){
   if(!canGo(s)) return;
+  if(s!=='ende') viewing=null;
   S.view=s; if(MINUTES[s]&&!S.start[s]&&!S.done[s]) S.start[s]=Date.now();
   save(); render(); window.scrollTo({top:0,behavior:'smooth'});
 }
 document.addEventListener('click',e=>{
   const g=e.target.closest('[data-go]'); if(g){ go(g.dataset.go); }
 });
-$('#startBtn').addEventListener('click',()=>{const next=ORDER.slice(1,5).find(s=>!S.done[s])||'ende';go(next)});
+const nameIn=$('#candName');
+nameIn.value=S.name||'';
+const syncName=()=>{const v=nameIn.value.trim();$('#startBtn').disabled=v.length<2&&!S.name;$('#candChip').textContent='Kandidat/in: '+(S.name||v||'–')};
+nameIn.addEventListener('input',syncName);
+$('#startBtn').addEventListener('click',()=>{const v=nameIn.value.trim();if(v.length>=2){S.name=v;save()} if(!S.name) return;nameIn.readOnly=true;syncName();const next=ORDER.slice(1,5).find(s=>!S.done[s])||'ende';go(next);push()});
 
 function render(){
   $$('.panel').forEach(p=>p.classList.toggle('show',p.id==='p-'+S.view));
@@ -621,30 +678,45 @@ const use=n=>(window.claude&&typeof window.claude.use==='function')?window.claud
 function setSync(state,text){const el=$('#sync');el.className='sync '+state;el.querySelector('span').textContent=text}
 const timeout=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))]);
 
-use('db').then(async d=>{
-  db=d;
-  if(!db){setSync('err','Offline: Antworten bleiben in diesem Browser. Am Ende können Sie sie kopieren.');return}
-  setSync('on','Verbunden: Ihre Antworten gehen direkt an die Prüferin.');
+let uid=null,user=null,sample=null,canWrite=false;
+use('sample').then(x=>{sample=x;if(S.view==='ende')renderEnd()});
+Promise.all([use('db'),use('user')]).then(async([d,u])=>{
+  db=d;user=u;
+  if(!db||!user){setSync('err','Ohne Verbindung: Ihre Antworten bleiben in diesem Browser. Am Ende können Sie sie kopieren.');return}
+  try{uid=await user.id()}catch(e){}
+  if(user.isOwner&&await user.isOwner().catch(()=>false)) loadOwner();
+  if(!uid){setSync('err','Ohne Verbindung: Ihre Antworten bleiben in diesem Browser. Am Ende können Sie sie kopieren.');return}
   try{
-    for(const sec of ['lesen','hoeren','schreiben','sprechen']){
-      const snap=await timeout(db.doc('pruefung/'+sec).get(),10000);
-      if(snap.exists&&!S.done[sec]){const d=snap.data();S.ans[sec]=d.answers||S.ans[sec];S.done[sec]=Date.parse(d.submittedAt)||Date.now();S.sent[sec]=true}
-    }
-    save(); render();
-    for(const sec of Object.keys(S.done)) if(!S.sent[sec]) send(sec);
-  }catch(e){}
+    const snap=await timeout(db.doc('attempts/'+uid).get(),10000);
+    if(snap.exists&&!S.name){const r=snap.data();Object.assign(S,{name:r.name||'',ans:r.answers||S.ans,done:r.done||{},used:r.used||{},plays:r.plays||{},result:r.result||null});save();nameIn.value=S.name;syncName();render();HOEREN.forEach(h=>paintPlays(h.id))}
+    canWrite=true;setSync('on','Verbunden: Ihre Antworten werden gespeichert.');
+  }catch(e){setSync('err','Ohne Verbindung: Ihre Antworten bleiben in diesem Browser.')}
 });
-async function send(sec){
-  if(!db){renderEnd();return}
-  const payload={answers:S.ans[sec],submittedAt:new Date(S.done[sec]||Date.now()).toISOString(),secondsUsed:S.used[sec]??null};
-  if(sec==='hoeren') payload.plays=S.plays;
+async function push(){
+  if(!db||!uid||!S.name) return false;
   try{
-    await db.doc('pruefung/'+sec).set(payload); S.sent[sec]=true;
-    if(['lesen','hoeren','schreiben','sprechen'].every(s=>S.done[s])) await db.doc('pruefung/status').set({finished:true,finishedAt:new Date().toISOString()});
-  }catch(e){S.sent[sec]=false}
-  save(); if(S.view==='ende') renderEnd();
+    await db.doc('attempts/'+uid).set({name:S.name,answers:S.ans,done:S.done,used:S.used,plays:S.plays,result:S.result||null,finished:['lesen','hoeren','schreiben','sprechen'].every(x=>S.done[x]),updatedAt:new Date().toISOString()});
+    canWrite=true;return true;
+  }catch(e){canWrite=false;setSync('err','Speichern nicht möglich: Bitte am Ende die Antworten kopieren und weiterschicken.');return false}
 }
+async function send(sec){await push();if(S.view==='ende')renderEnd()}
 
+/* ---------- owner overview ---------- */
+let attempts=[];
+async function loadOwner(){
+  $('#ownerBox').hidden=false;
+  try{
+    db.collection('attempts').onSnapshot(q=>{attempts=q.docs.map(d=>Object.assign({id:d.id},d.data()));paintOwner()},()=>{$('#attRows').innerHTML='<tr><td colspan="5" class="tiny">Ergebnisse konnten nicht geladen werden.</td></tr>'});
+  }catch(e){}
+}
+function paintOwner(){
+  if(!attempts.length){$('#attRows').innerHTML='<tr><td colspan="5" class="tiny">Noch niemand hat die Prüfung gemacht. Teilen Sie den Link, dann erscheinen die Ergebnisse hier.</td></tr>';return}
+  attempts.sort((x,y)=>(y.updatedAt||'').localeCompare(x.updatedAt||''));
+  $('#attRows').innerHTML=attempts.map((a,i)=>{const n=['lesen','hoeren','schreiben','sprechen'].filter(x=>a.done&&a.done[x]).length;const t=a.result&&a.result.total!=null?a.result.total+' / 100':'–';
+    return `<tr><td><b>${esc(a.name||'Ohne Namen')}</b>${a.id===uid?' <span class="tiny">(Sie)</span>':''}</td><td class="n">${a.updatedAt?new Date(a.updatedAt).toLocaleDateString('de-DE'):''}</td><td>${a.result?'<span class="badge ok">bewertet</span>':a.finished?'<span class="badge run">fertig</span>':`<span class="badge">${n}/4 Teile</span>`}</td><td class="n">${t}</td><td>${a.finished?`<button class="btn ghostb" data-view="${i}" style="padding:6px 12px">Ansehen</button>`:''}</td></tr>`}).join('');
+}
+let viewing=null;
+document.addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(!b)return;viewing=attempts[+b.dataset.view];S.view='ende';render();window.scrollTo({top:0,behavior:'smooth'})});
 use('tts').then(t=>{tts=t});
 use('dictation').then(d=>{
   dict=d; if(!d) return;
@@ -730,21 +802,93 @@ document.addEventListener('click',async e=>{
 
 /* ---------- end ---------- */
 function summary(){
-  const L=[];
-  L.push('LESEN: '+LESEN_Q.map(q=>q.n+'='+(S.ans.lesen[q.n]||'-')).join(', '));
-  L.push('HÖREN: '+SHEET.hoeren.map(n=>n+'='+(S.ans.hoeren[n]||'-')).join(', '));
-  L.push('SCHREIBEN ('+words(S.ans.schreiben.text||'')+' Wörter):\n'+(S.ans.schreiben.text||'-'));
+  const A=viewing?viewing.answers:S.ans;const L=['KANDIDAT/IN: '+((viewing?viewing.name:S.name)||'-')];
+  L.push('LESEN: '+LESEN_Q.map(q=>q.n+'='+(A.lesen[q.n]||'-')).join(', '));
+  L.push('HÖREN: '+SHEET.hoeren.map(n=>n+'='+(A.hoeren[n]||'-')).join(', '));
+  L.push('SCHREIBEN ('+words(A.schreiben.text||'')+' Wörter):\n'+(A.schreiben.text||'-'));
   L.push('SPRECHEN:');
-  T1.forEach((q,i)=>L.push(`T1.${i+1} ${q}\n→ ${S.ans.sprechen['t1_'+(i+1)]||'-'}`));
-  L.push(`T2 Was machen Sie am Wochenende?\n→ ${S.ans.sprechen.t2||'-'}`);
-  L.push(`T2 Nachfrage (schlechtes Wetter)\n→ ${S.ans.sprechen.t2_frage||'-'}`);
-  T3.forEach((q,i)=>L.push(`T3.${i+1} Partnerin: ${q}\n→ ${S.ans.sprechen['t3_'+(i+1)]||'-'}`));
+  T1.forEach((q,i)=>L.push(`T1.${i+1} ${q}\n→ ${A.sprechen['t1_'+(i+1)]||'-'}`));
+  L.push(`T2 Was machen Sie am Wochenende?\n→ ${A.sprechen.t2||'-'}`);
+  L.push(`T2 Nachfrage (schlechtes Wetter)\n→ ${A.sprechen.t2_frage||'-'}`);
+  T3.forEach((q,i)=>L.push(`T3.${i+1} Partnerin: ${q}\n→ ${A.sprechen['t3_'+(i+1)]||'-'}`));
   return L.join('\n\n');
 }
+const PERC=(n,m)=>Math.round(n/m*25);
+function objective(A){const l=Object.keys(SOL.lesen).filter(k=>A.lesen[k]===SOL.lesen[k]).length,h=Object.keys(SOL.hoeren).filter(k=>A.hoeren[k]===SOL.hoeren[k]).length;return {l,h,lp:PERC(l,7),hp:PERC(h,6)}}
+const PRAED=t=>t>=90?'sehr gut':t>=80?'gut':t>=70?'befriedigend':t>=60?'ausreichend':'nicht bestanden';
+let evalBusy=false,evalErr='';
+function prompt(A,lang){
+  const sp=[];T1.forEach((q,i)=>sp.push(`Teil 1, Frage ${i+1}: ${q}\nAntwort: ${A.sprechen['t1_'+(i+1)]||'(keine)'}`));
+  sp.push(`Teil 2, Karte "Was machen Sie am Wochenende?" (Sport, Freunde, Familie, Hobbys), 1–2 Minuten:\nAntwort: ${A.sprechen.t2||'(keine)'}`);
+  sp.push(`Teil 2, Nachfrage: Was machen Sie am liebsten bei schlechtem Wetter? Warum?\nAntwort: ${A.sprechen.t2_frage||'(keine)'}`);
+  sp.push('Teil 3, Rollenspiel: Mit einer Freundin am Samstag ein Geschenk für Sarah kaufen. Kalender des Kandidaten: 8 Frühstück, 9–11 Fußballtraining, 11 frei, 12:30 Mittagessen mit Eltern, 14–16 frei, 16:30 Deutsch lernen, 19 Kino mit Tom. Die Freundin kann vormittags nicht.');
+  T3.forEach((q,i)=>sp.push(`Freundin: ${q}\nKandidat: ${A.sprechen['t3_'+(i+1)]||'(keine)'}`));
+  return `You are an experienced examiner for the German A2 exam (Goethe-Zertifikat A2 / Start Deutsch 2 format). Mark this candidate fairly and strictly, like a real examiner. The speaking answers were typed or dictated, so ignore filler words like "äh" and do not assess pronunciation.
+
+WRITING TASK (30–40 words): Email to friend Paul, who invited the candidate to his birthday party on Saturday evening. The candidate cannot come. Points: 1) thank him, 2) say why you cannot come, 3) suggest another meeting.
+Score out of 25 = task fulfilment (all 3 points, length) 10 + form and register (greeting, closing, consistent du) 5 + linguistic accuracy 10.
+
+CANDIDATE EMAIL:
+"""${A.schreiben.text||'(empty)'}"""
+
+SPEAKING (score out of 25 = Teil 1 max 8 + Teil 2 max 8 + Teil 3 max 9; judge task completion, range, grammar accuracy, interaction):
+${sp.join('\n\n')}
+
+Write all explanations in ${lang}. Keep the corrected German sentences in German.
+Reply with only this JSON:
+{"schreiben":{"punkte":0,"kommentar":"2-3 sentences","fehler":[{"falsch":"original German","richtig":"corrected German","regel":"short rule"}],"muster":"a correct 30-40 word model email in German"},
+ "sprechen":{"punkte":0,"teil1":0,"teil2":0,"teil3":0,"kommentar":"2-3 sentences","gut":["good German phrase the candidate used"],"fehler":[{"falsch":"","richtig":"","regel":""}]},
+ "staerken":["..."],"schwaechen":["..."],
+ "lernen":[{"thema":"grammar or skill topic","tipp":"what to practise, with a German example"}],
+ "plan":[{"wochen":"1–2","fokus":"","aufgabe":""}],
+ "fazit":"2 encouraging sentences"}
+Give up to 8 writing errors and up to 8 speaking errors (the most important ones), 3-5 strengths, 3-5 weaknesses, 5-7 learning topics, and a 4-row plan for 8 weeks.`;
+}
+async function evaluate(){
+  if(evalBusy||!sample||viewing) return;
+  evalBusy=true;evalErr='';renderEnd();
+  const lang=$('#evLang')?$('#evLang').value:'English';
+  try{
+    const r=await sample.json(prompt(S.ans,lang),{modelTier:'default'});
+    if(!r||!r.schreiben||!r.sprechen) throw {message:'Die Antwort war unvollständig.'};
+    const o=objective(S.ans);
+    const sw=Math.max(0,Math.min(25,Math.round(+r.schreiben.punkte||0))),sk=Math.max(0,Math.min(25,Math.round(+r.sprechen.punkte||0)));
+    S.result=Object.assign(r,{lesenP:o.lp,hoerenP:o.hp,schreibenP:sw,sprechenP:sk,total:o.lp+o.hp+sw+sk,lang,at:new Date().toISOString()});
+    save();push();
+  }catch(e){evalErr=e&&e.code==='not_granted'?'Die automatische Bewertung wurde nicht erlaubt.':e&&e.code==='rate_limited'?'Zu viele Anfragen. Bitte versuchen Sie es in ein paar Minuten noch einmal.':'Die Bewertung hat nicht geklappt. Bitte versuchen Sie es noch einmal.'}
+  evalBusy=false;renderEnd();
+}
+document.addEventListener('click',e=>{if(e.target.closest('#evBtn'))evaluate();if(e.target.closest('#backList')){viewing=null;go('intro')}});
+function li(arr){return '<ul class="lst">'+(arr||[]).map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>'}
+function fx(arr){return '<div class="fx">'+(arr||[]).map(f=>`<div><s>${esc(f.falsch||'')}</s><b>${esc(f.richtig||'')}</b><small>${esc(f.regel||'')}</small></div>`).join('')+'</div>'}
 function renderEnd(){
-  $('#endlist').innerHTML=['lesen','hoeren','schreiben','sprechen'].map(s=>`<li><span>${NAMES[s]}</span><span>${S.done[s]?(S.sent[s]?'✓ übermittelt':(db?'wird übermittelt …':'✓ gespeichert')):'offen'}</span></li>`).join('');
-  $('#endsync').textContent=db?'':'Hinweis: Die direkte Übertragung ist in dieser Ansicht nicht verfügbar. Kopieren Sie bitte Ihre Antworten unten und fügen Sie sie im Chat ein.';
-  $('#summaryBox').value=summary();
+  const name=viewing?viewing.name:S.name, A=viewing?viewing.answers:S.ans, R=viewing?viewing.result:S.result, o=objective(A);
+  const date=new Date((R&&R.at)||Date.now()).toLocaleDateString('de-DE',{day:'numeric',month:'long',year:'numeric'});
+  let h=viewing?'<div><button class="btn ghostb" id="backList">← Zurück zur Liste</button></div>':'';
+  const mk=(sec,n)=>'<div class="mk">'+Object.keys(SOL[sec]).map(k=>{const y=A[sec][k]===SOL[sec][k];return `<div class="${y?'y':'n'}"><span>${k}: ${A[sec][k]||'–'}</span><span>${y?'✓':'✗ '+SOL[sec][k]}</span></div>`}).join('')+'</div>';
+  if(!R){
+    h+=`<div class="rcard"><div class="eyebrow">Prüfung beendet</div><div class="who">Vielen Dank, ${esc(name||'')}!</div><p class="meta2">Lesen: ${o.l}/7 richtig (${o.lp}/25 Punkte) · Hören: ${o.h}/6 richtig (${o.hp}/25 Punkte)</p>`;
+    if(viewing){h+='<p>Diese Person hat noch keine automatische Bewertung erstellt. Kopieren Sie die Antworten unten und schicken Sie sie Claude im Chat.</p>'}
+    else if(sample){h+=`<p>Jetzt erstelle ich Ihre Bewertung für Schreiben und Sprechen. Das dauert etwa eine Minute.</p>
+      <div class="field"><label for="evLang">Sprache der Bewertung</label><select id="evLang"><option>English</option><option value="German (einfaches Deutsch)">Deutsch</option><option value="Urdu">اردو (Urdu)</option></select></div>
+      ${evalBusy?'<p><span class="spin"></span>Frau Weber korrigiert Ihre Prüfung …</p>':`<button class="btn" id="evBtn">Bewertung erstellen</button>`}${evalErr?`<p style="color:var(--bad);margin-top:10px">${evalErr}</p>`:''}`}
+    else{h+='<p>Die automatische Bewertung ist in dieser Ansicht nicht verfügbar. Kopieren Sie unten Ihre Antworten und schicken Sie sie an die Person, die Ihnen den Link geschickt hat.</p>'}
+    h+=`<p class="tiny" style="margin-top:12px">${canWrite?'✓ Ihre Antworten sind gespeichert.':'Hinweis: Ihre Antworten sind nur in diesem Browser gespeichert. Bitte kopieren Sie sie unten.'}</p></div>`;
+    h+=`<div class="rsec"><h2>Lesen und Hören</h2><p class="tiny">Lesen</p>${mk('lesen')}<p class="tiny" style="margin-top:10px">Hören</p>${mk('hoeren')}</div>`;
+  }else{
+    const t=R.total,pass=t>=60,parts=[['Lesen',R.lesenP],['Hören',R.hoerenP],['Schreiben',R.schreibenP],['Sprechen',R.sprechenP]];
+    h+=`<div class="rcard"><div class="eyebrow">Ergebnisbescheinigung · Modellprüfung A2</div><div class="who">${esc(name||'')}</div><div class="meta2">${date} · Übungsprüfung im A2‑Format, kein offizielles Zertifikat</div>
+     <div class="rgrid">${parts.map(([n,v])=>`<div class="rs"><small>${n}</small><b>${v}</b><span class="tiny"> / 25</span><div class="bar"><i class="${v<15?'lo':''}" style="width:${v*4}%"></i></div></div>`).join('')}</div>
+     <div class="rtotal"><span class="big">${t} / 100</span><span><b>${PRAED(t)}</b><br><span class="tiny">90+ sehr gut · 80+ gut · 70+ befriedigend · 60+ ausreichend</span></span><div class="seal2${pass?'':' fail'}">${pass?'BESTANDEN':'NICHT<br>BESTANDEN'}<br>${t}</div></div></div>`;
+    h+=`<div class="rsec"><h2>Lesen ${o.l}/7 · Hören ${o.h}/6</h2>${mk('lesen')}<div style="height:8px"></div>${mk('hoeren')}</div>`;
+    h+=`<div class="rsec"><h2>Schreiben · ${R.schreibenP}/25</h2><p>${esc(R.schreiben.kommentar||'')}</p>${fx(R.schreiben.fehler)}<p class="tiny" style="margin-top:12px">Musterlösung</p><div class="model2">${esc(R.schreiben.muster||'')}</div></div>`;
+    h+=`<div class="rsec"><h2>Sprechen · ${R.sprechenP}/25</h2><p class="tiny">Teil 1: ${R.sprechen.teil1??'–'}/8 · Teil 2: ${R.sprechen.teil2??'–'}/8 · Teil 3: ${R.sprechen.teil3??'–'}/9</p><p>${esc(R.sprechen.kommentar||'')}</p>${(R.sprechen.gut||[]).length?'<p class="tiny">Gut gesagt</p><div class="good" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">'+R.sprechen.gut.map(g=>`<span class="badge ok" style="font:600 14px/1.3 var(--f-body)">${esc(g)}</span>`).join('')+'</div>':''}${fx(R.sprechen.fehler)}</div>`;
+    h+=`<div class="rsec"><h2>Stärken</h2>${li(R.staerken)}<h2 style="margin-top:14px">Schwächen</h2>${li(R.schwaechen)}</div>`;
+    h+=`<div class="rsec"><h2>Was Sie lernen sollten</h2><ul class="lst">${(R.lernen||[]).map(x=>`<li><b>${esc(x.thema||'')}</b>: ${esc(x.tipp||'')}</li>`).join('')}</ul></div>`;
+    h+=`<div class="rsec"><h2>Lernplan für 8 Wochen</h2><div style="overflow-x:auto"><table class="att"><thead><tr><th>Wochen</th><th>Fokus</th><th>Aufgabe</th></tr></thead><tbody>${(R.plan||[]).map(x=>`<tr><td class="n">${esc(x.wochen||'')}</td><td><b>${esc(x.fokus||'')}</b></td><td>${esc(x.aufgabe||'')}</td></tr>`).join('')}</tbody></table></div><p style="margin-top:12px">${esc(R.fazit||'')}</p></div>`;
+  }
+  $('#resultBox').innerHTML=h;
+  $('#summaryBox').value=summary()+(R?`\n\nERGEBNIS: Lesen ${R.lesenP}, Hören ${R.hoerenP}, Schreiben ${R.schreibenP}, Sprechen ${R.sprechenP}, Gesamt ${R.total}/100`:'');
 }
 $('#copyBtn').addEventListener('click',()=>{
   const box=$('#summaryBox'); box.value=summary();
@@ -756,10 +900,11 @@ $('#resetBtn').addEventListener('click',()=>{$('#resetConfirm').hidden=false});
 $('#resetNo').addEventListener('click',()=>{$('#resetConfirm').hidden=true});
 $('#resetYes').addEventListener('click',async()=>{
   $('#resetConfirm').hidden=true;
-  if(db){for(const s of ['lesen','hoeren','schreiben','sprechen','status']){try{await db.doc('pruefung/'+s).delete()}catch(e){}}}
-  S=fresh(); save(); $$('.transcript').forEach(t=>{t.hidden=true;t.innerHTML=''}); render(); HOEREN.forEach(h=>paintPlays(h.id));
+  if(db&&uid){try{await db.doc('attempts/'+uid).delete()}catch(e){}}
+  S=fresh(); save(); nameIn.value=''; nameIn.readOnly=false; syncName(); $$('.transcript').forEach(t=>{t.hidden=true;t.innerHTML=''}); render(); HOEREN.forEach(h=>paintPlays(h.id));
 });
 
-render(); HOEREN.forEach(h=>paintPlays(h.id));
+if(S.name) nameIn.readOnly=true;
+syncName(); render(); HOEREN.forEach(h=>paintPlays(h.id));
 })();
 </script>
