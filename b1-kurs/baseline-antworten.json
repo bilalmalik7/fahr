@@ -1,0 +1,27 @@
+{
+  "date": "2026-11-14",
+  "lesen": {"answers": {"1":"R","2":"F","3":"R","4":"b","5":"b","6":"a","7":"a"}, "key": {"1":"R","2":"F","3":"R","4":"b","5":"b","6":"a","7":"c"}, "secondsUsed": 760},
+  "hoeren": {"answers": {"1":"b","2":"b","3":"b","4":"a","5":"F","6":"b"}, "key": {"1":"b","2":"b","3":"b","4":"a","5":"F","6":"b"}, "secondsUsed": 223},
+  "schreiben": {
+    "task": "E-Mail an Paul (30-40 Wörter): danken, Grund für Absage, anderes Treffen vorschlagen",
+    "text": "Lieber Paul,\nDanke für die einladung auf ihre Geburtstagparty. Ich kann das nicht gekommen weil habe ich eine termine mit meiner Praxis for Physcology und das termine is sehr wicjtig für mir. Aber wir konnen am wochnende treffen ins Bar wo wir konnen trinken Bier and fieren ihre Geburtstag. Ich wünche ihene eine lange leben and gesund lebe. \nNochmal Vielen Danke für einladung.\nIhre Freund Bilal\n",
+    "secondsUsed": 260
+  },
+  "sprechen": {
+    "note": "Diktiert per Mikrofon; Aussprache nicht bewertet.",
+    "t1_1": "Ich heiße Bilal und ich komme aus Pakistan.",
+    "t1_2": "Ich wohne in Osnabrück. äh, Am Naturparkstraße 6 und 60 in einem Studentenwohnheim.",
+    "t1_3": "Ish. Studiere Masters in Cognitive Science und äh, arbeite als Künstlicher Ingenieur in einer Firma.",
+    "t1_4": "Ich stehe um 9 Uhr auf, äh, ich dusche und ein Frühstück, dann Frühstück haben und danach wann ich muss meine Studientage, dann ich gehe nach meinem Kurs und nehme meine äh, Kurs und wann muss ich meine Arbeit machen, dann gehe ich nach meinem Büro und dann der mu äh, ich muss meine Arbeit machen mit meinen Kollegen treffen oder eine Besprechung teilnehmen oder so.",
+    "t1_5": "Ja, in meiner Familie, ich habe zwei Brüder und eine Schwester. Liebe Geschwister, mm, äh, meine äh, großer Bruder arbeitet nicht und meine jüngere Bruder studieren ihre Bachelors. Ich habe eine Frau. Ja, auch habe gemacht Bachelors in Dietitian und ich habe meine, äh, meine Mutter und meine Vater. Meine Mutter ist äh, Hauswife und mein Vater ist eine Farmer.",
+    "t1_6": "Ich habe am letzten Woche nach meiner Freundin äh, Haus gegangen wo wir grillen und äh, sprechen über unsere äh, Politik in Pakistan und danach ich komme zurück meine Haus am, nach, am Nacht.",
+    "t2": "Am Wochenende ich äh, gehe mm, nach meine Freunde und der wir kuschen oder wir spielen unser Sport. Das ist Cricket, das ist auch meine Hobby. Und der wir spielen, wir treffen, wir kochen, dann wir manchmal fe- Fernsehen lieber am Sonntag gehe nach meine, einer meiner Freunde wer wir in Küche kochen äh, und sogar lieber. Äh, ähm, lieber äh, Dinger und dann ich treffe mit meinen anderen Freunden. Wann habe ich Zeit? Am Sonntag ich äh, rufe meine Familie an in Pakistan. Wir, wir äh, reden über unsere äh, äh, was wir gemacht in unserer Wochenende, ähm, was wir gemacht, äh, was wir kocht, äh, was ist das in Pakistan, passiert oder so, die, wir sprachen über diese Things over there.",
+    "t2_frage": "Um, und das war das Schlechteste am liebsten. Äh, ich äh, rufe meine Freundin und äh, fragen von er ist, er hat frei sagt, if, äh, er sagt mir ja, ich habe frei. Seit dann ich äh, sage von ihnen, dass bitte komme meine Hause wir Küche. Äh, dann wenn er kommt um meine Hause, dann wir kochen unser lieber Lieblings äh, äh, essen und danach wir sprechen oder spielen äh, Uno oder so.",
+    "t3_1": "Hallo, ja, warum nicht? Wir mussten kaufen ein Geschenk für Sarah. Er ist unser lieber Freund. Am Samstag, äh, ich will äh, aufstehen um 9 Uhr auf, dann, mach, dann frühstücke um 8 Uhr, dann ich habe ein Training für Fußball, um 9 Uhr. Äh, von 9 bis äh, 10, ich muss meine Fußballtraining machen. Um 11 Uhr, ich habe Freizeit bis äh, 12.30 Uhr. Äh, der wir können machen das äh, und danach wir können Mittagessen. äh, mit meinen Eltern. Nehmen um 12.30 Uhr. Danach ich habe vielleicht äh, vier Stunden frei. Wir können gerne in diese Zeit auch gehen und kaufen eine Geschenk für Iga. Um 6.30 Uhr muss ich durchlernen und nehme meine Kurs und danach äh, um 19 Uhr ich mit, äh, mit äh, Tom, ich muss in Kino gehen. So, was passiert? sie? Welche ist gut für Sie? Was passt Ihnen? Bitte sagen mir, wir können dann entscheiden.",
+    "t3_2": "Ja, das passt mir gut. Ich habe Freizeit von äh, s- 14 bis 16, halb 30. Dann wir können äh, gehen diese Zeit.",
+    "t3_3": "Ja, gut, das passt mir auch. Äh, Ich denke, wir müssen kaufen äh, Ihnen eine vielleicht äh, Playstation oder wir äh, Geschenk geben, eine vielleicht Coupon. auf 30 Euro vielleicht. Er kann kaufen selber, was ich, was er braucht. Aber wir können denken das auch, wenn wir treffen.",
+    "t3_4": "Äh, ich denke, wir treffen im Bahnhof, äh, von der wir kann nehmen einen Zug nach Berlin, von wo wir können äh, fahren mit S-Bahn oder U-Bahn und äh, mit Public Transport wir können machen das.",
+    "secondsUsed": 703
+  },
+  "scores": {"lesen": 21, "hoeren": 25, "schreiben": 14, "sprechen": 15, "total": 75}
+}
