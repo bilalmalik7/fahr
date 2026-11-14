@@ -1,0 +1,23 @@
+# Copy this file to .github/workflows/ci.yml in YOUR repository (ticket HG-3).
+name: ci
+on:
+  pull_request:
+  push: { branches: [main] }
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync
+      - name: Lint
+        run: uv run ruff check hatchguard tests
+      - name: Tests (grows with every milestone)
+        run: uv run pytest
+      - name: Secrets in the history
+        run: docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest detect --source /repo
+      - name: Vulnerable dependencies and risky config
+        run: docker run --rm -v "$PWD:/src" aquasec/trivy:latest fs --scanners vuln,misconfig --exit-code 1 --severity HIGH,CRITICAL /src
+      - name: Image builds
+        run: docker build -t hatchguard:ci .

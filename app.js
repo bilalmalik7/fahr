@@ -5,7 +5,7 @@ const $=(s,r)=>(r||document).querySelector(s), $$=(s,r)=>Array.from((r||document
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const reduce=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
 const sleep=ms=>new Promise(r=>setTimeout(r,reduce?0:ms));
-const T=window.TRACKS, ORDER=['ai','eng','data','sec','deutsch','pro'].filter(k=>T[k]);
+const T=window.TRACKS, ORDER=['build','ai','eng','data','sec','deutsch','pro'].filter(k=>T[k]);
 const VIEWS=['start'].concat(ORDER,['train','news']);
 const today=()=>Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/86400000);
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -163,23 +163,23 @@ function initTutor(){
 }
 
 /* ---------- start view ---------- */
-const PLAN=[['pro','deutsch'],['ai','deutsch'],['eng','deutsch'],['ai','deutsch'],['data','deutsch'],['sec','deutsch'],['ai','eng']];   // Sunday first
+const PLAN=[['build','pro'],['build','deutsch'],['build','deutsch'],['build','deutsch'],['build','deutsch'],['build','deutsch'],['build','deutsch']];   // Sunday first
 function nextOf(k){const i=T[k].stations.findIndex(s=>!P[s.id]);const j=i<0?0:i;return{s:T[k].stations[j],lab:label(k,j)}}
 function mapSVG(){
-  const ys=[24,60,96,132,168,204],col={ai:'var(--lk)',eng:'var(--lo)',data:'var(--lf)',sec:'var(--lx)',deutsch:'var(--ld)',pro:'var(--lc)'};
-  let s='<svg viewBox="0 0 720 236" role="img" aria-label="Map with six learning lines that meet at one destination">';
-  ORDER.forEach((k,i)=>{const y=ys[i],c2=Math.abs(i-2.5),d='M28 '+y+' H'+(300-c2*16)+' Q'+(360-c2*9)+' '+y+' '+(410-c2*5)+' '+(y+(114-y)*0.55)+' L460 114 H650',t=totals(k);
+  const ys=[24,60,96,132,168,204,240],col={build:'var(--lb)',ai:'var(--lk)',eng:'var(--lo)',data:'var(--lf)',sec:'var(--lx)',deutsch:'var(--ld)',pro:'var(--lc)'};
+  let s='<svg viewBox="0 0 720 272" role="img" aria-label="Map with seven learning lines that meet at one destination">';
+  ORDER.forEach((k,i)=>{const y=ys[i],c2=Math.abs(i-3),d='M28 '+y+' H'+(300-c2*16)+' Q'+(360-c2*9)+' '+y+' '+(410-c2*5)+' '+(y+(132-y)*0.55)+' L460 132 H650',t=totals(k);
     s+='<path id="ln'+i+'" d="'+d+'" fill="none" stroke="'+col[k]+'" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" class="draw" style="animation-delay:'+(i*120)+'ms"/>';
     for(let n=0;n<6;n++){const x=70+n*38;s+='<circle cx="'+x+'" cy="'+y+'" r="6" fill="'+((n+1)/6<=t.pct/100+0.001?col[k]:'var(--surface)')+'" stroke="'+col[k]+'" stroke-width="3"/>'}
     s+='<text x="28" y="'+(y-11)+'" font-size="13.5">'+esc(T[k].name)+'</text><circle r="7" fill="'+col[k]+'" stroke="var(--surface)" stroke-width="2" class="train"><animateMotion dur="'+(8+i*1.1)+'s" repeatCount="indefinite" begin="'+(i*0.7)+'s"><mpath href="#ln'+i+'"/></animateMotion></circle>'});
-  return s+'<circle cx="650" cy="114" r="15" fill="var(--surface)" stroke="var(--ink)" stroke-width="5"/><circle cx="650" cy="114" r="5" fill="var(--ink)" class="pulse2"/><text x="650" y="150" text-anchor="middle" font-size="17">Ziel</text><text x="650" y="168" text-anchor="middle" class="lbl">AI engineer · B1</text><text x="555" y="102" text-anchor="middle" class="lbl">12 months</text></svg>';
+  return s+'<circle cx="650" cy="132" r="15" fill="var(--surface)" stroke="var(--ink)" stroke-width="5"/><circle cx="650" cy="132" r="5" fill="var(--ink)" class="pulse2"/><text x="650" y="168" text-anchor="middle" font-size="17">Ziel</text><text x="650" y="186" text-anchor="middle" class="lbl">AI engineer · B1</text><text x="555" y="120" text-anchor="middle" class="lbl">12 months</text></svg>';
 }
 function renderStart(){
   const h=new Date().getHours(),greet=h<11?'Guten Morgen':h<18?'Guten Tag':'Guten Abend',plan=PLAN[new Date().getDay()],due=dueCards(),sd=stationsDone();
   const todayRows=plan.map(k=>{const n=nextOf(k);return '<a class="trow c-'+T[k].c+'" href="#'+k+'-'+n.s.id+'"><span class="badge c-'+T[k].c+'">'+T[k].letter+'</span><span><b>'+esc(n.s.t)+'</b><small>'+n.lab+' · '+esc(T[k].name)+' · '+(n.s.min||20)+' min</small></span></a>'}).join('')
     +'<a class="trow c-d" href="#train"><span class="badge c-d">5</span><span><b>'+(due?due+' German cards are due':'Five minutes of German cards')+'</b><small>Flashcards with spaced repetition</small></span></a>';
-  $('#v-start').innerHTML='<div class="stack"><div class="hero"><div class="hello c-k">'+mascot(sd[0]?'happy':'idle')+'<div><p class="bubble">'+greet+'! '+(M.streak>1&&M.day>=today()-1?'Day '+M.streak+' in a row. Keep the train moving.':sd[0]?'Good to see you again. One station today is enough.':'Welcome on board. Start with the first station of the AI line.')+'</p><h1>Tori\'s Fahrplan</h1></div></div>'
-   +'<p class="lead">Six lines, one destination: an engineer who can build, run and secure AI systems, works like a professional, and speaks German at B1. Ride each line one station at a time.</p><div class="map">'+mapSVG()+'</div></div>'
+  $('#v-start').innerHTML='<div class="stack"><div class="hero"><div class="hello c-k">'+mascot(sd[0]?'happy':'idle')+'<div><p class="bubble">'+greet+'! '+(M.streak>1&&M.day>=today()-1?'Day '+M.streak+' in a row. Keep the train moving.':sd[0]?'Good to see you again. One station today is enough.':'Welcome on board. Start with the first station of the Project line.')+'</p><h1>Tori\'s Fahrplan</h1></div></div>'
+   +'<p class="lead">One project, six reference lines, one destination: an engineer who can build, test, run and secure AI systems, works like a professional, and speaks German at B1. The Project line is your main path. The other lines explain each topic in depth when you need it.</p><div class="map">'+mapSVG()+'</div></div>'
    +'<div class="grid g2"><div class="card stack" style="gap:10px"><h2>Today</h2>'+todayRows+'</div>'
    +'<div class="card stack" style="gap:12px"><h2>Your numbers</h2><div class="nums"><div><b data-stat="streak">0</b><span>days in a row</span></div><div><b data-stat="xp">0</b><span>points</span></div><div><b data-stat="level">1</b><span>level</span></div><div><b data-stat="done">0</b><span>stations done</span></div></div><p class="small muted">A correct answer gives 10 points, a finished station 30. Any practice keeps the streak alive.</p></div></div>'
    +'<div class="grid g5">'+ORDER.map(k=>{const t=T[k];return '<a class="card linecard c-'+t.c+'" href="#'+k+'"><svg viewBox="0 0 48 48" class="ring" aria-hidden="true"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--soft)" stroke-width="6"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c)" stroke-width="6" stroke-linecap="round" stroke-dasharray="126" stroke-dashoffset="126" transform="rotate(-90 24 24)" data-ring="'+k+'"/><text x="24" y="29" text-anchor="middle" font-size="15" font-weight="700" fill="var(--ink)">'+t.letter+'</text></svg><h3>'+esc(t.name)+'</h3><span class="pct" data-pct="'+k+'">0%</span><span class="muted small">'+t.stations.length+' stations</span></a>'}).join('')+'</div>'
@@ -224,7 +224,7 @@ function renderTrain(){
   if(trainTab==='review')newReview();
   if(trainTab==='gloss')paintGloss('');
 }
-function paintGloss(q){q=q.toLowerCase();const L={K:'k',E:'o',P:'f',S:'x',C:'c',D:'d'};$('[data-gl]').innerHTML=window.GLOSS.slice().sort((a,b)=>a[0].localeCompare(b[0])).filter(g=>!q||(g[0]+' '+g[1]).toLowerCase().includes(q)).map(g=>'<div class="c-'+(L[g[2]]||'n')+'"><dt><span class="badge c-'+(L[g[2]]||'n')+'">'+g[2]+'</span>'+esc(g[0])+'</dt><dd>'+esc(g[1])+'</dd></div>').join('')||'<p class="muted">Nothing found.</p>'}
+function paintGloss(q){q=q.toLowerCase();const L={B:'b',K:'k',E:'o',P:'f',S:'x',C:'c',D:'d'};$('[data-gl]').innerHTML=window.GLOSS.slice().sort((a,b)=>a[0].localeCompare(b[0])).filter(g=>!q||(g[0]+' '+g[1]).toLowerCase().includes(q)).map(g=>'<div class="c-'+(L[g[2]]||'n')+'"><dt><span class="badge c-'+(L[g[2]]||'n')+'">'+g[2]+'</span>'+esc(g[0])+'</dt><dd>'+esc(g[1])+'</dd></div>').join('')||'<p class="muted">Nothing found.</p>'}
 let IDX=null;
 function search(q){q=q.trim().toLowerCase();const out=$('[data-sr]');if(q.length<3){out.innerHTML='<p class="muted small">Type at least three letters.</p>';return}
   if(!IDX){IDX=[];ORDER.forEach(k=>T[k].stations.forEach((s,i)=>IDX.push({k,s,lab:label(k,i),txt:(s.t+' '+s.sum+' '+(s.body+(s.after||'')).replace(/<[^>]+>/g,' ')).replace(/&[a-z]+;/g,' ')})))}
@@ -254,7 +254,7 @@ function route(){
 }
 window.APP={$,$$,esc,hl,sleep,reduce,askAI,speak,stopSpeak,srs,addXP,cheer,toast,save,today,meta:M};
 if(M.theme)document.documentElement.setAttribute('data-theme',M.theme);
-$('.nav').innerHTML='<a href="#start"><span class="badge c-s" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 2 2 7.5V14h4v-4h4v4h4V7.5z" fill="currentColor"/></svg></span>Start</a>'+ORDER.map(k=>'<a href="#'+k+'"><span class="badge c-'+T[k].c+'">'+T[k].letter+'</span>'+esc({ai:'AI',eng:'Engineering',data:'Data',sec:'Security',deutsch:'Deutsch',pro:'Career'}[k])+'</a>').join('')+'<a href="#train"><span class="badge c-n">T</span>Train</a><a href="#news"><span class="badge c-n">N</span>This week</a>';
+$('.nav').innerHTML='<a href="#start"><span class="badge c-s" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14"><path d="M8 2 2 7.5V14h4v-4h4v4h4V7.5z" fill="currentColor"/></svg></span>Start</a>'+ORDER.map(k=>'<a href="#'+k+'"><span class="badge c-'+T[k].c+'">'+T[k].letter+'</span>'+esc({build:'Project',ai:'AI',eng:'Engineering',data:'Data',sec:'Security',deutsch:'Deutsch',pro:'Career'}[k])+'</a>').join('')+'<a href="#train"><span class="badge c-n">T</span>Train</a><a href="#news"><span class="badge c-n">N</span>This week</a>';
 renderNews();route();
 window.addEventListener('hashchange',route);
 if(reduce)$$('animateMotion').forEach(a=>a.remove());

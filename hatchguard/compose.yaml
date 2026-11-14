@@ -1,0 +1,8 @@
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    environment:
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}     # empty = demo mode without a real model
+      HG_IMPL: ${HG_IMPL:-hatchguard}
+    volumes: ["./traces:/app/traces"]
