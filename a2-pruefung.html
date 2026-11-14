@@ -1,0 +1,765 @@
+<title>Modellprüfung Deutsch A2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500&display=swap">
+<style>
+/* Layout: an exam portal. Sticky header with timer and section stepper, a working column for the task, and an answer sheet beside it. */
+:root{
+  --bg:#eef1f4; --paper:#ffffff; --ink:#18212b; --muted:#5b6673; --line:#d5dbe2;
+  --accent:#1f4fa3; --accent-soft:#e3ebf8; --accent-ink:#ffffff;
+  --graphite:#2b3036; --ok:#1d7a4c; --ok-soft:#dff2e8; --warn:#a35b00; --warn-soft:#fbefdc; --bad:#b3261e;
+  --note:#fff7c9; --note-line:#e7d989; --tape:rgba(200,190,150,.45);
+  --shadow:0 1px 2px rgba(20,30,45,.06),0 4px 14px rgba(20,30,45,.06);
+  --f-display:"Archivo",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace; --f-hand:"Caveat","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --paper:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2d3743;
+  --accent:#7ea6ec; --accent-soft:#1f2c42; --accent-ink:#0d1420;
+  --graphite:#dfe4ea; --ok:#5cc792; --ok-soft:#163327; --warn:#f0a948; --warn-soft:#3a2a12; --bad:#f2867e;
+  --note:#38341f; --note-line:#575032; --tape:rgba(120,115,90,.45);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --paper:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2d3743;
+  --accent:#7ea6ec; --accent-soft:#1f2c42; --accent-ink:#0d1420;
+  --graphite:#dfe4ea; --ok:#5cc792; --ok-soft:#163327; --warn:#f0a948; --warn-soft:#3a2a12; --bad:#f2867e;
+  --note:#38341f; --note-line:#575032; --tape:rgba(120,115,90,.45);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+button{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.seal{width:34px;height:34px;border-radius:8px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font:800 13px/1 var(--f-display);letter-spacing:.02em;flex:none}
+.brand b{font-family:var(--f-display);font-size:16px;display:block}
+.brand small{color:var(--muted);font-size:13px;display:block}
+.meta{margin-left:auto;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip{font-family:var(--f-mono);font-size:13px;border:1px solid var(--line);border-radius:6px;padding:5px 9px;color:var(--muted);white-space:nowrap}
+.timer{font-family:var(--f-mono);font-size:15px;font-weight:500;padding:5px 10px;border-radius:6px;background:var(--accent-soft);color:var(--accent);font-variant-numeric:tabular-nums;white-space:nowrap}
+.timer.low{background:var(--warn-soft);color:var(--warn)}
+.timer[hidden]{display:none}
+.steps{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto}
+.step{flex:1 1 0;min-width:96px;border:0;background:none;text-align:left;padding:6px 2px 0;cursor:pointer;color:var(--muted)}
+.step .rail{height:4px;border-radius:2px;background:var(--line);position:relative;overflow:hidden}
+.step .rail i{position:absolute;inset:0;width:0;background:var(--accent);transition:width .5s ease}
+.step.done .rail i{width:100%;background:var(--ok)}
+.step.active .rail i{width:100%}
+.step span{display:flex;gap:6px;align-items:baseline;font-size:13px;margin-top:6px;white-space:nowrap}
+.step span em{font-style:normal;font-family:var(--f-mono);font-size:12px}
+.step.active{color:var(--ink);font-weight:600}
+.step.done span::after{content:"✓";color:var(--ok);font-weight:700}
+.step:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+
+/* Panels */
+main{padding-block:28px 60px}
+.panel{display:none}
+.panel.show{display:block;animation:enter .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:.2;transform:translateY(14px)}to{opacity:1;transform:none}}
+.phead{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;margin-bottom:22px}
+.phead h1{font-size:clamp(26px,4vw,36px);font-weight:800}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.instr{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:8px;padding:12px 16px;margin-bottom:22px;max-width:75ch}
+.instr p{margin:0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:28px;align-items:start}
+.col{display:flex;flex-direction:column;gap:30px;min-width:0}
+
+/* Answer sheet */
+.sheet{position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px);background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px;box-shadow:var(--shadow)}
+.sheet h3{font-size:14px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px}
+.cells{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cell{border:1.5px solid var(--line);border-radius:6px;padding:6px 0;text-align:center;font-family:var(--f-mono);font-size:13px;color:var(--muted);text-decoration:none;transition:all .25s}
+.cell b{display:block;font-size:15px;color:var(--ink);min-height:1.3em}
+.cell.filled{border-color:var(--accent);background:var(--accent-soft)}
+.sheet .count{font-size:14px;color:var(--muted);margin:12px 0}
+.sheet .btn{width:100%}
+
+/* Task documents */
+.task{display:flex;flex-direction:column;gap:14px}
+.tlabel{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.tlabel h2{font-size:20px}
+.tlabel span{color:var(--muted);font-size:15px}
+.mail{background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.mail .mh{padding:12px 18px;border-bottom:1px solid var(--line);font-size:15px;display:grid;grid-template-columns:auto 1fr;gap:2px 12px;background:var(--accent-soft)}
+.mail .mh dt{color:var(--muted)}
+.mail .mh dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.mail .mb{padding:16px 18px;max-width:68ch}
+.mail .mb p{margin:0 0 10px}
+.note{position:relative;background:var(--note);border:1px solid var(--note-line);padding:26px 22px 18px;max-width:520px;transform:rotate(-.6deg);box-shadow:var(--shadow);margin:6px 0 0 6px}
+.note::before{content:"";position:absolute;top:-10px;left:50%;width:96px;height:22px;margin-left:-48px;background:var(--tape);transform:rotate(2deg)}
+.note h3{font-size:24px;margin-bottom:8px}
+.note p{margin:0 0 8px}
+.note .tel{font-family:var(--f-mono);font-size:16px;font-weight:500}
+.sign{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px;box-shadow:var(--shadow);max-width:600px}
+.sign h3{font-size:20px;padding-bottom:10px;border-bottom:2px solid var(--ink);margin-bottom:10px}
+.sign table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;margin-bottom:12px}
+.sign td{padding:5px 0;border-bottom:1px dashed var(--line)}
+.sign td:last-child{text-align:right;font-family:var(--f-mono);font-size:15px}
+.sign p{margin:0 0 8px}
+
+/* Questions */
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;scroll-margin-top:140px}
+.q .qt{display:flex;gap:10px;font-weight:600;margin-bottom:10px}
+.q .qn{flex:none;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:500 13px/1 var(--f-mono);margin-top:1px}
+.opts{display:flex;flex-direction:column;gap:6px;padding-left:36px}
+.opts.row{flex-direction:row;flex-wrap:wrap;gap:8px 22px}
+.opt{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:5px 8px;border-radius:6px;transition:background .15s}
+.opt:hover{background:var(--accent-soft)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:none;width:22px;height:22px;border:1.6px solid var(--muted);border-radius:3px;margin-top:2px;display:grid;place-items:center;background:var(--paper)}
+.box svg{width:18px;height:18px}
+.box path{fill:none;stroke:var(--graphite);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .28s ease}
+.box path+path{transition-delay:.12s}
+.opt input:checked + .box{border-color:var(--graphite)}
+.opt input:checked + .box path{stroke-dashoffset:0}
+.opt input:focus-visible + .box{outline:2px solid var(--accent);outline-offset:2px}
+.opt .letter{font-family:var(--f-mono);font-weight:500;margin-right:4px}
+.locked .opt{cursor:default}
+.locked .opt:hover{background:none}
+
+/* Listening */
+.audio{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
+.play{width:56px;height:56px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;display:grid;place-items:center;flex:none;transition:transform .15s}
+.play:hover{transform:scale(1.05)}
+.play:disabled{background:var(--line);color:var(--muted);cursor:not-allowed;transform:none}
+.play svg{width:22px;height:22px;fill:currentColor}
+.wave{display:flex;align-items:center;gap:3px;height:34px;flex:1 1 140px;min-width:120px}
+.wave i{flex:1;max-width:5px;background:var(--line);border-radius:3px;height:20%;transition:height .2s}
+.audio.playing .wave i{background:var(--accent);animation:bar 1s ease-in-out infinite}
+@keyframes bar{0%,100%{height:18%}50%{height:95%}}
+.ainfo{font-size:14px;color:var(--muted)}
+.ainfo b{color:var(--ink)}
+.plays{display:flex;gap:5px;margin-top:4px}
+.plays i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--accent)}
+.plays i.used{background:var(--accent)}
+.transcript{background:var(--warn-soft);border-radius:8px;padding:12px 14px;font-size:15px}
+.transcript p{margin:0 0 6px}
+
+/* Writing */
+.situation{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:18px 20px;max-width:72ch}
+.situation ul{margin:10px 0 0;padding-left:22px}
+.situation li{margin-bottom:4px}
+.pad{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden}
+.pad .ph{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
+textarea{width:100%;border:0;background:transparent;color:var(--ink);font:inherit;line-height:1.7;padding:14px 16px;resize:vertical;min-height:120px;display:block}
+textarea:focus{outline:none}
+.pad:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.lined textarea{min-height:230px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(1.7em - 1px),var(--line) calc(1.7em - 1px),var(--line) 1.7em);background-attachment:local;background-position:0 14px}
+.wc{font-family:var(--f-mono);font-variant-numeric:tabular-nums;padding:2px 8px;border-radius:5px;background:var(--bg)}
+.wc.ok{background:var(--ok-soft);color:var(--ok)}
+.wc.over{background:var(--warn-soft);color:var(--warn)}
+.ghost{padding:0 16px 10px;color:var(--muted);font-style:italic;font-size:15px;min-height:0}
+.ghost:empty{display:none}
+
+/* Speaking */
+.examiner{display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:700 14px/1 var(--f-display)}
+.bubble{background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 14px;max-width:60ch;display:flex;gap:10px;align-items:flex-start}
+.bubble p{margin:0}
+.ibtn{flex:none;border:1px solid var(--line);background:var(--paper);border-radius:999px;width:32px;height:32px;display:grid;place-items:center;cursor:pointer;color:var(--accent)}
+.ibtn svg{width:16px;height:16px;fill:currentColor}
+.ibtn:hover{background:var(--accent-soft)}
+.ibtn.rec{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(179,38,30,.45)}100%{box-shadow:0 0 0 10px rgba(179,38,30,0)}}
+.reply{margin-left:52px}
+.reply .pad textarea{min-height:90px}
+.card{position:relative;background:var(--paper);border:2px solid var(--ink);border-radius:12px;padding:22px;max-width:560px;display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:center}
+.card .center{grid-column:1/-1;font:800 21px/1.25 var(--f-display);padding:14px 8px;border-block:1px solid var(--line)}
+.card .corner{font-family:var(--f-hand);font-size:26px;color:var(--accent)}
+.card .tag{position:absolute;top:-11px;left:16px;background:var(--paper);padding:0 8px;font:500 12px/22px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cal{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:420px}
+.cal h3{font-size:15px;padding:10px 14px;background:var(--accent);color:var(--accent-ink)}
+.cal div{display:grid;grid-template-columns:62px 1fr;border-top:1px solid var(--line);font-size:15px}
+.cal div b{font-family:var(--f-mono);font-weight:500;font-size:14px;padding:6px 10px;color:var(--muted);border-right:1px solid var(--line)}
+.cal div span{padding:6px 10px;font-family:var(--f-hand);font-size:21px;line-height:1.2}
+.cal div.free span{color:var(--muted);font-family:var(--f-body);font-size:14px;font-style:italic}
+.sub{font:700 13px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-top:8px;border-top:1px solid var(--line)}
+
+/* Buttons and dialogs */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--accent);color:var(--accent-ink);transition:transform .12s,filter .12s}
+.btn:hover{filter:brightness(1.08)}
+.btn:active{transform:translateY(1px)}
+.btn.ghostb{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:focus-visible,.ibtn:focus-visible,.play:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.confirm{margin-top:10px;background:var(--warn-soft);border-radius:8px;padding:12px;font-size:15px}
+.confirm p{margin:0 0 10px}
+.confirm .row{display:flex;gap:8px;flex-wrap:wrap}
+.stamp{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ok);color:var(--ok);border-radius:6px;padding:4px 10px;font:700 13px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;transform:rotate(-3deg);animation:stamp .4s cubic-bezier(.3,1.6,.5,1)}
+@keyframes stamp{from{transform:rotate(-3deg) scale(1.8);opacity:0}to{transform:rotate(-3deg) scale(1);opacity:1}}
+.footnav{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:6px}
+
+/* Intro and end */
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;align-items:start}
+.welcome{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:var(--shadow)}
+.welcome h1{font-size:clamp(28px,4.5vw,40px);font-weight:800;margin:6px 0 14px}
+.welcome p{max-width:62ch;margin:0 0 12px}
+.plan{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper)}
+.plan div{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:13px 16px;border-top:1px solid var(--line)}
+.plan div:first-child{border-top:0}
+.plan b{font-family:var(--f-display)}
+.plan small{display:block;color:var(--muted);font-size:14px}
+.plan .min{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.plan .n{font:500 13px/1 var(--f-mono);color:var(--accent)}
+.rules{margin:14px 0 18px;padding-left:20px}
+.rules li{margin-bottom:4px}
+.sync{font-size:14px;color:var(--muted);display:flex;gap:8px;align-items:center}
+.sync i{width:8px;height:8px;border-radius:50%;background:var(--line);flex:none}
+.sync.on i{background:var(--ok)}
+.sync.err i{background:var(--bad)}
+.endcard{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:28px;max-width:720px;box-shadow:var(--shadow)}
+.endcard h1{font-size:clamp(26px,4vw,36px);margin:8px 0 12px}
+.endlist{list-style:none;padding:0;margin:16px 0;display:flex;flex-direction:column;gap:8px}
+.endlist li{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:8px}
+.endlist li span:last-child{font-family:var(--f-mono);font-size:14px}
+.chatcue{background:var(--accent-soft);border-radius:10px;padding:14px 16px;margin:16px 0}
+.chatcue code{font-family:var(--f-mono);font-weight:500;background:var(--paper);padding:2px 6px;border-radius:4px}
+#summaryBox{width:100%;min-height:140px;font-family:var(--f-mono);font-size:13px;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:var(--bg)}
+.tiny{font-size:13px;color:var(--muted)}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}
+footer{padding-block:20px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:860px){
+  .grid,.hero{grid-template-columns:minmax(0,1fr)}
+  .sheet{position:static;order:-1}
+  .cells{grid-template-columns:repeat(7,1fr)}
+  .reply{margin-left:0}
+  .meta .chip.cand{display:none}
+}
+@media (max-width:480px){
+  body{font-size:16px}
+  .opts{padding-left:0}
+  .card{grid-template-columns:1fr}
+  .cells{grid-template-columns:repeat(4,1fr)}
+  .note{transform:none;margin-left:0}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <div class="seal">A2</div>
+      <div><b>Modellprüfung Deutsch A2</b><small>Übungsportal · Prüfungssimulation</small></div>
+    </div>
+    <div class="meta">
+      <span class="chip cand">Kandidat/in Nr. 2611‑0437</span>
+      <span class="timer" id="timer" hidden>30:00</span>
+    </div>
+  </div>
+  <nav class="wrap steps" id="steps" aria-label="Prüfungsteile"></nav>
+</header>
+
+<main class="wrap" id="main">
+
+<!-- INTRO -->
+<section class="panel" id="p-intro">
+  <div class="hero">
+    <div class="welcome">
+      <div class="eyebrow">Herzlich willkommen</div>
+      <h1>Ihre Prüfung auf Niveau A2</h1>
+      <p>Guten Tag! Ich bin <b>Frau Weber</b> und begleite Sie heute als Prüferin durch diese Modellprüfung. Die Prüfung hat vier Teile. Bearbeiten Sie die Teile in der Reihenfolge und geben Sie jeden Teil am Ende ab.</p>
+      <ul class="rules">
+        <li>Bitte benutzen Sie kein Wörterbuch und keine Übersetzungsprogramme.</li>
+        <li>Die Hörtexte hören Sie <b>zweimal</b>. Schalten Sie bitte den Ton ein.</li>
+        <li>Nach der Abgabe können Sie die Antworten eines Teils nicht mehr ändern.</li>
+        <li>Im Teil Sprechen können Sie tippen oder, wenn verfügbar, das Mikrofon benutzen.</li>
+      </ul>
+      <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="startBtn">Prüfung beginnen</button>
+        <span class="sync" id="sync"><i></i><span>Verbindung zur Prüferin wird hergestellt …</span></span>
+      </div>
+    </div>
+    <div class="plan" aria-label="Ablauf">
+      <div><span class="n">01</span><span><b>Lesen</b><small>3 Texte · 7 Aufgaben</small></span><span class="min">30 Min.</span></div>
+      <div><span class="n">02</span><span><b>Hören</b><small>3 Hörtexte · 6 Aufgaben</small></span><span class="min">30 Min.</span></div>
+      <div><span class="n">03</span><span><b>Schreiben</b><small>1 E‑Mail · 30–40 Wörter</small></span><span class="min">30 Min.</span></div>
+      <div><span class="n">04</span><span><b>Sprechen</b><small>3 Teile mit der Prüferin</small></span><span class="min">15 Min.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- LESEN -->
+<section class="panel" id="p-lesen">
+  <div class="phead"><div><div class="eyebrow">Prüfungsteil 1</div><h1>Lesen</h1></div><span id="st-lesen"></span></div>
+  <div class="instr"><p>Lesen Sie die drei Texte und lösen Sie die Aufgaben 1 bis 7. Markieren Sie Ihre Lösung mit einem Kreuz.</p></div>
+  <div class="grid">
+    <div class="col" id="lesen-col">
+      <div class="task">
+        <div class="tlabel"><h2>Text A</h2><span>Sie lesen eine E‑Mail.</span></div>
+        <div class="mail">
+          <dl class="mh"><dt>Von:</dt><dd>Julia Brenner</dd><dt>An:</dt><dd>Tobias Kern</dd><dt>Betreff:</dt><dd><b>Samstag</b></dd></dl>
+          <div class="mb">
+            <p>Hallo Tobias,</p>
+            <p>danke für deine Einladung zum Grillen am Samstag! Leider kann ich erst um 18 Uhr kommen, nicht um 16 Uhr. Ich muss am Nachmittag noch meiner Schwester beim Umzug helfen. Sie zieht in eine neue Wohnung in der Nähe vom Bahnhof.</p>
+            <p>Soll ich etwas mitbringen? Ich kann einen Kartoffelsalat machen oder Getränke kaufen. Fleisch esse ich ja nicht, aber ich bringe für mich Gemüse zum Grillen mit.</p>
+            <p>Bis Samstag!<br>Julia</p>
+          </div>
+        </div>
+        <div class="qs" data-from="1" data-to="3"></div>
+      </div>
+      <div class="task">
+        <div class="tlabel"><h2>Text B</h2><span>Sie lesen einen Aushang im Supermarkt.</span></div>
+        <div class="note">
+          <h3>Fahrrad zu verkaufen!</h3>
+          <p>Damenfahrrad, 28 Zoll, blau, 3 Jahre alt, sehr guter Zustand. Mit Licht und Fahrradschloss. Neuer Preis: 450 €, für nur <b>180 €</b>!</p>
+          <p>Ich ziehe ins Ausland und kann das Fahrrad leider nicht mitnehmen.</p>
+          <p>Besichtigung nur am Wochenende möglich.<br>Bitte rufen Sie abends nach 19 Uhr an:</p>
+          <p class="tel">0176 / 334 85 21 (Markus)</p>
+        </div>
+        <div class="qs" data-from="4" data-to="4"></div>
+      </div>
+      <div class="task">
+        <div class="tlabel"><h2>Text C</h2><span>Sie lesen eine Information im Museum.</span></div>
+        <div class="sign">
+          <h3>Stadtmuseum Lindau · Öffnungszeiten und Preise</h3>
+          <table><tbody>
+            <tr><td>Dienstag bis Freitag</td><td>10:00–17:00</td></tr>
+            <tr><td>Samstag und Sonntag</td><td>11:00–18:00</td></tr>
+            <tr><td>Montag</td><td>geschlossen</td></tr>
+          </tbody></table>
+          <p><b>Eintritt:</b> Erwachsene 8 €, Studenten und Rentner 5 €, Kinder unter 12 Jahren frei.<br><b>Familienkarte</b> (2 Erwachsene + Kinder): 18 €</p>
+          <p>Jeden ersten Sonntag im Monat ist der Eintritt für alle kostenlos.</p>
+          <p>Führungen auf Englisch: Samstag um 14 Uhr. Anmeldung an der Kasse.</p>
+        </div>
+        <div class="qs" data-from="5" data-to="7"></div>
+      </div>
+    </div>
+    <aside class="sheet" data-sheet="lesen"></aside>
+  </div>
+</section>
+
+<!-- HÖREN -->
+<section class="panel" id="p-hoeren">
+  <div class="phead"><div><div class="eyebrow">Prüfungsteil 2</div><h1>Hören</h1></div><span id="st-hoeren"></span></div>
+  <div class="instr"><p>Sie hören drei Texte. Jeden Text hören Sie <b>zweimal</b>. Lesen Sie zuerst die Aufgaben, dann klicken Sie auf ▶. Markieren Sie Ihre Lösung mit einem Kreuz.</p></div>
+  <div class="grid">
+    <div class="col" id="hoeren-col"></div>
+    <aside class="sheet" data-sheet="hoeren"></aside>
+  </div>
+</section>
+
+<!-- SCHREIBEN -->
+<section class="panel" id="p-schreiben">
+  <div class="phead"><div><div class="eyebrow">Prüfungsteil 3</div><h1>Schreiben</h1></div><span id="st-schreiben"></span></div>
+  <div class="instr"><p>Schreiben Sie eine E‑Mail mit <b>30 bis 40 Wörtern</b>. Schreiben Sie zu allen drei Punkten.</p></div>
+  <div class="col" style="max-width:820px">
+    <div class="situation">
+      <p>Ihr Freund <b>Paul</b> hat Sie zu seiner Geburtstagsparty am Samstagabend eingeladen. Sie können leider nicht kommen.</p>
+      <p style="margin-top:8px">Schreiben Sie Paul eine E‑Mail:</p>
+      <ul>
+        <li>Bedanken Sie sich für die Einladung.</li>
+        <li>Schreiben Sie, warum Sie nicht kommen können.</li>
+        <li>Machen Sie einen Vorschlag für ein anderes Treffen.</li>
+      </ul>
+    </div>
+    <div class="pad lined">
+      <div class="ph"><span>An: paul.richter@mail.de · Betreff: Deine Party</span><span class="wc" id="wc">0 Wörter</span></div>
+      <textarea id="schreiben-text" data-sec="schreiben" data-key="text" spellcheck="false" autocomplete="off" aria-label="Ihre E-Mail an Paul" placeholder="Lieber Paul, …"></textarea>
+    </div>
+    <p class="tiny">Die Rechtschreibprüfung ist ausgeschaltet, wie in der echten Prüfung.</p>
+    <div class="footnav" data-submit="schreiben"></div>
+  </div>
+</section>
+
+<!-- SPRECHEN -->
+<section class="panel" id="p-sprechen">
+  <div class="phead"><div><div class="eyebrow">Prüfungsteil 4</div><h1>Sprechen</h1></div><span id="st-sprechen"></span></div>
+  <div class="instr"><p>Frau Weber stellt Ihnen Fragen. Klicken Sie auf 🔊, um die Frage zu hören. Antworten Sie in ganzen Sätzen. Sie können tippen<span class="micnote" hidden> oder auf 🎙 klicken und sprechen</span>.</p></div>
+  <div class="col" style="max-width:820px" id="sprechen-col"></div>
+</section>
+
+<!-- ENDE -->
+<section class="panel" id="p-ende">
+  <div class="endcard">
+    <div class="eyebrow">Prüfung beendet</div>
+    <h1>Vielen Dank! Sie haben alle Teile bearbeitet.</h1>
+    <p>Ihre Antworten sind gespeichert. Frau Weber wertet die Prüfung jetzt aus.</p>
+    <ul class="endlist" id="endlist"></ul>
+    <div class="chatcue">Gehen Sie zurück in den Chat und schreiben Sie <code>Fertig</code>. Dann bekommen Sie Ihre ausführliche Bewertung.</div>
+    <p class="tiny" id="endsync"></p>
+    <details>
+      <summary class="tiny" style="cursor:pointer">Antworten als Text anzeigen (falls die Übertragung nicht klappt)</summary>
+      <div style="margin-top:10px"><button class="btn ghostb" id="copyBtn">Antworten kopieren</button> <span class="tiny" id="copyMsg"></span></div>
+      <textarea id="summaryBox" readonly aria-label="Alle Antworten als Text"></textarea>
+    </details>
+  </div>
+</section>
+</main>
+
+<footer class="wrap">
+  <span class="tiny">Übungsprüfung nach dem Format der A2‑Prüfungen. Keine offizielle Prüfung, kein Zertifikat.</span>
+  <span><button class="linkbtn" id="resetBtn">Prüfung neu starten</button><span id="resetConfirm" hidden class="tiny"> Alle Antworten löschen? <button class="linkbtn" id="resetYes">Ja, löschen</button> · <button class="linkbtn" id="resetNo">Abbrechen</button></span></span>
+</footer>
+
+<script>
+(function(){
+const ORDER=['intro','lesen','hoeren','schreiben','sprechen','ende'];
+const NAMES={intro:'Start',lesen:'Lesen',hoeren:'Hören',schreiben:'Schreiben',sprechen:'Sprechen',ende:'Ende'};
+const MINUTES={lesen:30,hoeren:30,schreiben:30,sprechen:15};
+const KEY='a2-modellpruefung-v1';
+
+const RF=[['R','Richtig'],['F','Falsch']];
+const LESEN_Q=[
+ {n:1,t:'Julia kommt später zur Party als geplant.',o:RF,row:1},
+ {n:2,t:'Julias Schwester wohnt schon lange in der Nähe vom Bahnhof.',o:RF,row:1},
+ {n:3,t:'Julia isst vegetarisch.',o:RF,row:1},
+ {n:4,t:'Man kann das Fahrrad …',o:[['a','jeden Tag ansehen.'],['b','nur am Samstag und Sonntag ansehen.'],['c','nur abends nach 19 Uhr ansehen.']]},
+ {n:5,t:'Sie möchten am Montag ins Museum gehen. Was ist richtig?',o:[['a','Das Museum ist ab 10 Uhr geöffnet.'],['b','Das Museum ist nicht geöffnet.'],['c','Das Museum ist ab 11 Uhr geöffnet.']]},
+ {n:6,t:'Ein Student und sein 10‑jähriger Bruder besuchen das Museum. Wie viel bezahlen sie zusammen?',o:[['a','5 €'],['b','13 €'],['c','18 €']]},
+ {n:7,t:'Eine englische Führung …',o:[['a','gibt es jeden Tag um 14 Uhr.'],['b','ist am ersten Sonntag im Monat kostenlos.'],['c','muss man an der Kasse anmelden.']]}
+];
+const HOEREN=[
+ {id:'h1',title:'Hörtext 1',kind:'Sie hören eine Durchsage am Bahnhof.',
+  lines:[{who:'Durchsage',voice:'glassy',text:'Achtung an Gleis 4. Der ICE 578 nach Hamburg, planmäßige Abfahrt 14 Uhr 32, hat heute etwa 20 Minuten Verspätung. Grund ist eine Reparatur am Zug. Der Zug fährt heute ausnahmsweise von Gleis 7 ab. Ich wiederhole: Der ICE nach Hamburg fährt heute von Gleis 7. Wir bitten um Entschuldigung.'}],
+  qs:[{n:1,t:'Wann fährt der Zug nach Hamburg ungefähr ab?',o:[['a','um 14:32 Uhr'],['b','um 14:52 Uhr'],['c','um 15:12 Uhr']]},
+      {n:2,t:'Von welchem Gleis fährt der Zug heute ab?',o:[['a','von Gleis 4'],['b','von Gleis 7'],['c','von Gleis 17']]}]},
+ {id:'h2',title:'Hörtext 2',kind:'Sie hören eine Nachricht auf dem Anrufbeantworter.',
+  lines:[{who:'Praxis',voice:'airy',text:'Guten Tag, Frau Novak, hier ist die Praxis Doktor Hoffmann. Sie haben morgen, am Mittwoch, um 9 Uhr einen Termin bei uns. Leider ist Doktor Hoffmann krank. Können Sie vielleicht am Freitag um halb elf kommen? Bitte rufen Sie uns bis heute 18 Uhr zurück. Und bringen Sie bitte Ihre Versichertenkarte mit. Vielen Dank und auf Wiederhören.'}],
+  qs:[{n:3,t:'Wann ist der neue Termin?',o:[['a','am Mittwoch um 9 Uhr'],['b','am Freitag um 10:30 Uhr'],['c','am Freitag um 11:30 Uhr']]},
+      {n:4,t:'Was soll Frau Novak mitbringen?',o:[['a','ihre Versichertenkarte'],['b','ein Rezept'],['c','Geld für den Arzt']]}]},
+ {id:'h3',title:'Hörtext 3',kind:'Sie hören ein Gespräch zwischen Lena und Murat.',
+  lines:[
+   {who:'Lena',voice:'airy',text:'Hallo Murat! Was hast du denn am Wochenende gemacht?'},
+   {who:'Murat',voice:'rounded',text:'Ach, am Samstag wollte ich eigentlich wandern gehen. Aber es hat den ganzen Tag geregnet. Deshalb bin ich mit meinem Bruder ins Kino gegangen.'},
+   {who:'Lena',voice:'airy',text:'Schade! Und am Sonntag?'},
+   {who:'Murat',voice:'rounded',text:'Am Sonntag habe ich meine Großeltern besucht. Meine Oma hatte Geburtstag. Sie ist achtzig geworden!'}],
+  qs:[{n:5,t:'Murat ist am Samstag gewandert.',o:RF,row:1},
+      {n:6,t:'Was hat Murat am Sonntag gemacht?',o:[['a','Er ist ins Kino gegangen.'],['b','Er hat seine Großeltern besucht.'],['c','Er hat gearbeitet.']]}]}
+];
+const T1=[
+ 'Wie heißen Sie und woher kommen Sie?',
+ 'Wo wohnen Sie jetzt? Beschreiben Sie bitte Ihre Wohnung oder Ihr Haus.',
+ 'Was machen Sie beruflich, oder was studieren Sie?',
+ 'Wie sieht ein normaler Tag bei Ihnen aus?',
+ 'Erzählen Sie bitte von Ihrer Familie.',
+ 'Was haben Sie letztes Wochenende gemacht?'
+];
+const T3=[
+ 'Hallo! Du, Sarah hat nächste Woche Geburtstag. Wollen wir am Samstag zusammen ein Geschenk für sie kaufen? Wann hast du Zeit?',
+ 'Hmm, am Vormittag kann ich leider nicht, da muss ich arbeiten. Wie ist es am Nachmittag bei dir?',
+ 'Gut, das passt mir. Und was wollen wir Sarah schenken? Hast du eine Idee?',
+ 'Gute Idee! Wo treffen wir uns, und wie fahren wir in die Stadt?'
+];
+
+/* ---------- state ---------- */
+const fresh=()=>({view:'intro',ans:{lesen:{},hoeren:{},schreiben:{text:''},sprechen:{}},done:{},plays:{},start:{},used:{},sent:{}});
+let S=fresh();
+try{const raw=localStorage.getItem(KEY); if(raw){const o=JSON.parse(raw); if(o&&o.ans) S=Object.assign(fresh(),o);}}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- builders ---------- */
+const crossSvg='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 4.5L15.5 15.5"/><path d="M15.5 4.5L4.5 15.5"/></svg>';
+function qHtml(sec,q){
+  return `<div class="q" id="${sec}-q${q.n}"><div class="qt"><span class="qn">${q.n}</span><span>${esc(q.t)}</span></div>
+   <div class="opts${q.row?' row':''}" role="radiogroup" aria-label="Aufgabe ${q.n}">${q.o.map(([v,l])=>`
+    <label class="opt"><input type="radio" id="${sec}-${q.n}-${v}" name="${sec}-${q.n}" value="${v}" data-sec="${sec}" data-key="${q.n}"><span class="box">${crossSvg}</span><span>${q.row?esc(l):`<span class="letter">${v})</span>${esc(l)}`}</span></label>`).join('')}</div></div>`;
+}
+$$('#lesen-col .qs').forEach(el=>{const a=+el.dataset.from,b=+el.dataset.to;el.innerHTML=LESEN_Q.filter(q=>q.n>=a&&q.n<=b).map(q=>qHtml('lesen',q)).join('');el.style.display='flex';el.style.flexDirection='column';el.style.gap='10px'});
+
+const playSvg='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
+const spkSvg='<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+const micSvg='<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v7a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V22h2v-3.1A7 7 0 0 0 19 12h-2z"/></svg>';
+$('#hoeren-col').innerHTML=HOEREN.map(h=>`
+ <div class="task"><div class="tlabel"><h2>${h.title}</h2><span>${h.kind}</span></div>
+  <div class="audio" id="audio-${h.id}">
+   <button class="play" data-play="${h.id}" aria-label="${h.title} abspielen">${playSvg}</button>
+   <div class="wave">${Array.from({length:28},(_,i)=>`<i style="animation-delay:${(i*73%900)/1000}s"></i>`).join('')}</div>
+   <div class="ainfo"><b data-pstat="${h.id}">Bereit</b><div class="plays" data-pdots="${h.id}"><i></i><i></i></div></div>
+  </div>
+  <div class="transcript" id="tr-${h.id}" hidden></div>
+  <div style="display:flex;flex-direction:column;gap:10px">${h.qs.map(q=>qHtml('hoeren',q)).join('')}</div>
+ </div>`).join('');
+
+function padHtml(key,label,ph){
+  return `<div class="pad"><div class="ph"><span>${label}</span><span style="display:flex;gap:8px;align-items:center"><span class="wc" data-wc="${key}">0 Wörter</span><button class="ibtn mic" data-mic="${key}" hidden aria-label="Antwort sprechen">${micSvg}</button></span></div>
+   <textarea id="sp-${key}" data-sec="sprechen" data-key="${key}" spellcheck="false" placeholder="${ph}" aria-label="${label}"></textarea><div class="ghost" data-ghost="${key}"></div></div>`;
+}
+function ask(text,id){
+  return `<div class="examiner"><div class="avatar">FW</div><div class="bubble"><p>${esc(text)}</p><button class="ibtn" data-say="${id}" aria-label="Frage anhören">${spkSvg}</button></div></div>`;
+}
+const SAY={};
+let sp='<div class="sub">Teil 1 · Fragen zur Person</div>';
+T1.forEach((t,i)=>{SAY['t1-'+i]=t;sp+=ask(t,'t1-'+i)+`<div class="reply">${padHtml('t1_'+(i+1),'Ihre Antwort','Ich …')}</div>`});
+sp+=`<div class="sub">Teil 2 · Über ein Thema sprechen</div>`;
+SAY.t2='Jetzt möchte ich, dass Sie etwas über Ihr Leben erzählen. Auf der Karte steht das Thema: Was machen Sie am Wochenende? Sprechen Sie bitte ein bis zwei Minuten. Die Wörter auf der Karte helfen Ihnen.';
+sp+=ask(SAY.t2,'t2');
+sp+=`<div class="card"><span class="tag">Aufgabenkarte · Teil 2</span><span class="corner">Sport?</span><span class="corner">Freunde?</span><div class="center">Was machen Sie am Wochenende?</div><span class="corner">Familie?</span><span class="corner">Hobbys?</span></div>`;
+sp+=`<div class="reply" style="margin-left:0">${padHtml('t2','Ihr Text · Ziel: etwa 80–120 Wörter','Am Wochenende …')}</div>`;
+SAY.t2f='Danke. Noch eine Frage: Was machen Sie am liebsten, wenn das Wetter schlecht ist? Und warum?';
+sp+=ask(SAY.t2f,'t2f')+`<div class="reply">${padHtml('t2_frage','Ihre Antwort','Wenn das Wetter schlecht ist, …')}</div>`;
+sp+=`<div class="sub">Teil 3 · Etwas zusammen planen</div>`;
+sp+=`<div class="situation"><p>Sie und Ihre Freundin / Ihr Freund möchten am <b>Samstag</b> zusammen ein Geburtstagsgeschenk für Sarah kaufen. Finden Sie einen Termin. Hier ist Ihr Kalender. Frau Weber spielt Ihre Freundin.</p></div>
+<div class="cal"><h3>Samstag, 21. November</h3>
+ <div><b>08:00</b><span>Frühstück</span></div>
+ <div><b>09:00</b><span>Fußballtraining</span></div>
+ <div><b>10:00</b><span>Fußballtraining</span></div>
+ <div class="free"><b>11:00</b><span>frei</span></div>
+ <div><b>12:30</b><span>Mittagessen mit Eltern</span></div>
+ <div class="free"><b>14:00</b><span>frei</span></div>
+ <div class="free"><b>15:00</b><span>frei</span></div>
+ <div><b>16:30</b><span>Deutsch lernen</span></div>
+ <div><b>19:00</b><span>Kino mit Tom</span></div>
+</div>`;
+T3.forEach((t,i)=>{SAY['t3-'+i]=t;sp+=ask(t,'t3-'+i)+`<div class="reply">${padHtml('t3_'+(i+1),'Ihre Antwort','…')}</div>`});
+sp+='<div class="footnav" data-submit="sprechen"></div>';
+$('#sprechen-col').innerHTML=sp;
+
+/* answer sheets and submit areas */
+const SHEET={lesen:LESEN_Q.map(q=>q.n),hoeren:HOEREN.flatMap(h=>h.qs.map(q=>q.n))};
+Object.keys(SHEET).forEach(sec=>{
+  $(`[data-sheet="${sec}"]`).innerHTML=`<h3>Antwortbogen</h3><div class="cells">${SHEET[sec].map(n=>`<a class="cell" href="#${sec}-q${n}" data-cell="${sec}-${n}">${n}<b></b></a>`).join('')}</div><p class="count" data-count="${sec}"></p><div data-submit="${sec}"></div>`;
+});
+$$('[data-submit]').forEach(el=>{const sec=el.dataset.submit;el.innerHTML=`<div data-sbox="${sec}"><button class="btn" data-sub="${sec}">${sec==='sprechen'?'Prüfung abschließen':'Teil abgeben'}</button></div>`});
+
+/* ---------- stepper & navigation ---------- */
+$('#steps').innerHTML=ORDER.filter(s=>s!=='intro'&&s!=='ende').map((s,i)=>`<button class="step" data-go="${s}"><div class="rail"><i></i></div><span><em>0${i+1}</em>${NAMES[s]}</span></button>`).join('');
+function canGo(s){
+  if(s==='intro') return true;
+  const i=ORDER.indexOf(s);
+  for(let k=1;k<i&&k<5;k++){ if(!S.done[ORDER[k]]) return false; }
+  return true;
+}
+function go(s){
+  if(!canGo(s)) return;
+  S.view=s; if(MINUTES[s]&&!S.start[s]&&!S.done[s]) S.start[s]=Date.now();
+  save(); render(); window.scrollTo({top:0,behavior:'smooth'});
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-go]'); if(g){ go(g.dataset.go); }
+});
+$('#startBtn').addEventListener('click',()=>{const next=ORDER.slice(1,5).find(s=>!S.done[s])||'ende';go(next)});
+
+function render(){
+  $$('.panel').forEach(p=>p.classList.toggle('show',p.id==='p-'+S.view));
+  $$('.step').forEach(b=>{const s=b.dataset.go;b.classList.toggle('active',s===S.view);b.classList.toggle('done',!!S.done[s]);b.disabled=!canGo(s);b.setAttribute('aria-current',s===S.view?'step':'false')});
+  ['lesen','hoeren','schreiben','sprechen'].forEach(lockState);
+  fillInputs(); updateSheets(); tick();
+  if(S.view==='ende') renderEnd();
+  $('#startBtn').textContent=Object.keys(S.done).length?'Prüfung fortsetzen':'Prüfung beginnen';
+}
+function lockState(sec){
+  const panel=$('#p-'+sec), done=!!S.done[sec];
+  panel.classList.toggle('locked',done);
+  $$('input,textarea',panel).forEach(i=>{ if(i.type==='radio') i.disabled=done; else i.readOnly=done; });
+  $$('.mic',panel).forEach(m=>m.disabled=done);
+  $('#st-'+sec).innerHTML=done?'<span class="stamp">✓ Abgegeben</span>':'';
+  $$(`[data-sbox="${sec}"]`).forEach(b=>{
+    if(done){ const i=ORDER.indexOf(sec), nx=ORDER[i+1]; b.innerHTML=`<button class="btn" data-go="${nx}">Weiter: ${NAMES[nx]} →</button>`; }
+    else if(!b.querySelector('[data-sub]')&&!b.querySelector('.confirm')) b.innerHTML=`<button class="btn" data-sub="${sec}">${sec==='sprechen'?'Prüfung abschließen':'Teil abgeben'}</button>`;
+  });
+}
+function fillInputs(){
+  $$('input[type=radio][data-sec]').forEach(i=>{i.checked=S.ans[i.dataset.sec][i.dataset.key]===i.value});
+  $$('textarea[data-sec]').forEach(t=>{const v=S.ans[t.dataset.sec][t.dataset.key]||''; if(t.value!==v) t.value=v; wc(t)});
+}
+function updateSheets(){
+  Object.keys(SHEET).forEach(sec=>{
+    let n=0;
+    SHEET[sec].forEach(k=>{const v=S.ans[sec][k];const c=$(`[data-cell="${sec}-${k}"]`);c.classList.toggle('filled',!!v);c.querySelector('b').textContent=v||'';if(v)n++});
+    $(`[data-count="${sec}"]`).textContent=`${n} von ${SHEET[sec].length} beantwortet`;
+  });
+}
+
+/* ---------- inputs ---------- */
+const words=s=>(s.trim().match(/\S+/g)||[]).length;
+function wc(t){
+  const n=words(t.value);
+  const el=t.id==='schreiben-text'?$('#wc'):$(`[data-wc="${t.dataset.key}"]`);
+  if(!el) return;
+  el.textContent=n+(n===1?' Wort':' Wörter');
+  el.classList.remove('ok','over');
+  if(t.id==='schreiben-text'){ if(n>=30&&n<=45) el.classList.add('ok'); else if(n>45) el.classList.add('over'); }
+}
+document.addEventListener('change',e=>{const i=e.target;if(i.type==='radio'&&i.dataset.sec&&!S.done[i.dataset.sec]){S.ans[i.dataset.sec][i.dataset.key]=i.value;save();updateSheets()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.tagName==='TEXTAREA'&&t.dataset.sec&&!S.done[t.dataset.sec]){S.ans[t.dataset.sec][t.dataset.key]=t.value;save();wc(t)}});
+
+/* ---------- submit ---------- */
+function missing(sec){
+  if(SHEET[sec]) return SHEET[sec].filter(k=>!S.ans[sec][k]).length;
+  if(sec==='schreiben') return words(S.ans.schreiben.text||'')<5?1:0;
+  if(sec==='sprechen') return $$('textarea[data-sec=sprechen]').filter(t=>!(S.ans.sprechen[t.dataset.key]||'').trim()).length;
+  return 0;
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-sub]'); if(!b) return;
+  const sec=b.dataset.sub, m=missing(sec), box=b.parentElement;
+  let msg=sec==='schreiben'?(m?'Ihre E‑Mail ist noch fast leer.':`Ihre E‑Mail hat ${words(S.ans.schreiben.text)} Wörter.`):(m?`${m} Aufgabe${m>1?'n sind':' ist'} noch offen.`:'Alle Aufgaben sind bearbeitet.');
+  box.innerHTML=`<div class="confirm"><p>${msg} Nach der Abgabe können Sie nichts mehr ändern. Wirklich abgeben?</p><div class="row"><button class="btn" data-yes="${sec}">Ja, abgeben</button><button class="btn ghostb" data-no="${sec}">Weiter bearbeiten</button></div></div>`;
+});
+document.addEventListener('click',e=>{
+  const y=e.target.closest('[data-yes]'), n=e.target.closest('[data-no]');
+  if(n){ const sec=n.dataset.no; n.closest('[data-sbox]').innerHTML=`<button class="btn" data-sub="${sec}">${sec==='sprechen'?'Prüfung abschließen':'Teil abgeben'}</button>`; }
+  if(y){
+    const sec=y.dataset.yes; S.done[sec]=Date.now(); S.used[sec]=S.start[sec]?Math.round((Date.now()-S.start[sec])/1000):null; save();
+    if(dict&&dict.active()) dict.stop().catch(()=>{});
+    send(sec);
+    if(sec==='sprechen'){ go('ende'); } else render();
+  }
+});
+
+/* ---------- timer ---------- */
+function fmt(s){const m=Math.floor(Math.abs(s)/60),x=Math.abs(s)%60;return (s<0?'−':'')+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0')}
+function tick(){
+  const s=S.view, t=$('#timer');
+  if(!MINUTES[s]||S.done[s]||!S.start[s]){t.hidden=true;return}
+  const left=Math.round(MINUTES[s]*60-(Date.now()-S.start[s])/1000);
+  t.hidden=false; t.textContent=(left<0?'Zeit vorbei ':'')+fmt(left); t.classList.toggle('low',left<300);
+}
+setInterval(tick,1000);
+
+/* ---------- capabilities ---------- */
+let db=null,tts=null,dict=null;
+const use=n=>(window.claude&&typeof window.claude.use==='function')?window.claude.use(n).catch(()=>null):Promise.resolve(null);
+function setSync(state,text){const el=$('#sync');el.className='sync '+state;el.querySelector('span').textContent=text}
+const timeout=(p,ms)=>Promise.race([p,new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms))]);
+
+use('db').then(async d=>{
+  db=d;
+  if(!db){setSync('err','Offline: Antworten bleiben in diesem Browser. Am Ende können Sie sie kopieren.');return}
+  setSync('on','Verbunden: Ihre Antworten gehen direkt an die Prüferin.');
+  try{
+    for(const sec of ['lesen','hoeren','schreiben','sprechen']){
+      const snap=await timeout(db.doc('pruefung/'+sec).get(),10000);
+      if(snap.exists&&!S.done[sec]){const d=snap.data();S.ans[sec]=d.answers||S.ans[sec];S.done[sec]=Date.parse(d.submittedAt)||Date.now();S.sent[sec]=true}
+    }
+    save(); render();
+    for(const sec of Object.keys(S.done)) if(!S.sent[sec]) send(sec);
+  }catch(e){}
+});
+async function send(sec){
+  if(!db){renderEnd();return}
+  const payload={answers:S.ans[sec],submittedAt:new Date(S.done[sec]||Date.now()).toISOString(),secondsUsed:S.used[sec]??null};
+  if(sec==='hoeren') payload.plays=S.plays;
+  try{
+    await db.doc('pruefung/'+sec).set(payload); S.sent[sec]=true;
+    if(['lesen','hoeren','schreiben','sprechen'].every(s=>S.done[s])) await db.doc('pruefung/status').set({finished:true,finishedAt:new Date().toISOString()});
+  }catch(e){S.sent[sec]=false}
+  save(); if(S.view==='ende') renderEnd();
+}
+
+use('tts').then(t=>{tts=t});
+use('dictation').then(d=>{
+  dict=d; if(!d) return;
+  $$('.mic').forEach(m=>m.hidden=false); $$('.micnote').forEach(m=>m.hidden=false);
+  d.onPartial(({text})=>{ if(activeKey){const g=$(`[data-ghost="${activeKey}"]`); if(g) g.textContent=text;} });
+  d.onFinal(({text})=>{
+    if(!activeKey) return; const ta=$('#sp-'+activeKey); if(!ta||ta.readOnly) return;
+    const sep=ta.value&&!/\s$/.test(ta.value)?' ':''; ta.value+=sep+text.trim();
+    ta.dispatchEvent(new Event('input',{bubbles:true}));
+    const g=$(`[data-ghost="${activeKey}"]`); if(g) g.textContent='';
+  });
+  d.onState(({state})=>{
+    $$('.mic').forEach(m=>m.classList.toggle('rec',state!=='idle'&&m.dataset.mic===activeKey));
+    if(state==='idle'){ $$('.ghost').forEach(g=>g.textContent=''); }
+  });
+});
+let activeKey=null;
+document.addEventListener('click',e=>{
+  const m=e.target.closest('[data-mic]'); if(!m||!dict) return;
+  const key=m.dataset.mic;
+  if(dict.active()){
+    if(activeKey===key){ dict.stop().catch(()=>{}); return; }
+    activeKey=key; $$('.mic').forEach(x=>x.classList.toggle('rec',x.dataset.mic===key)); return;
+  }
+  activeKey=key;
+  dict.start({language:'de-DE'}).catch(err=>{
+    if(err&&err.code==='not_granted'){ $$('.mic').forEach(x=>x.hidden=true); }
+  });
+});
+
+/* ---------- speech output ---------- */
+function browserSpeak(lines){
+  return new Promise((res,rej)=>{
+    if(!('speechSynthesis' in window)) return rej(new Error('none'));
+    const synth=window.speechSynthesis; synth.cancel();
+    const vs=synth.getVoices().filter(v=>/^de/i.test(v.lang));
+    const pitch={airy:1.15,rounded:.85,glassy:1,buttery:1};
+    lines.forEach((l,i)=>{
+      const u=new SpeechSynthesisUtterance(l.text); u.lang='de-DE'; u.rate=.92; u.pitch=pitch[l.voice]||1;
+      if(vs.length) u.voice=vs[(l.voice==='rounded'&&vs[1])?1:0];
+      if(i===lines.length-1){u.onend=()=>res();} u.onerror=ev=>rej(ev);
+      synth.speak(u);
+    });
+  });
+}
+async function speak(lines){
+  if(tts){
+    try{ await tts.speak(lines.map(l=>({text:l.text,voice:l.voice,language:'de'})),{language:'de',rate:.95}); return 'ok'; }
+    catch(e){ if(e&&(e.code==='stopped'||e.code==='busy'||e.code==='rate_limited')) return 'stopped'; }
+  }
+  try{ await browserSpeak(lines); return 'ok'; }catch(e){ return 'fail'; }
+}
+function paintPlays(id){
+  const used=S.plays[id]||0;
+  $$(`[data-pdots="${id}"] i`).forEach((d,i)=>d.classList.toggle('used',i<used));
+  const btn=$(`[data-play="${id}"]`), st=$(`[data-pstat="${id}"]`);
+  if(!btn.closest('.audio').classList.contains('playing')){
+    btn.disabled=used>=2||!!S.done.hoeren;
+    st.textContent=used===0?'Bereit · 1. Hören':used===1?'2. Hören möglich':'Zweimal gehört';
+  }
+}
+let playing=false;
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-play]'); if(!b||playing) return;
+  const id=b.dataset.play, h=HOEREN.find(x=>x.id===id);
+  if((S.plays[id]||0)>=2||S.done.hoeren) return;
+  playing=true; S.plays[id]=(S.plays[id]||0)+1; save();
+  const box=$('#audio-'+id); box.classList.add('playing'); b.disabled=true;
+  $(`[data-pstat="${id}"]`).textContent='Läuft …'; paintPlays(id);
+  const r=await speak(h.lines);
+  box.classList.remove('playing'); playing=false;
+  if(r==='fail'){
+    const tr=$('#tr-'+id); tr.hidden=false;
+    tr.innerHTML='<p><b>Audio ist in diesem Browser nicht verfügbar.</b> Lesen Sie den Text einmal und schließen Sie ihn dann.</p>'+h.lines.map(l=>`<p>${h.lines.length>1?`<b>${l.who}:</b> `:''}${esc(l.text)}</p>`).join('');
+    S.plays[id]=2; save();
+  }
+  paintPlays(id);
+});
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-say]'); if(!b) return;
+  b.disabled=true; await speak([{text:SAY[b.dataset.say],voice:'airy'}]); b.disabled=false;
+});
+
+/* ---------- end ---------- */
+function summary(){
+  const L=[];
+  L.push('LESEN: '+LESEN_Q.map(q=>q.n+'='+(S.ans.lesen[q.n]||'-')).join(', '));
+  L.push('HÖREN: '+SHEET.hoeren.map(n=>n+'='+(S.ans.hoeren[n]||'-')).join(', '));
+  L.push('SCHREIBEN ('+words(S.ans.schreiben.text||'')+' Wörter):\n'+(S.ans.schreiben.text||'-'));
+  L.push('SPRECHEN:');
+  T1.forEach((q,i)=>L.push(`T1.${i+1} ${q}\n→ ${S.ans.sprechen['t1_'+(i+1)]||'-'}`));
+  L.push(`T2 Was machen Sie am Wochenende?\n→ ${S.ans.sprechen.t2||'-'}`);
+  L.push(`T2 Nachfrage (schlechtes Wetter)\n→ ${S.ans.sprechen.t2_frage||'-'}`);
+  T3.forEach((q,i)=>L.push(`T3.${i+1} Partnerin: ${q}\n→ ${S.ans.sprechen['t3_'+(i+1)]||'-'}`));
+  return L.join('\n\n');
+}
+function renderEnd(){
+  $('#endlist').innerHTML=['lesen','hoeren','schreiben','sprechen'].map(s=>`<li><span>${NAMES[s]}</span><span>${S.done[s]?(S.sent[s]?'✓ übermittelt':(db?'wird übermittelt …':'✓ gespeichert')):'offen'}</span></li>`).join('');
+  $('#endsync').textContent=db?'':'Hinweis: Die direkte Übertragung ist in dieser Ansicht nicht verfügbar. Kopieren Sie bitte Ihre Antworten unten und fügen Sie sie im Chat ein.';
+  $('#summaryBox').value=summary();
+}
+$('#copyBtn').addEventListener('click',()=>{
+  const box=$('#summaryBox'); box.value=summary();
+  navigator.clipboard.writeText(box.value).then(()=>$('#copyMsg').textContent='Kopiert.').catch(()=>{box.focus();box.select();$('#copyMsg').textContent='Text ist markiert. Bitte kopieren Sie ihn manuell.'});
+});
+
+/* ---------- reset ---------- */
+$('#resetBtn').addEventListener('click',()=>{$('#resetConfirm').hidden=false});
+$('#resetNo').addEventListener('click',()=>{$('#resetConfirm').hidden=true});
+$('#resetYes').addEventListener('click',async()=>{
+  $('#resetConfirm').hidden=true;
+  if(db){for(const s of ['lesen','hoeren','schreiben','sprechen','status']){try{await db.doc('pruefung/'+s).delete()}catch(e){}}}
+  S=fresh(); save(); $$('.transcript').forEach(t=>{t.hidden=true;t.innerHTML=''}); render(); HOEREN.forEach(h=>paintPlays(h.id));
+});
+
+render(); HOEREN.forEach(h=>paintPlays(h.id));
+})();
+</script>
