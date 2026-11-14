@@ -1,0 +1,397 @@
+<title>A2 Ergebnis Bilal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: a stack of A4 paper sheets on a desk. Paper is always white; the desk follows the theme. Print = one sheet per page. */
+:root{
+  --desk:#e6e9ee; --desk-ink:#3b4552;
+  --paper:#ffffff; --ink:#18212b; --muted:#5d6874; --line:#d8dde3;
+  --navy:#1c2f5a; --navy-soft:#e8edf7; --gold:#a07a2c; --gold-soft:#f6efdf;
+  --red:#c62828; --red-soft:#fdecec; --green:#1f7a4a; --green-soft:#e3f3ea; --amber:#9a5b00; --amber-soft:#fbf0dc;
+  --f-cert:"Cormorant Garamond",Georgia,serif; --f-body:"Source Sans 3",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace; --f-pen:"Caveat","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--desk:#151a21;--desk-ink:#c9d1da;color-scheme:dark}}
+:root[data-theme="dark"]{--desk:#151a21;--desk-ink:#c9d1da;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--desk);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.5}
+.desk{display:flex;flex-direction:column;align-items:center;gap:28px;padding-block:28px 60px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.deskhead{width:min(210mm,100%);color:var(--desk-ink);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.deskhead b{font-family:var(--f-cert);font-size:24px}
+.deskhead span{font-size:14px}
+.page{position:relative;width:210mm;max-width:100%;min-height:297mm;background:var(--paper);color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08),0 18px 40px rgba(0,0,0,.12);padding:16mm 16mm 18mm;display:flex;flex-direction:column;gap:11px;animation:rise .7s cubic-bezier(.2,.7,.2,1) both}
+.page:nth-child(3){animation-delay:.1s}.page:nth-child(4){animation-delay:.15s}
+@keyframes rise{from{transform:translateY(16px);opacity:.4}to{transform:none;opacity:1}}
+.page>*{flex-shrink:0}
+.pfoot{margin-top:auto;display:flex;justify-content:space-between;gap:10px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px;font-family:var(--f-mono)}
+h1,h2,h3{margin:0;line-height:1.2;text-wrap:balance}
+.ph{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--navy);padding-bottom:8px}
+.ph h1{font-family:var(--f-cert);font-size:30px;color:var(--navy);font-weight:700}
+.ph .eb{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.ph .tot{font-family:var(--f-mono);font-size:13px;color:var(--muted);text-align:right}
+.ph .tot b{font-size:22px;color:var(--navy);font-variant-numeric:tabular-nums}
+h2{font-size:16px;color:var(--navy);display:flex;gap:8px;align-items:baseline}
+h2 small{font-weight:400;color:var(--muted);font-size:13px}
+.pen{font-family:var(--f-pen);color:var(--red);font-size:20px;line-height:1.15}
+.tw{overflow-x:auto}
+
+/* ===== Certificate ===== */
+.cert{padding:11mm}
+.frame{position:relative;flex:1;border:1.5px solid var(--gold);padding:5px;display:flex}
+.frame-in{flex:1;border:5px double var(--navy);padding:12mm 13mm 10mm;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;position:relative;overflow:hidden;
+  background:radial-gradient(circle at 50% 42%,rgba(160,122,44,.07),transparent 60%),repeating-radial-gradient(circle at 50% 42%,transparent 0 11px,rgba(28,47,90,.035) 11px 12px)}
+.corner{position:absolute;width:26px;height:26px;border:2px solid var(--gold)}
+.corner.tl{top:14px;left:14px;border-right:0;border-bottom:0}.corner.tr{top:14px;right:14px;border-left:0;border-bottom:0}
+.corner.bl{bottom:14px;left:14px;border-right:0;border-top:0}.corner.br{bottom:14px;right:14px;border-left:0;border-top:0}
+.rosette{width:92px;height:92px}
+.org{font:600 11px/1.3 var(--f-mono);letter-spacing:.22em;text-transform:uppercase;color:var(--navy)}
+.cert h1{font-family:var(--f-cert);font-weight:700;font-size:44px;color:var(--navy);letter-spacing:.02em}
+.cert .lvl{font-family:var(--f-cert);font-style:italic;font-size:19px;color:var(--gold)}
+.cert .intro{font-size:14px;color:var(--muted);max-width:120mm}
+.name{font-family:var(--f-cert);font-size:52px;font-weight:600;color:var(--ink);line-height:1;padding:0 18mm 6px;border-bottom:1.5px solid var(--gold);margin-top:2px}
+.scores{width:100%;max-width:150mm;border-collapse:collapse;margin-top:6px;font-variant-numeric:tabular-nums}
+.scores th{font:600 10.5px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:6px 8px;border-bottom:1px solid var(--navy);text-align:left}
+.scores td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left}
+.scores td.n{font-family:var(--f-mono);text-align:right;white-space:nowrap}
+.scores th:last-child{text-align:right}
+.scores .bar{height:7px;border-radius:4px;background:var(--line);position:relative;min-width:60px}
+.scores .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--navy);animation:fill 1.4s .4s cubic-bezier(.2,.7,.2,1) both}
+.scores .bar i.lo{background:var(--gold)}
+.scores .bar::after{content:"";position:absolute;left:60%;top:-3px;bottom:-3px;width:1.5px;background:var(--red);opacity:.6}
+@keyframes fill{from{width:8%!important}}
+.scores tr.total td{border-bottom:2px solid var(--navy);font-weight:700;font-size:16px;color:var(--navy)}
+.pred{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:4px}
+.pred .p{font-family:var(--f-cert);font-size:26px;font-weight:700;color:var(--navy)}
+.pill{font:600 11px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:var(--navy-soft);color:var(--navy)}
+.pill.g{background:var(--gold-soft);color:var(--gold)}
+.scale{font-size:11px;color:var(--muted);font-family:var(--f-mono)}
+.signrow{width:100%;display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:end;margin-top:auto}
+.sig{text-align:center;font-size:12px;color:var(--muted)}
+.sig .hand{font-family:var(--f-pen);font-size:34px;color:var(--navy);line-height:1;border-bottom:1px solid var(--ink);padding-bottom:2px;margin-bottom:4px}
+.stamp{width:110px;height:110px;border-radius:50%;border:3px solid var(--red);color:var(--red);display:grid;place-items:center;transform:rotate(-12deg);position:relative;opacity:.85;animation:stamp .55s 1.2s cubic-bezier(.3,1.6,.5,1) both}
+.stamp::before{content:"";position:absolute;inset:6px;border:1px solid var(--red);border-radius:50%}
+.stamp div{font:700 13px/1.15 var(--f-mono);letter-spacing:.08em;text-align:center}
+.stamp div b{display:block;font-size:24px;letter-spacing:0}
+@keyframes stamp{from{transform:rotate(-12deg) scale(2.2);opacity:0}to{transform:rotate(-12deg) scale(1);opacity:.85}}
+.certno{font-size:10.5px;color:var(--muted);font-family:var(--f-mono);letter-spacing:.06em}
+
+/* ===== Answer sheet ===== */
+.sheet{width:100%;border-collapse:collapse;font-size:13.5px}
+.sheet th{font:600 10.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px;border-bottom:1.5px solid var(--navy)}
+.sheet td{padding:3px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.sheet td.nr{font-family:var(--f-mono);font-weight:500;width:28px}
+.boxes{display:flex;gap:6px;white-space:nowrap}
+.bx{width:22px;height:22px;border:1.4px solid var(--muted);border-radius:3px;display:grid;place-items:center;font:500 10px/1 var(--f-mono);color:var(--muted);position:relative}
+.bx svg{position:absolute;inset:1px;width:18px;height:18px}
+.bx .x{fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
+.bx .ring{fill:none;stroke:var(--red);stroke-width:1.8;stroke-dasharray:80;animation:draw 1s 1s ease both}
+.bx.cand{border-color:var(--ink)}
+.res{width:38px;height:24px}
+.res path{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;animation:draw .7s ease both}
+.res.ok path{stroke:var(--green)}.res.no path{stroke:var(--red)}
+@keyframes draw{from{stroke-dashoffset:60}to{stroke-dashoffset:0}}
+.pts{font-family:var(--f-mono);text-align:right;white-space:nowrap}
+.secsum{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--navy-soft);border-radius:6px;padding:8px 12px;font-size:13px}
+.secsum b{font-family:var(--f-mono);color:var(--navy)}
+.margin{display:flex;gap:10px;align-items:flex-start;background:var(--red-soft);border-left:3px solid var(--red);padding:8px 12px;border-radius:0 6px 6px 0}
+.margin .pen{font-size:21px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{border:1px solid var(--line);border-radius:8px;padding:7px 12px}
+.kpi small{display:block;font:500 10.5px/1.2 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.kpi b{font-size:20px;font-family:var(--f-mono);color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi span{font-size:12.5px;color:var(--muted);display:block}
+
+/* ===== Writing corrections ===== */
+.letter{border:1px solid var(--line);border-radius:6px;padding:10px 16px;line-height:1.95;font-size:14px;background:repeating-linear-gradient(to bottom,transparent 0 calc(1.95em - 1px),#eef1f5 calc(1.95em - 1px) 1.95em)}
+.letter p{margin:0}
+del{text-decoration:none;background-image:linear-gradient(var(--red),var(--red));background-size:100% 1.6px;background-repeat:no-repeat;background-position:0 55%;color:var(--muted);animation:strike .6s ease both}
+@keyframes strike{from{background-size:0 1.6px}}
+ins{text-decoration:none;font-family:var(--f-pen);color:var(--red);font-size:18px;font-weight:700;margin-left:3px}
+sup.t{font:700 9px/1 var(--f-mono);color:#fff;background:var(--red);border-radius:3px;padding:2px 3px;margin-left:2px;vertical-align:super}
+sup.t.reg{background:var(--amber)}sup.t.e{background:#6b4fa0}sup.t.w{background:var(--navy)}sup.t.r{background:#7a7f86}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend sup.t{vertical-align:baseline;margin-right:4px}
+.crit{width:100%;border-collapse:collapse;font-size:13.5px}
+.crit td,.crit th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.crit th{font:600 10.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--navy)}
+.crit td.n{font-family:var(--f-mono);white-space:nowrap;text-align:right}
+.crit tr.sum td{font-weight:700;color:var(--navy);border-bottom:2px solid var(--navy)}
+.model{border:1.5px solid var(--green);border-radius:8px;padding:12px 16px;background:var(--green-soft)}
+.model h3{font-size:13px;font-family:var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--green);margin-bottom:6px}
+.model p{margin:0;font-size:15px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ===== Speaking ===== */
+.fix{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:12.8px;line-height:1.35}
+.fix>div{padding:5px 10px;border-top:1px solid var(--line)}
+.fix>div:nth-child(-n+2){border-top:0}
+.fix .h{font:600 10.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:#f6f7f9;padding-block:8px}
+.fix .you{color:var(--muted);background:var(--red-soft)}
+.fix .you i{font-style:normal;text-decoration:line-through;text-decoration-color:var(--red)}
+.fix .ok{background:var(--green-soft);font-weight:600}
+.fix .ok em{font-style:normal;color:var(--red);font-weight:700}
+.fix .why{grid-column:1/-1;font-size:11.5px;color:var(--muted);padding-top:0;padding-bottom:4px!important;border-top:0;background:#fafbfc}
+.good{display:flex;flex-wrap:wrap;gap:6px}
+.good span{background:var(--green-soft);color:var(--green);border-radius:999px;padding:4px 10px;font-size:13px;font-weight:600}
+.note{font-size:12.5px;color:var(--muted);font-style:italic}
+
+/* ===== Study notes ===== */
+.rules{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rule{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;break-inside:avoid}
+.rule h3{font-size:14px;color:var(--navy);display:flex;gap:8px;align-items:baseline}
+.rule h3 span{font:600 11px/1 var(--f-mono);color:var(--paper);background:var(--navy);border-radius:4px;padding:3px 5px}
+.rule .f{font-family:var(--f-mono);font-size:12px;background:var(--navy-soft);border-radius:4px;padding:5px 7px;color:var(--navy)}
+.rule p{margin:0;font-size:13px}
+.rule .ex{font-size:13px}
+.rule .ex b{color:var(--green)}
+.mini{border-collapse:collapse;font-size:12.5px;width:100%}
+.mini td,.mini th{border:1px solid var(--line);padding:3px 6px;text-align:left}
+.mini th{background:#f6f7f9;font-weight:600}
+.vocab{columns:2;column-gap:18px;font-size:13.5px}
+.vocab div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dotted var(--line);padding:3px 0;break-inside:avoid}
+.vocab div span:first-child{color:var(--muted)}
+.vocab div span:last-child{font-weight:600}
+.plan{width:100%;border-collapse:collapse;font-size:13px}
+.plan td,.plan th{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.plan th{font:600 10.5px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--navy)}
+.plan td:first-child{font-family:var(--f-mono);white-space:nowrap;color:var(--navy);font-weight:500}
+.check{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;font-size:13.5px}
+.check div{display:flex;gap:8px;align-items:flex-start}
+.check div::before{content:"";flex:none;width:13px;height:13px;border:1.4px solid var(--navy);border-radius:2px;margin-top:3px}
+.closing{text-align:center;padding:10px;border-top:1px solid var(--line)}
+.closing .pen{color:var(--navy);font-size:26px}
+
+@media (max-width:760px){
+  .page{min-height:0;padding:20px 16px}
+  .cert{padding:10px}.frame-in{padding:22px 14px}
+  .cert h1{font-size:32px}.name{font-size:38px;padding:0 10px 6px}
+  .two,.rules,.check,.fix{grid-template-columns:1fr}
+  .fix .h:nth-child(2){display:none}
+  .kpis{grid-template-columns:1fr}
+  .vocab{columns:1}
+  .signrow{grid-template-columns:1fr;justify-items:center}
+}
+@page{size:A4;margin:0}
+@media print{
+  body{background:#fff}
+  .desk{padding:0;gap:0}
+  .deskhead{display:none}
+  .page{box-shadow:none;width:210mm;height:297mm;min-height:297mm;break-after:page;overflow:hidden}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+</style>
+
+<div class="desk">
+<div class="deskhead"><b>Ihr Prüfungsergebnis</b><span>Modellprüfung Deutsch A2 · 14. November 2026 · 6 Seiten</span></div>
+
+<!-- ============ PAGE 1: CERTIFICATE ============ -->
+<section class="page cert">
+ <div class="frame"><div class="frame-in">
+  <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+  <svg class="rosette" id="rosette" viewBox="-50 -50 100 100" aria-hidden="true"></svg>
+  <div class="org">Modellprüfung Deutsch · Übungsportal</div>
+  <h1>Ergebnisbescheinigung</h1>
+  <div class="lvl">Niveau A2 · Gemeinsamer Europäischer Referenzrahmen</div>
+  <p class="intro">Hiermit wird bescheinigt, dass</p>
+  <div class="name">Bilal</div>
+  <p class="intro">am 14. November 2026 die Modellprüfung Deutsch A2 in allen vier Prüfungsteilen abgelegt und sie mit folgendem Ergebnis <b>bestanden</b> hat:</p>
+  <div class="tw" style="width:100%;display:flex;justify-content:center">
+  <table class="scores">
+   <thead><tr><th>Prüfungsteil</th><th style="width:44%">Leistung</th><th>Punkte</th></tr></thead>
+   <tbody>
+    <tr><td>Lesen</td><td><div class="bar"><i style="width:84%"></i></div></td><td class="n"><span data-count="21">21</span> / 25</td></tr>
+    <tr><td>Hören</td><td><div class="bar"><i style="width:100%"></i></div></td><td class="n"><span data-count="25">25</span> / 25</td></tr>
+    <tr><td>Schreiben</td><td><div class="bar"><i class="lo" style="width:56%"></i></div></td><td class="n"><span data-count="14">14</span> / 25</td></tr>
+    <tr><td>Sprechen</td><td><div class="bar"><i class="lo" style="width:60%"></i></div></td><td class="n"><span data-count="15">15</span> / 25</td></tr>
+    <tr class="total"><td>Gesamt</td><td></td><td class="n"><span data-count="75">75</span> / 100</td></tr>
+   </tbody>
+  </table></div>
+  <div class="pred"><span class="pill">Prädikat</span><span class="p">befriedigend</span><span class="pill g">Einstufung: solides A2</span></div>
+  <div class="scale">90–100 sehr gut · 80–89 gut · 70–79 befriedigend · 60–69 ausreichend · 0–59 nicht bestanden<br>Rote Linie = Bestehensgrenze 60 %</div>
+  <div class="signrow">
+   <div class="sig"><div class="hand">Osnabrück, 14.11.2026</div>Ort, Datum</div>
+   <div class="stamp" aria-label="Stempel: bestanden"><div>BESTANDEN<b>75</b>PUNKTE</div></div>
+   <div class="sig"><div class="hand">K. Weber</div>Frau Weber · Prüferin</div>
+  </div>
+  <div class="certno">Nr. MP‑A2‑2611‑0437 · Übungsprüfung im A2‑Format. Kein offizielles Sprachzertifikat.</div>
+ </div></div>
+</section>
+
+<!-- ============ PAGE 2: ANSWER SHEET ============ -->
+<section class="page">
+ <div class="ph"><div><div class="eb">Seite 2 · Korrigierter Antwortbogen</div><h1>Lesen und Hören</h1></div><div class="tot">Richtig: <b>12 / 13</b></div></div>
+ <div class="kpis">
+  <div class="kpi"><small>Lesen</small><b>6 / 7</b><span>21 von 25 Punkten · 12:40 Min. von 30</span></div>
+  <div class="kpi"><small>Hören</small><b>6 / 6</b><span>25 von 25 Punkten · 3:43 Min.</span></div>
+  <div class="kpi"><small>Hörtexte</small><b>3 × 2</b><span>Jeder Text zweimal gehört</span></div>
+ </div>
+ <h2>Teil 1 · Lesen <small>Text A: E‑Mail · Text B: Aushang · Text C: Museum</small></h2>
+ <div class="tw"><table class="sheet" id="sheet-lesen"></table></div>
+ <div class="margin"><span class="pen">Nr. 7:</span><div>Der Text sagt: <i>„Führungen auf Englisch: <b>Samstag</b> um 14 Uhr. <b>Anmeldung an der Kasse.</b>“</i> Es gibt die Führung also nicht jeden Tag. Richtig ist <b>c</b>. <span class="pen" style="font-size:18px">Tipp: Lesen Sie Wörter wie „nur“, „jeden“ und „Samstag“ ganz genau!</span></div></div>
+ <h2>Teil 2 · Hören <small>Durchsage · Anrufbeantworter · Gespräch</small></h2>
+ <div class="tw"><table class="sheet" id="sheet-hoeren"></table></div>
+ <div class="margin" style="background:var(--green-soft);border-color:var(--green)"><span class="pen" style="color:var(--green)">Super!</span><div>Alles richtig, auch die schweren Stellen: 14:32 + 20 Minuten = <b>14:52</b>, und „halb elf“ = <b>10:30</b>. Ihr Hörverstehen ist schon fast auf B1‑Niveau.</div></div>
+ <div class="pfoot"><span>Bilal · MP‑A2‑2611‑0437</span><span>Seite 2 / 6</span></div>
+</section>
+
+<!-- ============ PAGE 3: WRITING ============ -->
+<section class="page">
+ <div class="ph"><div><div class="eb">Seite 3 · Korrektur</div><h1>Schreiben</h1></div><div class="tot">Punkte: <b>14 / 25</b></div></div>
+ <p style="margin:0"><b>Aufgabe:</b> E‑Mail an Paul (30–40 Wörter): sich bedanken · Grund für die Absage · Vorschlag für ein anderes Treffen.</p>
+ <div class="legend"><span><sup class="t w">W</sup>Wortstellung</span><span><sup class="t">G</sup>Grammatik</span><span><sup class="t reg">D/S</sup>du oder Sie</span><span><sup class="t e">E</sup>Englisch</span><span><sup class="t r">R</sup>Rechtschreibung</span></div>
+ <div class="letter">
+  <p>Lieber Paul,</p>
+  <p>Danke für die <del>einladung</del><ins>Einladung</ins><sup class="t r">R</sup> <del>auf ihre</del><ins>zu deiner</ins><sup class="t reg">D/S</sup> <del>Geburtstagparty</del><ins>Geburtstagsparty</ins><sup class="t r">R</sup>. Ich <del>kann das nicht gekommen</del><ins>kann leider nicht kommen</ins><sup class="t">G</sup><del>&nbsp;weil habe ich eine termine</del><ins>, weil ich einen Termin habe</ins><sup class="t w">W</sup> <del>mit meiner Praxis for Physcology</del><ins>bei meiner Psychologin</ins><sup class="t e">E</sup> und <del>das termine is sehr wicjtig für mir</del><ins>der Termin ist sehr wichtig für mich</ins><sup class="t">G</sup>. Aber wir <del>konnen am wochnende treffen ins Bar</del><ins>können uns am Wochenende in einer Bar treffen</ins><sup class="t w">W</sup>, wo wir <del>konnen trinken Bier and fieren ihre Geburtstag</del><ins>Bier trinken und deinen Geburtstag feiern können</ins><sup class="t w">W</sup>. Ich <del>wünche ihene eine lange leben and gesund lebe</del><ins>wünsche dir ein langes und gesundes Leben</ins><sup class="t">G</sup>.</p>
+  <p><del>Nochmal Vielen Danke für einladung</del><ins>Nochmals vielen Dank für die Einladung</ins><sup class="t">G</sup>.</p>
+  <p><del>Ihre Freund</del><ins>Dein Freund</ins><sup class="t reg">D/S</sup><br>Bilal</p>
+ </div>
+ <div class="two">
+  <div>
+   <table class="crit">
+    <thead><tr><th>Kriterium</th><th style="text-align:right">Punkte</th></tr></thead>
+    <tbody>
+     <tr><td><b>Aufgabe erfüllt</b><br><span class="note">Alle 3 Punkte da ✓ · aber 60 statt 30–40 Wörter</span></td><td class="n">8 / 10</td></tr>
+     <tr><td><b>Form und Register</b><br><span class="note">Anrede und Gruß da ✓ · du und Sie gemischt ✗</span></td><td class="n">2,5 / 5</td></tr>
+     <tr><td><b>Sprachliche Richtigkeit</b><br><span class="note">Viele Fehler bei Wortstellung, Artikeln und Rechtschreibung, dazu englische Wörter</span></td><td class="n">3,5 / 10</td></tr>
+     <tr class="sum"><td>Gesamt</td><td class="n">14 / 25</td></tr>
+    </tbody>
+   </table>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+   <div class="model"><h3>Musterlösung · 39 Wörter</h3><p>Lieber Paul,<br>vielen Dank für deine Einladung! Leider kann ich am Samstag nicht kommen, weil ich einen wichtigen Arzttermin habe. Können wir uns nächstes Wochenende treffen? Wir können in eine Bar gehen und deinen Geburtstag feiern.<br>Viele Grüße<br>Bilal</p></div>
+   <div class="margin"><span class="pen">Zeit!</span><div>Nur <b>4 von 30 Min.</b> genutzt. Nehmen Sie sich 5 Minuten zum Kontrollieren.</div></div>
+  </div>
+ </div>
+ <div class="pfoot"><span>Bilal · MP‑A2‑2611‑0437</span><span>Seite 3 / 6</span></div>
+</section>
+
+<!-- ============ PAGE 4: SPEAKING ============ -->
+<section class="page">
+ <div class="ph"><div><div class="eb">Seite 4 · Bewertung</div><h1>Sprechen</h1></div><div class="tot">Punkte: <b>15 / 25</b></div></div>
+ <div class="kpis">
+  <div class="kpi"><small>Teil 1 · Fragen zur Person</small><b>5 / 8</b><span>Alle 6 Fragen beantwortet, viele Details</span></div>
+  <div class="kpi"><small>Teil 2 · Wochenende</small><b>5 / 8</b><span>Viel Inhalt (Cricket, Kochen, Familie), aber oft falsche Wortstellung</span></div>
+  <div class="kpi"><small>Teil 3 · Termin planen</small><b>5 / 9</b><span>Guter Zeitvorschlag, aber Kalender teilweise falsch gelesen</span></div>
+ </div>
+ <h2>Das haben Sie gut gemacht</h2>
+ <div class="good"><span>Ich habe zwei Brüder und eine Schwester.</span><span>Ja, das passt mir gut.</span><span>Wir können … gehen.</span><span>Ich denke, wir …</span><span>Was passt Ihnen?</span><span>Gutschein‑Idee ✓</span><span>14 bis 16 Uhr frei ✓</span></div>
+ <h2>Ihre Sätze und die Korrektur</h2>
+ <div class="fix">
+  <div class="h">Sie haben gesagt</div><div class="h">Richtig</div>
+  <div class="you"><i>Am Wochenende ich gehe nach meine Freunde.</i></div><div class="ok">Am Wochenende <em>gehe ich zu meinen</em> Freunden.</div>
+  <div class="why">Verb an Position 2 · zu + Person (Dativ)</div>
+  <div class="you"><i>Ich habe am letzten Woche nach meiner Freundin Haus gegangen.</i></div><div class="ok"><em>Letztes Wochenende bin</em> ich <em>zu meinem Freund</em> gegangen.</div>
+  <div class="why">gehen → Perfekt mit „sein“</div>
+  <div class="you"><i>danach ich komme zurück meine Haus am Nacht</i></div><div class="ok">Danach <em>bin ich in der Nacht nach Hause</em> gekommen.</div>
+  <div class="why">nach Hause · in der Nacht</div>
+  <div class="you"><i>meine jüngere Bruder studieren ihre Bachelors</i></div><div class="ok"><em>Mein jüngerer</em> Bruder <em>macht seinen</em> Bachelor.</div>
+  <div class="why">er → studiert / macht · sein (nicht ihr)</div>
+  <div class="you"><i>Meine Mutter ist Hauswife und mein Vater ist eine Farmer.</i></div><div class="ok">Meine Mutter ist <em>Hausfrau</em>, und mein Vater ist <em>Landwirt</em>.</div>
+  <div class="why">Bei Berufen steht kein Artikel · keine englischen Wörter</div>
+  <div class="you"><i>wann ich muss meine Arbeit machen</i></div><div class="ok"><em>wenn</em> ich arbeiten <em>muss</em></div>
+  <div class="why">wenn = Nebensatz, Verb am Ende · wann = nur Frage</div>
+  <div class="you"><i>Wir mussten kaufen ein Geschenk für Sarah. Er ist unser lieber Freund.</i></div><div class="ok">Wir <em>müssen</em> ein Geschenk für Sarah <em>kaufen</em>. <em>Sie</em> ist <em>unsere liebe Freundin</em>.</div>
+  <div class="why">Modalverb + Infinitiv am Ende · Sarah = sie</div>
+  <div class="you"><i>Um 6.30 Uhr muss ich durchlernen. … Was passt Ihnen?</i></div><div class="ok">Um <em>16:30 Uhr</em> muss ich Deutsch lernen. … Was passt <em>dir</em>?</div>
+  <div class="why">Uhrzeit genau lesen · mit Freunden sprechen Sie mit „du“</div>
+  <div class="you"><i>mit Public Transport</i></div><div class="ok">mit <em>öffentlichen Verkehrsmitteln</em> / mit der S‑Bahn</div>
+  <div class="why">Englische Wörter kosten Punkte</div>
+ </div>
+ <p class="note">Hinweis: Ihre Antworten im Teil Sprechen kamen als diktierter Text. Die Aussprache konnte ich deshalb nicht bewerten. Einzelne Wörter hat das Mikrofon vielleicht falsch erkannt. Sie sagen oft „äh“. Das ist normal, aber üben Sie, kurze Sätze ohne Pause zu sprechen.</p>
+ <div class="pfoot"><span>Bilal · MP‑A2‑2611‑0437</span><span>Seite 4 / 6</span></div>
+</section>
+
+<!-- ============ PAGE 5: GRAMMAR NOTES ============ -->
+<section class="page">
+ <div class="ph"><div><div class="eb">Seite 5 · Lernnotizen</div><h1>Grammatik, die Sie lernen müssen</h1></div><div class="tot">8 Regeln<br>nach Wichtigkeit</div></div>
+ <div class="rules">
+  <div class="rule"><h3><span>1</span>Verb auf Position 2</h3><div class="f">[Zeit/Ort] + VERB + Subjekt + …</div><p class="ex">✗ Am Sonntag ich rufe … an<br><b>✓ Am Sonntag rufe ich meine Familie an.</b></p><p>Das gilt nach: dann, danach, heute, am Wochenende, deshalb.</p></div>
+  <div class="rule"><h3><span>2</span>Nebensatz: Verb am Ende</h3><div class="f">…, weil / dass / wenn + Subjekt + … + VERB</div><p class="ex">✗ weil habe ich einen Termin<br><b>✓ …, weil ich einen Termin habe.</b></p><p>Vor dem Nebensatz steht immer ein Komma.</p></div>
+  <div class="rule"><h3><span>3</span>Perfekt: sein oder haben</h3><div class="f">Bewegung / Veränderung → SEIN · sonst → HABEN</div><table class="mini"><tr><th>sein</th><td>gehen, kommen, fahren, fliegen, laufen, aufstehen, bleiben</td></tr><tr><th>haben</th><td>machen, kochen, essen, spielen, sprechen, besuchen</td></tr></table><p class="ex"><b>✓ Ich bin ins Kino gegangen. Ich habe gekocht.</b></p></div>
+  <div class="rule"><h3><span>4</span>Modalverb + Infinitiv am Ende</h3><div class="f">können / müssen / wollen (Pos. 2) … INFINITIV</div><p class="ex">✗ wir können trinken Bier<br><b>✓ Wir können Bier trinken.</b></p><p>Mit Modalverb: <i>Ich kann nicht kommen</i>, nicht <i>gekommen</i>.</p></div>
+  <div class="rule"><h3><span>5</span>nach · zu · in</h3><table class="mini"><tr><th>nach</th><td>Städte, Länder, <b>nach Hause</b> → nach Berlin</td></tr><tr><th>zu</th><td>Personen, Arzt → zu meinen Freunden, zum Arzt</td></tr><tr><th>in</th><td>Gebäude → ins Büro, ins Kino, in die Stadt</td></tr></table></div>
+  <div class="rule"><h3><span>6</span>mein / meine / meinen / meinem</h3><table class="mini"><tr><th></th><th>der</th><th>die</th><th>das</th></tr><tr><th>Nom.</th><td>mein</td><td>meine</td><td>mein</td></tr><tr><th>Akk.</th><td>meinen</td><td>meine</td><td>mein</td></tr><tr><th>Dat.</th><td>meinem</td><td>meiner</td><td>meinem</td></tr></table><p class="ex"><b>✓ mein Vater · einen Termin · mit meinem Bruder</b></p></div>
+  <div class="rule"><h3><span>7</span>du oder Sie: nicht mischen</h3><table class="mini"><tr><th>Freund</th><td>du · dich · dir · dein</td></tr><tr><th>formell</th><td>Sie · Sie · Ihnen · Ihr</td></tr></table><p class="ex">„Lieber Paul“ → nur du: <b>deine Einladung, dir, Dein Freund</b></p></div>
+  <div class="rule"><h3><span>8</span>wann oder wenn</h3><div class="f">Wann? = Frage · wenn = Bedingung/Zeit im Satz</div><p class="ex"><b>✓ Wann hast du Zeit?<br>✓ Wenn das Wetter schlecht ist, koche ich.</b></p><p>Mit „wenn“ steht das Verb am Ende, danach folgt: Verb, Subjekt.</p></div>
+ </div>
+ <div class="pfoot"><span>Bilal · MP‑A2‑2611‑0437</span><span>Seite 5 / 6</span></div>
+</section>
+
+<!-- ============ PAGE 6: VOCAB + PLAN ============ -->
+<section class="page">
+ <div class="ph"><div><div class="eb">Seite 6 · Lernnotizen</div><h1>Wortschatz und Lernplan</h1></div><div class="tot">Ziel in 8 Wochen<br><b>85+ / 100</b></div></div>
+ <h2>Diese Wörter haben Ihnen gefehlt <small>Englisch → Deutsch</small></h2>
+ <div class="vocab">
+  <div><span>housewife</span><span>die Hausfrau</span></div>
+  <div><span>farmer</span><span>der Landwirt / Bauer</span></div>
+  <div><span>coupon, voucher</span><span>der Gutschein</span></div>
+  <div><span>public transport</span><span>öffentliche Verkehrsmittel</span></div>
+  <div><span>appointment</span><span>der Termin</span></div>
+  <div><span>doctor's appointment</span><span>der Arzttermin</span></div>
+  <div><span>psychologist</span><span>die Psychologin / der Psychologe</span></div>
+  <div><span>things</span><span>die Sachen / Dinge</span></div>
+  <div><span>if (whether)</span><span>ob</span></div>
+  <div><span>bachelor's degree</span><span>der Bachelor (machen)</span></div>
+  <div><span>dietitian</span><span>der Ernährungsberater / die Ernährungsberaterin</span></div>
+  <div><span>AI engineer</span><span>der KI‑Ingenieur</span></div>
+  <div><span>student dorm</span><span>das Studentenwohnheim ✓</span></div>
+  <div><span>to celebrate</span><span>feiern</span></div>
+  <div><span>to meet (each other)</span><span>sich treffen</span></div>
+  <div><span>to call (phone)</span><span>anrufen</span></div>
+ </div>
+ <h2>Ihr Lernplan</h2>
+ <div class="tw"><table class="plan">
+  <thead><tr><th>Wochen</th><th>Thema</th><th>Jeden Tag (30–45 Min.)</th></tr></thead>
+  <tbody>
+   <tr><td>1–2</td><td><b>Wortstellung</b> (Regel 1, 2)</td><td>Schreiben Sie 10 Sätze mit „Am Montag / Dann / Danach …“ und dazu je 5 Sätze mit „weil“ und „wenn“.</td></tr>
+   <tr><td>3–4</td><td><b>Perfekt und Modalverben</b> (Regel 3, 4)</td><td>Schreiben Sie abends 5 Sätze über Ihren Tag im Perfekt. Lernen Sie jeden Tag 3 Verben mit „sein“.</td></tr>
+   <tr><td>5–6</td><td><b>Schreiben</b> (Regel 6, 7)</td><td>Schreiben Sie 3 E‑Mails pro Woche (Einladung, Absage, Bitte) mit genau 30–40 Wörtern und prüfen Sie sie mit der Liste unten.</td></tr>
+   <tr><td>7–8</td><td><b>Sprechen</b> (Regel 5, 8)</td><td>Nehmen Sie sich jeden Tag 1 Minute zu einem Thema auf (Freizeit, Wohnen, Arbeit, Essen) und sprechen Sie dabei ohne englische Wörter. Hören Sie sich danach selbst an.</td></tr>
+  </tbody>
+ </table></div>
+ <h2>Checkliste vor jeder Abgabe <small>Schreiben</small></h2>
+ <div class="check">
+  <div>Habe ich alle 3 Punkte geschrieben?</div>
+  <div>Habe ich 30–40 Wörter geschrieben?</div>
+  <div>Schreibe ich alle Nomen groß?</div>
+  <div>Steht das Verb auf Position 2?</div>
+  <div>Steht nach weil / dass / wenn das Verb am Ende?</div>
+  <div>Schreibe ich überall du (oder überall Sie)?</div>
+  <div>Habe ich ä, ö und ü geschrieben?</div>
+  <div>Habe ich kein englisches Wort benutzt?</div>
+ </div>
+ <div class="closing"><div class="pen">Gut gemacht, Bilal! Lesen und Hören sind schon sehr stark. Jetzt kommen Schreiben und Sprechen dran. Sie schaffen das!</div><div class="note">Frau Weber</div></div>
+ <div class="pfoot"><span>Bilal · MP‑A2‑2611‑0437</span><span>Seite 6 / 6</span></div>
+</section>
+</div>
+
+<script>
+(function(){
+ // Rosette (guilloche) for the certificate
+ const svg=document.getElementById('rosette');
+ const ring=(R,r,d,turns,color,w)=>{let p='';const N=900;for(let i=0;i<=N;i++){const t=i/N*Math.PI*2*turns;const x=(R-r)*Math.cos(t)+d*Math.cos((R-r)/r*t);const y=(R-r)*Math.sin(t)-d*Math.sin((R-r)/r*t);p+=(i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2)}return `<path d="${p}" fill="none" stroke="${color}" stroke-width="${w}"/>`};
+ svg.innerHTML=ring(40,7,17,7,'#a07a2c',.45)+ring(30,6,12,6,'#1c2f5a',.4)+'<circle r="15" fill="#fff" stroke="#1c2f5a" stroke-width="1"/><text y="5.5" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="16" fill="#1c2f5a">A2</text>';
+
+ // Answer sheets
+ const L=[[1,'Julia kommt später zur Party.',['R','F'],'R','R'],[2,'Schwester wohnt schon lange am Bahnhof.',['R','F'],'F','F'],[3,'Julia isst vegetarisch.',['R','F'],'R','R'],[4,'Fahrrad ansehen: wann?',['a','b','c'],'b','b'],[5,'Museum am Montag',['a','b','c'],'b','b'],[6,'Student + Bruder (10): Preis',['a','b','c'],'a','a'],[7,'Englische Führung',['a','b','c'],'a','c']];
+ const H=[[1,'Abfahrt ICE nach Hamburg',['a','b','c'],'b','b'],[2,'Gleis heute',['a','b','c'],'b','b'],[3,'Neuer Arzttermin',['a','b','c'],'b','b'],[4,'Mitbringen',['a','b','c'],'a','a'],[5,'Murat ist am Samstag gewandert.',['R','F'],'F','F'],[6,'Murat am Sonntag',['a','b','c'],'b','b']];
+ const X='<svg viewBox="0 0 20 20"><path class="x" d="M4.5 4.5L15.5 15.5M15.5 4.5L4.5 15.5"/></svg>';
+ const RING='<svg viewBox="0 0 20 20" style="inset:-6px;width:32px;height:32px"><ellipse class="ring" cx="10" cy="10" rx="9" ry="8.5" transform="rotate(-8 10 10)"/></svg>';
+ const OK='<svg class="res ok" viewBox="0 0 46 30"><path d="M8 16 L18 25 L38 5"/></svg>';
+ const NO='<svg class="res no" viewBox="0 0 46 30"><path d="M12 5 L34 25 M34 5 L12 25"/></svg>';
+ const table=(id,rows,pts)=>{
+  let h='<thead><tr><th>Nr.</th><th>Aufgabe</th><th>Ihre Antwort</th><th>Lösung</th><th></th><th style="text-align:right">Pkt.</th></tr></thead><tbody>';
+  rows.forEach(([n,t,opts,you,sol],i)=>{const ok=you===sol;
+   h+=`<tr><td class="nr">${n}</td><td>${t}</td><td><div class="boxes">${opts.map(o=>`<span class="bx${o===you?' cand':''}">${o===you?X:o}${(!ok&&o===sol)?RING:''}</span>`).join('')}</div></td><td><b style="font-family:var(--f-mono)">${sol}</b></td><td style="width:50px">${(ok?OK:NO).replace('<path','<path style="animation-delay:'+(0.5+i*0.18)+'s"')}</td><td class="pts">${ok?pts:'0'}</td></tr>`});
+  document.getElementById(id).innerHTML=h+'</tbody>';
+ };
+ table('sheet-lesen',L,'1');table('sheet-hoeren',H,'1');
+
+ // Count-up on screen only
+ const mq=window.matchMedia;
+ if(!(mq&&mq('(prefers-reduced-motion: reduce)').matches)&&!(mq&&mq('print').matches)){
+  document.querySelectorAll('[data-count]').forEach(el=>{const end=+el.dataset.count;const t0=performance.now()+400;const step=now=>{const k=Math.min(1,Math.max(0,(now-t0)/1400));el.textContent=Math.round(end*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step)};el.textContent=end;requestAnimationFrame(step)});
+ }
+})();
+</script>
