@@ -4,9 +4,14 @@ Claude updates this file after every lesson and commits it. Newest day at the to
 
 ## Status
 - **Current day:** 0 (baseline done)
-- **Next lesson:** Tag 1, Verb in position 2
+- **Current lesson:** Tag 1, Verb in position 2 (sent, waiting for "fertig")
 - **Words learned:** 0
 - **Last test:** A2 baseline 75/100 (L 21 · H 25 · S 14 · Sp 15)
+
+## Lessons
+| Day | Topic | Link | Status |
+|---|---|---|---|
+| 1 | Verb in position 2 | https://claude.ai/artifact/2JbyBQf3YGgbE3nFsdZ3cC | sent |
 
 ## Error log
 How often each error type has appeared (baseline counts included). Tick it off once it no longer appears in 3 lessons in a row.
