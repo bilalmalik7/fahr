@@ -1,0 +1,142 @@
+{
+  "day": 2,
+  "title": "Nebensätze mit weil und dass",
+  "topic": "Studium und Beruf",
+  "minutes": 70,
+  "sections": [
+    {
+      "id": "warmup", "name": "Aufwärmen", "min": 5,
+      "intro": "These sentences are <b>your mistakes from Tag 1</b>. Correct each sentence, then fill in 3 words from yesterday.",
+      "items": [
+        {"type": "text", "id": "w1", "n": "1", "q": "Um 12 Uhr ich fahre ins Büro.", "ph": "Um 12 Uhr …"},
+        {"type": "text", "id": "w2", "n": "2", "q": "Deshalb ich koche gern am Wochenende.", "ph": "Deshalb …"},
+        {"type": "text", "id": "w3", "n": "3", "q": "Morgen stehe ich muss früh auf.", "hint": "Two verbs: which goes in position 2, and which goes to the end?", "ph": "Morgen …"},
+        {"type": "text", "id": "w4", "n": "4", "q": "Ich dusche und Frühstück.", "hint": "Frühstück is a noun. You need the verb.", "ph": "Ich dusche und …"},
+        {"type": "text", "id": "w5", "n": "5", "q": "Meine Vater ist Landwirt, und meine Hobby ist Cricket.", "hint": "der Vater, das Hobby", "ph": "… Vater …"},
+        {"type": "text", "id": "wv1", "n": "6", "q": "„Nach dem ______ koche ich mit meiner Frau.“ (end of the working day)", "ph": "das Wort"},
+        {"type": "text", "id": "wv2", "n": "7", "q": "„Die Vorlesung fällt heute ______.“ (is cancelled)", "ph": "das Wort"},
+        {"type": "text", "id": "wv3", "n": "8", "q": "„Heute muss ich noch drei Aufgaben ______.“ (get done)", "ph": "das Wort"}
+      ]
+    },
+    {
+      "id": "grammatik", "name": "Grammatik", "min": 15,
+      "intro": "Yesterday: in a main clause the verb is in <b>position 2</b>. Today: in a <b>subordinate clause</b> with <i>weil</i> or <i>dass</i>, the verb goes <b>to the very end</b> (your error E2).",
+      "blocks": [
+        "<h2>The rule: in the Nebensatz the verb goes to the end</h2><div class='formula'>Hauptsatz , weil / dass + Subjekt + … + VERB</div><div class='tw'><table class='pos'><thead><tr><th>Hauptsatz</th><th>Connector</th><th>Subject + middle</th><th>End</th></tr></thead><tbody><tr><td>Ich lerne Deutsch,</td><td>weil</td><td>ich in Osnabrück</td><td class='e'>wohne.</td></tr><tr><td>Ich glaube,</td><td>dass</td><td>KI sehr wichtig</td><td class='e'>ist.</td></tr><tr><td>Ich bin müde,</td><td>weil</td><td>ich um sechs Uhr</td><td class='e'>aufstehe.</td></tr><tr><td>Ich komme später,</td><td>weil</td><td>ich noch</td><td class='e'>arbeiten muss.</td></tr><tr><td>Sie war traurig,</td><td>weil</td><td>ich nicht</td><td class='e'>gekommen bin.</td></tr></tbody></table></div><p><b>Always a comma</b> before <i>weil</i> and <i>dass</i>. A separable verb joins back together (<i>aufstehe</i>). With two verbs, the <b>conjugated one goes last</b>: <i>arbeiten <u>muss</u></i>, <i>gekommen <u>bin</u></i>.</p>",
+        "<h2>dass: the most useful word for giving your opinion</h2><p><i>dass</i> usually comes after verbs of thinking and saying. In the B1 exam you need these phrases all the time:</p><div class='ex'><div><span class='de' data-saytext='Ich finde, dass die Arbeit im Homeoffice praktisch ist.'>Ich finde, dass die Arbeit im Homeoffice praktisch <b class='v'>ist</b>.</span></div><div><span class='de' data-saytext='Ich hoffe, dass meine Familie uns im Sommer besucht.'>Ich hoffe, dass meine Familie uns im Sommer <b class='v'>besucht</b>.</span></div><div><span class='de' data-saytext='Es ist wichtig, dass man jeden Tag ein bisschen lernt.'>Es ist wichtig, dass man jeden Tag ein bisschen <b class='v'>lernt</b>.</span></div><div><span class='de' data-saytext='Meine Frau sagt, dass ich zu viel arbeite.'>Meine Frau sagt, dass ich zu viel <b class='v'>arbeite</b>.</span></div></div>",
+        "<h2>Three ways to give a reason. Learn all three!</h2><div class='tw'><table class='pos'><thead><tr><th>Word</th><th>Position</th><th>Example</th></tr></thead><tbody><tr><td><b>weil</b></td><td>verb at the END</td><td>Ich lerne Deutsch, weil ich hier <b>arbeite</b>.</td></tr><tr><td><b>denn</b></td><td>position 0, normal order</td><td>Ich lerne Deutsch, denn ich <b>arbeite</b> hier.</td></tr><tr><td><b>deshalb</b></td><td>position 1, verb comes NEXT</td><td>Ich arbeite hier. Deshalb <b>lerne</b> ich Deutsch.</td></tr></tbody></table></div><p class='tip'><b>Bonus (B1 level):</b> the weil clause can also come <b>first</b>. Then the whole clause counts as position 1, and two verbs meet in the middle: <i>Weil es <u>regnet</u>, <u>spielen</u> wir heute kein Cricket.</i> Verb, comma, verb.</p>"
+      ],
+      "items": [
+        {"type": "mc", "id": "g1", "n": "1", "q": "Ich komme heute später, weil …", "o": [["a","ich habe eine Besprechung."],["b","ich eine Besprechung habe."],["c","habe ich eine Besprechung."]]},
+        {"type": "mc", "id": "g2", "n": "2", "q": "Ich glaube, dass …", "o": [["a","KI ist sehr wichtig."],["b","ist KI sehr wichtig."],["c","KI sehr wichtig ist."]]},
+        {"type": "mc", "id": "g3", "n": "3", "q": "Ich bin müde, denn …", "o": [["a","ich habe schlecht geschlafen."],["b","ich schlecht geschlafen habe."],["c","habe ich schlecht geschlafen."]]},
+        {"type": "mc", "id": "g4", "n": "4", "q": "Weil es regnet, …", "o": [["a","wir spielen kein Cricket."],["b","spielen wir kein Cricket."],["c","wir kein Cricket spielen."]]},
+        {"type": "order", "id": "g5", "n": "5", "q": "Put the words in order.", "hint": "Start with „Ich lerne jeden Tag,“", "tiles": ["machen möchte.","weil","Ich lerne jeden Tag,","die B1-Prüfung","ich"]},
+        {"type": "order", "id": "g6", "n": "6", "q": "Put the words in order.", "hint": "Start with „Meine Frau sagt,“", "tiles": ["arbeite.","zu viel","dass","Meine Frau sagt,","ich"]},
+        {"type": "order", "id": "g7", "n": "7", "q": "Put the words in order.", "hint": "Careful: separable verb!", "tiles": ["um sechs Uhr","Ich bin müde,","aufstehe.","ich","weil"]},
+        {"type": "text", "id": "g8", "n": "8", "q": "Join the sentences with <b>weil</b>: <i>Ich gehe heute nicht ins Büro. Ich habe Homeoffice.</i>", "ph": "Ich gehe heute nicht ins Büro, weil …"},
+        {"type": "text", "id": "g9", "n": "9", "q": "Join the sentences with <b>dass</b>: <i>Ich hoffe: Meine Familie besucht uns im Sommer.</i>", "ph": "Ich hoffe, dass …"},
+        {"type": "text", "id": "g10", "n": "10", "q": "Rewrite with <b>deshalb</b>: <i>Ich habe morgen eine Prüfung. Ich lerne heute Abend.</i>", "hint": "deshalb is position 1! Then the verb comes straight after.", "ph": "Ich habe morgen eine Prüfung. Deshalb …"}
+      ]
+    },
+    {
+      "id": "wortschatz", "name": "Wortschatz", "min": 10,
+      "intro": "15 words for your studies and your job. Tap a card to turn it over, 🔊 to hear it, then rate yourself honestly.",
+      "cards": [
+        {"art": "der", "de": "Studiengang", "pl": "die Studiengänge", "en": "degree programme", "ex": "Mein Studiengang heißt Kognitionswissenschaft."},
+        {"art": "die", "de": "Hausarbeit", "pl": "die Hausarbeiten", "en": "term paper", "ex": "Bis Freitag muss ich meine Hausarbeit abgeben."},
+        {"art": "die", "de": "Frist", "pl": "die Fristen", "en": "deadline", "ex": "Die Frist endet am Montag um Mitternacht."},
+        {"art": "das", "de": "Semester", "pl": "die Semester", "en": "semester", "ex": "Ich bin im dritten Semester."},
+        {"art": "der", "de": "Abschluss", "pl": "die Abschlüsse", "en": "degree, qualification", "ex": "Nach dem Abschluss möchte ich in Deutschland bleiben."},
+        {"art": "die", "de": "Erfahrung", "pl": "die Erfahrungen", "en": "experience", "ex": "Ich habe schon drei Jahre Erfahrung mit KI."},
+        {"art": "die", "de": "Stelle", "pl": "die Stellen", "en": "job, position", "ex": "Die Firma hat eine neue Stelle ausgeschrieben."},
+        {"art": "das", "de": "Gehalt", "pl": "die Gehälter", "en": "salary", "ex": "Das Gehalt ist am Monatsende auf dem Konto."},
+        {"art": "der", "de": "Vertrag", "pl": "die Verträge", "en": "contract", "ex": "Mein Vertrag läuft bis Dezember."},
+        {"art": "", "de": "sich bewerben (um)", "pl": "bewirbt sich · hat sich beworben", "en": "to apply (for)", "ex": "Ich bewerbe mich um eine Stelle in Hamburg."},
+        {"art": "", "de": "verdienen", "pl": "verdient · hat verdient", "en": "to earn", "ex": "Als Werkstudent verdient man nicht viel."},
+        {"art": "", "de": "entwickeln", "pl": "entwickelt · hat entwickelt", "en": "to develop", "ex": "Ich entwickle KI-Modelle für unsere Kunden."},
+        {"art": "die", "de": "Teilzeit", "pl": "kein Plural · ↔ die Vollzeit", "en": "part-time", "ex": "Ich arbeite in Teilzeit, zwanzig Stunden pro Woche."},
+        {"art": "", "de": "anstrengend", "pl": "Adjektiv", "en": "exhausting, tiring", "ex": "Studium und Arbeit zusammen sind anstrengend."},
+        {"art": "", "de": "ausfallen", "pl": "fällt aus · ist ausgefallen", "en": "to be cancelled", "ex": "Die Vorlesung fällt heute aus."}
+      ],
+      "items": [
+        {"type": "text", "id": "v1", "n": "1", "q": "„Ich arbeite nur zwanzig Stunden pro Woche, also in ______.“", "ph": "das Wort"},
+        {"type": "text", "id": "v2", "n": "2", "q": "„Bis Freitag muss ich meine ______ für das Seminar schreiben.“ (term paper)", "ph": "das Wort"},
+        {"type": "text", "id": "v3", "n": "3", "q": "„Ich ______ KI-Modelle für eine Firma.“ (to develop, ich-form)", "ph": "das Verb"},
+        {"type": "text", "id": "v4", "n": "4", "q": "„Nach meinem ______ möchte ich in Deutschland arbeiten.“ (degree)", "ph": "das Wort"},
+        {"type": "text", "id": "v5", "n": "5", "q": "Translate: <i>I am applying for a job in Hamburg.</i>", "ph": "Ich …"}
+      ]
+    },
+    {
+      "id": "hoeren", "name": "Hören", "min": 10,
+      "intro": "B1 Hören, Teil 3: an everyday conversation. <b>In the exam you hear this part only once.</b> You may listen twice today, but try to answer after the first time. Read the 6 statements first!",
+      "audio": [
+        {"id": "h1", "title": "Gespräch an der Uni", "kind": "Sie hören ein Gespräch zwischen Jana und Tarek.", "max": 2,
+         "lines": [
+           {"who": "Jana", "voice": "airy", "text": "Hallo Tarek! Du siehst aber müde aus. Alles okay?"},
+           {"who": "Tarek", "voice": "rounded", "text": "Ach, ich habe heute Nacht nur vier Stunden geschlafen, weil ich meine Hausarbeit fertig schreiben musste. Die Frist war heute um Mitternacht."},
+           {"who": "Jana", "voice": "airy", "text": "Oh nein! Und, hast du es geschafft?"},
+           {"who": "Tarek", "voice": "rounded", "text": "Ja, zum Glück. Aber jetzt bin ich total kaputt. Und heute Nachmittag muss ich auch noch arbeiten."},
+           {"who": "Jana", "voice": "airy", "text": "Arbeitest du immer noch im Café?"},
+           {"who": "Tarek", "voice": "rounded", "text": "Nein, seit Oktober arbeite ich als Werkstudent bei einer Softwarefirma, zwanzig Stunden pro Woche. Das Gehalt ist viel besser, und ich sammle Erfahrung für später."},
+           {"who": "Jana", "voice": "airy", "text": "Das klingt super. Ich suche auch etwas. Ich glaube, dass ich mit einem Job in meinem Fach nach dem Studium bessere Chancen habe."},
+           {"who": "Tarek", "voice": "rounded", "text": "Bestimmt. Meine Firma sucht übrigens noch eine Werkstudentin im Marketing. Soll ich dir den Link schicken?"},
+           {"who": "Jana", "voice": "airy", "text": "Ja, gern! Dann bewerbe ich mich sofort. Danke dir!"}
+         ],
+         "items": [
+           {"type": "rf", "id": "h1", "n": "1", "q": "Tarek hat letzte Nacht wenig geschlafen."},
+           {"type": "rf", "id": "h2", "n": "2", "q": "Tarek muss die Hausarbeit heute noch schreiben."},
+           {"type": "rf", "id": "h3", "n": "3", "q": "Tarek hat heute keine Arbeit mehr."},
+           {"type": "rf", "id": "h4", "n": "4", "q": "Tarek arbeitet seit Oktober im Café."},
+           {"type": "rf", "id": "h5", "n": "5", "q": "Jana möchte einen Job, der zu ihrem Studium passt."},
+           {"type": "rf", "id": "h6", "n": "6", "q": "Tarek schickt Jana Informationen über eine Stelle."}
+         ]}
+      ]
+    },
+    {
+      "id": "lesen", "name": "Lesen", "min": 10,
+      "intro": "B1 Lesen, Teil 4: people give their opinion. Is the person <b>for</b> the idea? <b>Ja</b> or <b>Nein</b>. Tip: watch for <i>aber, trotzdem, ehrlich gesagt</i>. The opinion often comes at the end!",
+      "reading": "<h2>Leserbriefe: Sollen Studierende neben dem Studium arbeiten?</h2><p class='blogmeta'>In unserer letzten Ausgabe haben wir gefragt, ob Studierende neben dem Studium jobben sollen. Hier sind einige Antworten.</p><p><b>1 · Lukas, 22:</b> Ich arbeite zehn Stunden pro Woche in einer Bäckerei. Natürlich bin ich manchmal müde. Aber ich finde, dass man so lernt, seine Zeit gut zu planen. Außerdem muss ich meine Eltern nicht um Geld bitten.</p><p><b>2 · Sevgi, 24:</b> Viele meiner Freunde arbeiten so viel, dass sie ihr Studium nicht rechtzeitig schaffen. Das Studium ist ein Vollzeitjob. Wer nebenbei arbeitet, verliert wertvolle Zeit.</p><p><b>3 · Marco, 27:</b> Ich habe während meines Studiums als Werkstudent gearbeitet. Deshalb habe ich nach dem Abschluss sofort eine Stelle bekommen. Arbeitgeber wollen Erfahrung sehen, nicht nur gute Noten.</p><p><b>4 · Helga, 58:</b> Mein Sohn wollte unbedingt jobben. Ich habe Nein gesagt, weil ich möchte, dass er sich auf seine Prüfungen konzentriert. Wir unterstützen ihn, solange er studiert.</p><p><b>5 · Amir, 25:</b> Ohne meinen Job könnte ich in Deutschland gar nicht studieren, weil das Leben hier so teuer ist. Im Semester arbeite ich nur wenig, aber in den Ferien arbeite ich Vollzeit. Für mich funktioniert das gut.</p><p><b>6 · Julia, 21:</b> Ein kleiner Job klingt erst mal gut. Ehrlich gesagt bringt er aber wenig: Man verdient nicht viel und hat keine Zeit mehr für Freunde und Sport. Ich würde es niemandem empfehlen.</p>",
+      "items": [
+        {"type": "mc", "id": "l1", "n": "7", "q": "Lukas: Ist er dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]},
+        {"type": "mc", "id": "l2", "n": "8", "q": "Sevgi: Ist sie dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]},
+        {"type": "mc", "id": "l3", "n": "9", "q": "Marco: Ist er dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]},
+        {"type": "mc", "id": "l4", "n": "10", "q": "Helga: Ist sie dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]},
+        {"type": "mc", "id": "l5", "n": "11", "q": "Amir: Ist er dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]},
+        {"type": "mc", "id": "l6", "n": "12", "q": "Julia: Ist sie dafür?", "row": true, "o": [["J","Ja"],["N","Nein"]]}
+      ]
+    },
+    {
+      "id": "schreiben", "name": "Schreiben", "min": 15,
+      "intro": "<b>Lesson from yesterday:</b> answer <b>all three points</b>, with at least 2 sentences each. Before you write, note 1, 2, 3 in your head. Then write, and then <b>check for 5 minutes</b>.",
+      "blocks": [
+        "<h2>Aufgabe</h2><p>Your friend <b>Sophie</b> from your German course writes: <i>„Erzähl mal, warum studierst du eigentlich in Deutschland? Wie gefällt es dir?“</i></p><p>Write her an email (<b>60–80 words</b>):</p><ol><li><b>Why</b> are you studying in Germany? (Use <b>weil</b> at least once.)</li><li>What do you like about your studies and work, and what is hard? (Use <b>Ich finde, dass …</b> at least once.)</li><li>Invite Sophie for a coffee and suggest a day and time. (Use <b>deshalb</b> or <b>denn</b> at least once.)</li></ol><p class='tiny'>Sophie is a friend, so use <b>du</b>. Nouns with a capital letter. No English words. If you don't know a word, write the sentence differently.</p>"
+      ],
+      "items": [
+        {"type": "write", "id": "s1", "n": "S", "q": "Ihre E-Mail an Sophie", "label": "An: sophie.m@mail.de · Betreff: Warum Deutschland?", "min": 60, "max": 80, "ph": "Liebe Sophie, …"},
+        {"type": "check", "id": "s1check", "q": "Check it (be honest: tick only what is really true):", "o": ["Point 1: at least 2 sentences, with weil","Point 2: at least 2 sentences, with Ich finde, dass …","Point 3: invitation with day and time","Verb at the END after weil and dass","Verb in POSITION 2 after deshalb, dann, am …","du the whole way through, capital letters, umlauts","No English words · 60–80 words"]}
+      ]
+    },
+    {
+      "id": "sprechen", "name": "Sprechen", "min": 10,
+      "intro": "Press 🔊, then answer with 🎙. <b>Today's goal:</b> in every answer use <b>weil</b> or <b>dass</b> at least once, with the verb at the end. Speak a little more slowly than yesterday. Accuracy matters more than speed.",
+      "items": [
+        {"type": "speak", "id": "sp1", "q": "Warum lernen Sie Deutsch? Nennen Sie drei Gründe.", "hint": "Use all three: … weil … · … denn … · Deshalb …", "timer": 60},
+        {"type": "speak", "id": "sp2", "q": "Was gefällt Ihnen an Ihrer Arbeit als KI-Ingenieur, und was ist anstrengend?", "hint": "Ich finde, dass … · Mir gefällt, dass … · Anstrengend ist, dass …"},
+        {"type": "speak", "id": "sp3", "q": "Ihre Frau fragt: „Warum kommst du heute so spät nach Hause?“ Erklären Sie es ihr.", "sayText": "Warum kommst du heute so spät nach Hause?", "hint": "Weil die Besprechung … · weil ich noch … musste"},
+        {"type": "speak", "id": "sp4", "q": "Was denken Sie: Sollen Studierende neben dem Studium arbeiten? Sagen Sie Ihre Meinung und begründen Sie sie.", "hint": "B1 Sprechen, Teil 3. Ich bin der Meinung, dass … · Einerseits … andererseits … · Für mich ist wichtig, dass …", "timer": 60}
+      ]
+    },
+    {
+      "id": "abschluss", "name": "Abschluss", "min": 5, "final": true,
+      "intro": "Today's rule in one line, and your task for this evening.",
+      "blocks": [
+        "<h2>Merksatz</h2><p class='formula'>weil / dass → verb at the END · denn → normal order · deshalb → verb right after</p><div class='ex'><div><span class='de' data-saytext='Ich lerne heute Abend, weil ich morgen eine Prüfung habe.'>Ich lerne heute Abend, weil ich morgen eine Prüfung <b class='v'>habe</b>.</span></div><div><span class='de' data-saytext='Ich habe morgen eine Prüfung. Deshalb lerne ich heute Abend.'>Ich habe morgen eine Prüfung. Deshalb <b class='v'>lerne</b> ich heute Abend.</span></div></div><h3>Your 5-minute task for this evening</h3><p>Write <b>5 sentences</b> about today, and say them out loud. At least <b>3 with weil or dass</b> and <b>1 with deshalb</b>. For example: <i>Heute war ich müde, weil … · Ich glaube, dass … · Deshalb …</i></p>"
+      ],
+      "items": [
+        {"type": "write", "id": "abend", "n": "★", "q": "5 Sätze mit weil, dass und deshalb", "label": "Abendaufgabe", "min": 30, "max": 70, "ph": "Heute …"},
+        {"type": "check", "id": "selbst", "q": "How confident are you today?", "o": ["I put the verb at the end after weil and dass","I know the difference between weil, denn and deshalb","I can put a separable verb at the end (weil ich früh aufstehe)","I can start a sentence with a weil clause (Weil …, verb …)","I have learned at least 10 of the 15 words"]}
+      ]
+    }
+  ]
+}

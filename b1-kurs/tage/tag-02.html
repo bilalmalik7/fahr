@@ -1,0 +1,346 @@
+<title>B1-Kurs Tag 2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout: a daily lesson workbook. Sticky header with day progress and section stepper, one working column per section. */
+:root{
+  --bg:#eef1f4; --paper:#ffffff; --ink:#18212b; --muted:#5b6673; --line:#d5dbe2;
+  --accent:#1f4fa3; --accent-soft:#e3ebf8; --accent-ink:#ffffff;
+  --graphite:#2b3036; --ok:#1d7a4c; --ok-soft:#dff2e8; --warn:#a35b00; --warn-soft:#fbefdc; --bad:#b3261e; --bad-soft:#fdecec;
+  --hi:#fff3b0;
+  --shadow:0 1px 2px rgba(20,30,45,.06),0 4px 14px rgba(20,30,45,.06);
+  --f-display:"Archivo",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,monospace; --f-hand:"Caveat","Comic Sans MS",cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --paper:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2d3743;
+  --accent:#7ea6ec; --accent-soft:#1f2c42; --accent-ink:#0d1420;
+  --graphite:#dfe4ea; --ok:#5cc792; --ok-soft:#163327; --warn:#f0a948; --warn-soft:#3a2a12; --bad:#f2867e; --bad-soft:#3a1d1b;
+  --hi:#4a4220; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --paper:#1a2129; --ink:#e7ecf1; --muted:#9aa6b2; --line:#2d3743;
+  --accent:#7ea6ec; --accent-soft:#1f2c42; --accent-ink:#0d1420;
+  --graphite:#dfe4ea; --ok:#5cc792; --ok-soft:#163327; --warn:#f0a948; --warn-soft:#3a2a12; --bad:#f2867e; --bad-soft:#3a1d1b;
+  --hi:#4a4220; --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 14px rgba(0,0,0,.25); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--paper)}
+button{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.2}
+.wrap{max-width:1000px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.ring{width:40px;height:40px;flex:none}
+.ring circle{fill:none;stroke-width:4}
+.ring .bgc{stroke:var(--line)}.ring .fg{stroke:var(--accent);stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;animation:ring 1.2s ease both}
+@keyframes ring{from{stroke-dashoffset:113}}
+.ring text{font:700 11px var(--f-mono);fill:var(--ink)}
+.brand b{font-family:var(--f-display);font-size:16px;display:block}
+.brand small{color:var(--muted);font-size:13px;display:block}
+.meta{margin-left:auto;display:flex;gap:8px;align-items:center}
+.chip{font-family:var(--f-mono);font-size:13px;border:1px solid var(--line);border-radius:6px;padding:5px 9px;color:var(--muted);white-space:nowrap}
+.chip.on{color:var(--ok);border-color:var(--ok)}
+.steps{display:flex;gap:4px;padding-bottom:10px;overflow-x:auto;scrollbar-width:thin}
+.step{flex:1 0 82px;border:0;background:none;text-align:left;padding:6px 2px 0;cursor:pointer;color:var(--muted)}
+.step .rail{height:4px;border-radius:2px;background:var(--line);overflow:hidden}
+.step .rail i{display:block;height:100%;width:0;background:var(--accent);transition:width .5s}
+.step.active .rail i{width:100%}.step.done .rail i{width:100%;background:var(--ok)}
+.step span{display:block;font-size:12.5px;margin-top:5px;white-space:nowrap}
+.step.active{color:var(--ink);font-weight:600}
+.step.done span::after{content:" ✓";color:var(--ok);font-weight:700}
+.step:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+main{padding-block:26px 60px}
+.sec{display:none;flex-direction:column;gap:20px}
+.sec.show{display:flex;animation:enter .45s cubic-bezier(.2,.7,.2,1)}
+@keyframes enter{from{opacity:.25;transform:translateY(12px)}to{opacity:1;transform:none}}
+.shead .eb{font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.shead h1{font-size:clamp(26px,4vw,34px);font-weight:800}
+.shead p{color:var(--muted);margin:6px 0 0;max-width:70ch}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:var(--shadow);min-width:0}
+.card p{margin:0 0 10px}.card p:last-child{margin-bottom:0}
+.card h2{font-size:20px;margin-bottom:10px}.card h3{font-size:16px;margin:14px 0 6px}
+.prose{max-width:72ch}
+.formula{font-family:var(--f-mono);font-size:15px;background:var(--accent-soft);color:var(--accent);border-radius:8px;padding:10px 14px;overflow-x:auto}
+.pos{width:100%;border-collapse:collapse;font-size:16px}
+.pos th{font:500 11px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--ink)}
+.pos td{padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+.pos td.v{font-weight:700;color:var(--accent);background:var(--accent-soft)}
+.pos td.e{font-weight:700;color:var(--ok)}
+.tw{overflow-x:auto}
+.ex{display:flex;flex-direction:column;gap:6px;margin:8px 0}
+.ex div{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.ex .de{font-weight:600}.ex .en{color:var(--muted);font-size:15px}
+.ex b.v{color:var(--accent);background:var(--accent-soft);padding:0 4px;border-radius:4px}
+.tip{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 8px 8px 0;padding:10px 14px}
+.tip b:first-child{color:var(--warn)}
+.say{border:1px solid var(--line);background:var(--paper);border-radius:999px;width:30px;height:30px;display:inline-grid;place-items:center;cursor:pointer;color:var(--accent);flex:none;vertical-align:middle}
+.say svg{width:15px;height:15px;fill:currentColor}
+.say:hover{background:var(--accent-soft)}
+.q{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.qt{display:flex;gap:10px;font-weight:600;align-items:flex-start}
+.qn{flex:none;min-width:26px;height:26px;padding:0 6px;border-radius:13px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:500 12px/1 var(--f-mono);margin-top:1px}
+.qt .hint{display:block;font-weight:400;color:var(--muted);font-size:15px}
+.opts{display:flex;flex-direction:column;gap:4px;padding-left:36px}
+.opts.row{flex-direction:row;flex-wrap:wrap;gap:4px 22px}
+.opt{display:flex;gap:10px;align-items:flex-start;cursor:pointer;padding:5px 8px;border-radius:6px}
+.opt:hover{background:var(--accent-soft)}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:none;width:22px;height:22px;border:1.6px solid var(--muted);border-radius:3px;margin-top:2px;display:grid;place-items:center;background:var(--paper)}
+.box svg{width:18px;height:18px}
+.box path{fill:none;stroke:var(--graphite);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:30;stroke-dashoffset:30;transition:stroke-dashoffset .28s}
+.box path+path{transition-delay:.12s}
+.opt input:checked+.box{border-color:var(--graphite)}
+.opt input:checked+.box path{stroke-dashoffset:0}
+.opt input:focus-visible+.box{outline:2px solid var(--accent);outline-offset:2px}
+.letter{font-family:var(--f-mono);font-weight:500;margin-right:4px}
+.line{display:flex;gap:8px;align-items:center;padding-left:36px;flex-wrap:wrap}
+.line input{flex:1 1 260px;min-width:0;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
+.line input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.tiles{display:flex;flex-wrap:wrap;gap:8px;padding-left:36px}
+.tile{border:1.5px solid var(--accent);background:var(--paper);color:var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer;font-weight:600;transition:transform .12s,opacity .2s}
+.tile:hover{transform:translateY(-2px)}
+.tile.used{opacity:.25;pointer-events:none}
+.built{margin-left:36px;min-height:44px;border:1.5px dashed var(--line);border-radius:8px;padding:9px 12px;display:flex;justify-content:space-between;gap:10px;align-items:center;font-weight:600}
+.built.has{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:14px;padding:0}
+.pad{background:var(--paper);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.pad:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.ph{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);font-size:14px;color:var(--muted)}
+textarea{width:100%;border:0;background:transparent;color:var(--ink);font:inherit;line-height:1.7;padding:12px 14px;resize:vertical;min-height:110px;display:block}
+.lined textarea{min-height:220px;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(1.7em - 1px),var(--line) calc(1.7em - 1px),var(--line) 1.7em);background-attachment:local;background-position:0 12px}
+.wc{font-family:var(--f-mono);font-variant-numeric:tabular-nums;padding:2px 8px;border-radius:5px;background:var(--bg)}
+.wc.ok{background:var(--ok-soft);color:var(--ok)}.wc.over{background:var(--warn-soft);color:var(--warn)}
+.ghost{padding:0 14px 10px;color:var(--muted);font-style:italic;font-size:15px}.ghost:empty{display:none}
+.ibtn{flex:none;border:1px solid var(--line);background:var(--paper);border-radius:999px;width:32px;height:32px;display:grid;place-items:center;cursor:pointer;color:var(--accent)}
+.ibtn svg{width:16px;height:16px;fill:currentColor}
+.ibtn.rec{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1.2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(179,38,30,.45)}100%{box-shadow:0 0 0 10px rgba(179,38,30,0)}}
+.examiner{display:flex;gap:12px;align-items:flex-start}
+.avatar{flex:none;width:40px;height:40px;border-radius:50%;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font:700 14px/1 var(--f-display)}
+.bubble{background:var(--paper);border:1px solid var(--line);border-radius:4px 14px 14px 14px;padding:10px 14px;display:flex;gap:10px;align-items:flex-start;min-width:0}
+.bubble p{margin:0}
+.timer{font-family:var(--f-mono);font-size:14px;padding:4px 10px;border-radius:6px;background:var(--accent-soft);color:var(--accent);border:0;cursor:pointer;font-variant-numeric:tabular-nums}
+.timer.run{background:var(--warn-soft);color:var(--warn)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.fc{display:block;width:100%;perspective:900px;min-height:170px;cursor:pointer;border:0;background:none;padding:0;text-align:left}
+.fc .in{position:relative;height:100%;min-height:170px;transition:transform .5s;transform-style:preserve-3d}
+.fc.flip .in{transform:rotateY(180deg)}
+.fc .f,.fc .b{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;border:1px solid var(--line);background:var(--paper);padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow)}
+.fc .b{transform:rotateY(180deg);background:var(--accent-soft)}
+.fc .art{font:500 12px var(--f-mono);color:var(--muted)}
+.fc .w{font:700 20px/1.2 var(--f-display)}
+.fc .pl{font-size:14px;color:var(--muted)}
+.fc .en2{font-size:15px;color:var(--muted)}
+.fc .exs{font-size:15px;font-weight:600}
+.fc .turn{margin-top:auto;font-size:12px;color:var(--muted)}
+.rate{display:flex;gap:6px;margin-top:8px}
+.rate button{flex:1;border:1px solid var(--line);background:var(--paper);border-radius:6px;padding:4px;font-size:13px;cursor:pointer}
+.rate button.sel.y{background:var(--ok-soft);color:var(--ok);border-color:var(--ok)}
+.rate button.sel.n{background:var(--warn-soft);color:var(--warn);border-color:var(--warn)}
+.audio{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
+.play{width:54px;height:54px;border-radius:50%;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer;display:grid;place-items:center;flex:none}
+.play:disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+.play svg{width:22px;height:22px;fill:currentColor}
+.wave{display:flex;align-items:center;gap:3px;height:32px;flex:1 1 140px;min-width:110px}
+.wave i{flex:1;max-width:5px;background:var(--line);border-radius:3px;height:20%}
+.audio.playing .wave i{background:var(--accent);animation:barw 1s ease-in-out infinite}
+@keyframes barw{0%,100%{height:18%}50%{height:95%}}
+.ainfo{font-size:14px;color:var(--muted)}.ainfo b{color:var(--ink)}
+.dots{display:flex;gap:5px;margin-top:4px}.dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--accent)}.dots i.u{background:var(--accent)}
+.transcript{background:var(--warn-soft);border-radius:8px;padding:12px 14px;font-size:15px}
+.reading{font-size:17px;line-height:1.75;max-width:68ch}
+.reading h2{font-size:22px}
+.blogmeta{font-size:14px;color:var(--muted);margin-bottom:10px}
+.checks{display:flex;flex-direction:column;gap:6px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:8px;padding:11px 18px;font-weight:700;cursor:pointer;background:var(--accent);color:var(--accent-ink)}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghostb{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn:focus-visible,.ibtn:focus-visible,.play:focus-visible,.say:focus-visible,.tile:focus-visible,.fc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.nav{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding-top:6px}
+.donebox{text-align:center;padding:26px}
+.donebox .big{font:800 clamp(26px,4vw,36px)/1.2 var(--f-display);margin:8px 0}
+.stamp{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--ok);color:var(--ok);border-radius:6px;padding:4px 10px;font:700 13px/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;transform:rotate(-3deg);animation:stamp .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes stamp{from{transform:rotate(-3deg) scale(1.8);opacity:0}to{transform:rotate(-3deg) scale(1);opacity:1}}
+.chatcue{background:var(--accent-soft);border-radius:10px;padding:14px 16px}
+.chatcue code{font-family:var(--f-mono);font-weight:500;background:var(--paper);padding:2px 6px;border-radius:4px}
+.tiny{font-size:13px;color:var(--muted)}
+footer{padding-block:18px 40px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+@media (max-width:560px){body{font-size:16px}.opts,.line,.tiles{padding-left:0}.built{margin-left:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap bar">
+    <div class="brand">
+      <svg class="ring" viewBox="0 0 40 40" aria-hidden="true"><circle class="bgc" cx="20" cy="20" r="18"/><circle class="fg" id="ringfg" cx="20" cy="20" r="18" stroke-dasharray="113" stroke-dashoffset="113"/><text x="20" y="24" text-anchor="middle" id="ringtx">1</text></svg>
+      <div><b id="hTitle">B1‑Kurs</b><small id="hSub">Tag 1 von 60</small></div>
+    </div>
+    <div class="meta"><span class="chip" id="sync">offline</span></div>
+  </div>
+  <nav class="wrap steps" id="steps" aria-label="Abschnitte"></nav>
+</header>
+<main class="wrap" id="main"></main>
+<footer class="wrap"><span class="tiny">B1‑Kurs für Bilal · Lernplan A2 → B1 in 60 Tagen</span><span class="tiny" id="saved"></span></footer>
+
+<script>
+const LESSON={"day": 2, "title": "Nebensätze mit weil und dass", "topic": "Studium und Beruf", "minutes": 70, "sections": [{"id": "warmup", "name": "Aufwärmen", "min": 5, "intro": "These sentences are <b>your mistakes from Tag 1<\/b>. Correct each sentence, then fill in 3 words from yesterday.", "items": [{"type": "text", "id": "w1", "n": "1", "q": "Um 12 Uhr ich fahre ins Büro.", "ph": "Um 12 Uhr …"}, {"type": "text", "id": "w2", "n": "2", "q": "Deshalb ich koche gern am Wochenende.", "ph": "Deshalb …"}, {"type": "text", "id": "w3", "n": "3", "q": "Morgen stehe ich muss früh auf.", "hint": "Two verbs: which goes in position 2, and which goes to the end?", "ph": "Morgen …"}, {"type": "text", "id": "w4", "n": "4", "q": "Ich dusche und Frühstück.", "hint": "Frühstück is a noun. You need the verb.", "ph": "Ich dusche und …"}, {"type": "text", "id": "w5", "n": "5", "q": "Meine Vater ist Landwirt, und meine Hobby ist Cricket.", "hint": "der Vater, das Hobby", "ph": "… Vater …"}, {"type": "text", "id": "wv1", "n": "6", "q": "„Nach dem ______ koche ich mit meiner Frau.“ (end of the working day)", "ph": "das Wort"}, {"type": "text", "id": "wv2", "n": "7", "q": "„Die Vorlesung fällt heute ______.“ (is cancelled)", "ph": "das Wort"}, {"type": "text", "id": "wv3", "n": "8", "q": "„Heute muss ich noch drei Aufgaben ______.“ (get done)", "ph": "das Wort"}]}, {"id": "grammatik", "name": "Grammatik", "min": 15, "intro": "Yesterday: in a main clause the verb is in <b>position 2<\/b>. Today: in a <b>subordinate clause<\/b> with <i>weil<\/i> or <i>dass<\/i>, the verb goes <b>to the very end<\/b> (your error E2).", "blocks": ["<h2>The rule: in the Nebensatz the verb goes to the end<\/h2><div class='formula'>Hauptsatz , weil / dass + Subjekt + … + VERB<\/div><div class='tw'><table class='pos'><thead><tr><th>Hauptsatz<\/th><th>Connector<\/th><th>Subject + middle<\/th><th>End<\/th><\/tr><\/thead><tbody><tr><td>Ich lerne Deutsch,<\/td><td>weil<\/td><td>ich in Osnabrück<\/td><td class='e'>wohne.<\/td><\/tr><tr><td>Ich glaube,<\/td><td>dass<\/td><td>KI sehr wichtig<\/td><td class='e'>ist.<\/td><\/tr><tr><td>Ich bin müde,<\/td><td>weil<\/td><td>ich um sechs Uhr<\/td><td class='e'>aufstehe.<\/td><\/tr><tr><td>Ich komme später,<\/td><td>weil<\/td><td>ich noch<\/td><td class='e'>arbeiten muss.<\/td><\/tr><tr><td>Sie war traurig,<\/td><td>weil<\/td><td>ich nicht<\/td><td class='e'>gekommen bin.<\/td><\/tr><\/tbody><\/table><\/div><p><b>Always a comma<\/b> before <i>weil<\/i> and <i>dass<\/i>. A separable verb joins back together (<i>aufstehe<\/i>). With two verbs, the <b>conjugated one goes last<\/b>: <i>arbeiten <u>muss<\/u><\/i>, <i>gekommen <u>bin<\/u><\/i>.<\/p>", "<h2>dass: the most useful word for giving your opinion<\/h2><p><i>dass<\/i> usually comes after verbs of thinking and saying. In the B1 exam you need these phrases all the time:<\/p><div class='ex'><div><span class='de' data-saytext='Ich finde, dass die Arbeit im Homeoffice praktisch ist.'>Ich finde, dass die Arbeit im Homeoffice praktisch <b class='v'>ist<\/b>.<\/span><\/div><div><span class='de' data-saytext='Ich hoffe, dass meine Familie uns im Sommer besucht.'>Ich hoffe, dass meine Familie uns im Sommer <b class='v'>besucht<\/b>.<\/span><\/div><div><span class='de' data-saytext='Es ist wichtig, dass man jeden Tag ein bisschen lernt.'>Es ist wichtig, dass man jeden Tag ein bisschen <b class='v'>lernt<\/b>.<\/span><\/div><div><span class='de' data-saytext='Meine Frau sagt, dass ich zu viel arbeite.'>Meine Frau sagt, dass ich zu viel <b class='v'>arbeite<\/b>.<\/span><\/div><\/div>", "<h2>Three ways to give a reason. Learn all three!<\/h2><div class='tw'><table class='pos'><thead><tr><th>Word<\/th><th>Position<\/th><th>Example<\/th><\/tr><\/thead><tbody><tr><td><b>weil<\/b><\/td><td>verb at the END<\/td><td>Ich lerne Deutsch, weil ich hier <b>arbeite<\/b>.<\/td><\/tr><tr><td><b>denn<\/b><\/td><td>position 0, normal order<\/td><td>Ich lerne Deutsch, denn ich <b>arbeite<\/b> hier.<\/td><\/tr><tr><td><b>deshalb<\/b><\/td><td>position 1, verb comes NEXT<\/td><td>Ich arbeite hier. Deshalb <b>lerne<\/b> ich Deutsch.<\/td><\/tr><\/tbody><\/table><\/div><p class='tip'><b>Bonus (B1 level):<\/b> the weil clause can also come <b>first<\/b>. Then the whole clause counts as position 1, and two verbs meet in the middle: <i>Weil es <u>regnet<\/u>, <u>spielen<\/u> wir heute kein Cricket.<\/i> Verb, comma, verb.<\/p>"], "items": [{"type": "mc", "id": "g1", "n": "1", "q": "Ich komme heute später, weil …", "o": [["a", "ich habe eine Besprechung."], ["b", "ich eine Besprechung habe."], ["c", "habe ich eine Besprechung."]]}, {"type": "mc", "id": "g2", "n": "2", "q": "Ich glaube, dass …", "o": [["a", "KI ist sehr wichtig."], ["b", "ist KI sehr wichtig."], ["c", "KI sehr wichtig ist."]]}, {"type": "mc", "id": "g3", "n": "3", "q": "Ich bin müde, denn …", "o": [["a", "ich habe schlecht geschlafen."], ["b", "ich schlecht geschlafen habe."], ["c", "habe ich schlecht geschlafen."]]}, {"type": "mc", "id": "g4", "n": "4", "q": "Weil es regnet, …", "o": [["a", "wir spielen kein Cricket."], ["b", "spielen wir kein Cricket."], ["c", "wir kein Cricket spielen."]]}, {"type": "order", "id": "g5", "n": "5", "q": "Put the words in order.", "hint": "Start with „Ich lerne jeden Tag,“", "tiles": ["machen möchte.", "weil", "Ich lerne jeden Tag,", "die B1-Prüfung", "ich"]}, {"type": "order", "id": "g6", "n": "6", "q": "Put the words in order.", "hint": "Start with „Meine Frau sagt,“", "tiles": ["arbeite.", "zu viel", "dass", "Meine Frau sagt,", "ich"]}, {"type": "order", "id": "g7", "n": "7", "q": "Put the words in order.", "hint": "Careful: separable verb!", "tiles": ["um sechs Uhr", "Ich bin müde,", "aufstehe.", "ich", "weil"]}, {"type": "text", "id": "g8", "n": "8", "q": "Join the sentences with <b>weil<\/b>: <i>Ich gehe heute nicht ins Büro. Ich habe Homeoffice.<\/i>", "ph": "Ich gehe heute nicht ins Büro, weil …"}, {"type": "text", "id": "g9", "n": "9", "q": "Join the sentences with <b>dass<\/b>: <i>Ich hoffe: Meine Familie besucht uns im Sommer.<\/i>", "ph": "Ich hoffe, dass …"}, {"type": "text", "id": "g10", "n": "10", "q": "Rewrite with <b>deshalb<\/b>: <i>Ich habe morgen eine Prüfung. Ich lerne heute Abend.<\/i>", "hint": "deshalb is position 1! Then the verb comes straight after.", "ph": "Ich habe morgen eine Prüfung. Deshalb …"}]}, {"id": "wortschatz", "name": "Wortschatz", "min": 10, "intro": "15 words for your studies and your job. Tap a card to turn it over, 🔊 to hear it, then rate yourself honestly.", "cards": [{"art": "der", "de": "Studiengang", "pl": "die Studiengänge", "en": "degree programme", "ex": "Mein Studiengang heißt Kognitionswissenschaft."}, {"art": "die", "de": "Hausarbeit", "pl": "die Hausarbeiten", "en": "term paper", "ex": "Bis Freitag muss ich meine Hausarbeit abgeben."}, {"art": "die", "de": "Frist", "pl": "die Fristen", "en": "deadline", "ex": "Die Frist endet am Montag um Mitternacht."}, {"art": "das", "de": "Semester", "pl": "die Semester", "en": "semester", "ex": "Ich bin im dritten Semester."}, {"art": "der", "de": "Abschluss", "pl": "die Abschlüsse", "en": "degree, qualification", "ex": "Nach dem Abschluss möchte ich in Deutschland bleiben."}, {"art": "die", "de": "Erfahrung", "pl": "die Erfahrungen", "en": "experience", "ex": "Ich habe schon drei Jahre Erfahrung mit KI."}, {"art": "die", "de": "Stelle", "pl": "die Stellen", "en": "job, position", "ex": "Die Firma hat eine neue Stelle ausgeschrieben."}, {"art": "das", "de": "Gehalt", "pl": "die Gehälter", "en": "salary", "ex": "Das Gehalt ist am Monatsende auf dem Konto."}, {"art": "der", "de": "Vertrag", "pl": "die Verträge", "en": "contract", "ex": "Mein Vertrag läuft bis Dezember."}, {"art": "", "de": "sich bewerben (um)", "pl": "bewirbt sich · hat sich beworben", "en": "to apply (for)", "ex": "Ich bewerbe mich um eine Stelle in Hamburg."}, {"art": "", "de": "verdienen", "pl": "verdient · hat verdient", "en": "to earn", "ex": "Als Werkstudent verdient man nicht viel."}, {"art": "", "de": "entwickeln", "pl": "entwickelt · hat entwickelt", "en": "to develop", "ex": "Ich entwickle KI-Modelle für unsere Kunden."}, {"art": "die", "de": "Teilzeit", "pl": "kein Plural · ↔ die Vollzeit", "en": "part-time", "ex": "Ich arbeite in Teilzeit, zwanzig Stunden pro Woche."}, {"art": "", "de": "anstrengend", "pl": "Adjektiv", "en": "exhausting, tiring", "ex": "Studium und Arbeit zusammen sind anstrengend."}, {"art": "", "de": "ausfallen", "pl": "fällt aus · ist ausgefallen", "en": "to be cancelled", "ex": "Die Vorlesung fällt heute aus."}], "items": [{"type": "text", "id": "v1", "n": "1", "q": "„Ich arbeite nur zwanzig Stunden pro Woche, also in ______.“", "ph": "das Wort"}, {"type": "text", "id": "v2", "n": "2", "q": "„Bis Freitag muss ich meine ______ für das Seminar schreiben.“ (term paper)", "ph": "das Wort"}, {"type": "text", "id": "v3", "n": "3", "q": "„Ich ______ KI-Modelle für eine Firma.“ (to develop, ich-form)", "ph": "das Verb"}, {"type": "text", "id": "v4", "n": "4", "q": "„Nach meinem ______ möchte ich in Deutschland arbeiten.“ (degree)", "ph": "das Wort"}, {"type": "text", "id": "v5", "n": "5", "q": "Translate: <i>I am applying for a job in Hamburg.<\/i>", "ph": "Ich …"}]}, {"id": "hoeren", "name": "Hören", "min": 10, "intro": "B1 Hören, Teil 3: an everyday conversation. <b>In the exam you hear this part only once.<\/b> You may listen twice today, but try to answer after the first time. Read the 6 statements first!", "audio": [{"id": "h1", "title": "Gespräch an der Uni", "kind": "Sie hören ein Gespräch zwischen Jana und Tarek.", "max": 2, "lines": [{"who": "Jana", "voice": "airy", "text": "Hallo Tarek! Du siehst aber müde aus. Alles okay?"}, {"who": "Tarek", "voice": "rounded", "text": "Ach, ich habe heute Nacht nur vier Stunden geschlafen, weil ich meine Hausarbeit fertig schreiben musste. Die Frist war heute um Mitternacht."}, {"who": "Jana", "voice": "airy", "text": "Oh nein! Und, hast du es geschafft?"}, {"who": "Tarek", "voice": "rounded", "text": "Ja, zum Glück. Aber jetzt bin ich total kaputt. Und heute Nachmittag muss ich auch noch arbeiten."}, {"who": "Jana", "voice": "airy", "text": "Arbeitest du immer noch im Café?"}, {"who": "Tarek", "voice": "rounded", "text": "Nein, seit Oktober arbeite ich als Werkstudent bei einer Softwarefirma, zwanzig Stunden pro Woche. Das Gehalt ist viel besser, und ich sammle Erfahrung für später."}, {"who": "Jana", "voice": "airy", "text": "Das klingt super. Ich suche auch etwas. Ich glaube, dass ich mit einem Job in meinem Fach nach dem Studium bessere Chancen habe."}, {"who": "Tarek", "voice": "rounded", "text": "Bestimmt. Meine Firma sucht übrigens noch eine Werkstudentin im Marketing. Soll ich dir den Link schicken?"}, {"who": "Jana", "voice": "airy", "text": "Ja, gern! Dann bewerbe ich mich sofort. Danke dir!"}], "items": [{"type": "rf", "id": "h1", "n": "1", "q": "Tarek hat letzte Nacht wenig geschlafen."}, {"type": "rf", "id": "h2", "n": "2", "q": "Tarek muss die Hausarbeit heute noch schreiben."}, {"type": "rf", "id": "h3", "n": "3", "q": "Tarek hat heute keine Arbeit mehr."}, {"type": "rf", "id": "h4", "n": "4", "q": "Tarek arbeitet seit Oktober im Café."}, {"type": "rf", "id": "h5", "n": "5", "q": "Jana möchte einen Job, der zu ihrem Studium passt."}, {"type": "rf", "id": "h6", "n": "6", "q": "Tarek schickt Jana Informationen über eine Stelle."}]}]}, {"id": "lesen", "name": "Lesen", "min": 10, "intro": "B1 Lesen, Teil 4: people give their opinion. Is the person <b>for<\/b> the idea? <b>Ja<\/b> or <b>Nein<\/b>. Tip: watch for <i>aber, trotzdem, ehrlich gesagt<\/i>. The opinion often comes at the end!", "reading": "<h2>Leserbriefe: Sollen Studierende neben dem Studium arbeiten?<\/h2><p class='blogmeta'>In unserer letzten Ausgabe haben wir gefragt, ob Studierende neben dem Studium jobben sollen. Hier sind einige Antworten.<\/p><p><b>1 · Lukas, 22:<\/b> Ich arbeite zehn Stunden pro Woche in einer Bäckerei. Natürlich bin ich manchmal müde. Aber ich finde, dass man so lernt, seine Zeit gut zu planen. Außerdem muss ich meine Eltern nicht um Geld bitten.<\/p><p><b>2 · Sevgi, 24:<\/b> Viele meiner Freunde arbeiten so viel, dass sie ihr Studium nicht rechtzeitig schaffen. Das Studium ist ein Vollzeitjob. Wer nebenbei arbeitet, verliert wertvolle Zeit.<\/p><p><b>3 · Marco, 27:<\/b> Ich habe während meines Studiums als Werkstudent gearbeitet. Deshalb habe ich nach dem Abschluss sofort eine Stelle bekommen. Arbeitgeber wollen Erfahrung sehen, nicht nur gute Noten.<\/p><p><b>4 · Helga, 58:<\/b> Mein Sohn wollte unbedingt jobben. Ich habe Nein gesagt, weil ich möchte, dass er sich auf seine Prüfungen konzentriert. Wir unterstützen ihn, solange er studiert.<\/p><p><b>5 · Amir, 25:<\/b> Ohne meinen Job könnte ich in Deutschland gar nicht studieren, weil das Leben hier so teuer ist. Im Semester arbeite ich nur wenig, aber in den Ferien arbeite ich Vollzeit. Für mich funktioniert das gut.<\/p><p><b>6 · Julia, 21:<\/b> Ein kleiner Job klingt erst mal gut. Ehrlich gesagt bringt er aber wenig: Man verdient nicht viel und hat keine Zeit mehr für Freunde und Sport. Ich würde es niemandem empfehlen.<\/p>", "items": [{"type": "mc", "id": "l1", "n": "7", "q": "Lukas: Ist er dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}, {"type": "mc", "id": "l2", "n": "8", "q": "Sevgi: Ist sie dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}, {"type": "mc", "id": "l3", "n": "9", "q": "Marco: Ist er dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}, {"type": "mc", "id": "l4", "n": "10", "q": "Helga: Ist sie dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}, {"type": "mc", "id": "l5", "n": "11", "q": "Amir: Ist er dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}, {"type": "mc", "id": "l6", "n": "12", "q": "Julia: Ist sie dafür?", "row": true, "o": [["J", "Ja"], ["N", "Nein"]]}]}, {"id": "schreiben", "name": "Schreiben", "min": 15, "intro": "<b>Lesson from yesterday:<\/b> answer <b>all three points<\/b>, with at least 2 sentences each. Before you write, note 1, 2, 3 in your head. Then write, and then <b>check for 5 minutes<\/b>.", "blocks": ["<h2>Aufgabe<\/h2><p>Your friend <b>Sophie<\/b> from your German course writes: <i>„Erzähl mal, warum studierst du eigentlich in Deutschland? Wie gefällt es dir?“<\/i><\/p><p>Write her an email (<b>60–80 words<\/b>):<\/p><ol><li><b>Why<\/b> are you studying in Germany? (Use <b>weil<\/b> at least once.)<\/li><li>What do you like about your studies and work, and what is hard? (Use <b>Ich finde, dass …<\/b> at least once.)<\/li><li>Invite Sophie for a coffee and suggest a day and time. (Use <b>deshalb<\/b> or <b>denn<\/b> at least once.)<\/li><\/ol><p class='tiny'>Sophie is a friend, so use <b>du<\/b>. Nouns with a capital letter. No English words. If you don't know a word, write the sentence differently.<\/p>"], "items": [{"type": "write", "id": "s1", "n": "S", "q": "Ihre E-Mail an Sophie", "label": "An: sophie.m@mail.de · Betreff: Warum Deutschland?", "min": 60, "max": 80, "ph": "Liebe Sophie, …"}, {"type": "check", "id": "s1check", "q": "Check it (be honest: tick only what is really true):", "o": ["Point 1: at least 2 sentences, with weil", "Point 2: at least 2 sentences, with Ich finde, dass …", "Point 3: invitation with day and time", "Verb at the END after weil and dass", "Verb in POSITION 2 after deshalb, dann, am …", "du the whole way through, capital letters, umlauts", "No English words · 60–80 words"]}]}, {"id": "sprechen", "name": "Sprechen", "min": 10, "intro": "Press 🔊, then answer with 🎙. <b>Today's goal:<\/b> in every answer use <b>weil<\/b> or <b>dass<\/b> at least once, with the verb at the end. Speak a little more slowly than yesterday. Accuracy matters more than speed.", "items": [{"type": "speak", "id": "sp1", "q": "Warum lernen Sie Deutsch? Nennen Sie drei Gründe.", "hint": "Use all three: … weil … · … denn … · Deshalb …", "timer": 60}, {"type": "speak", "id": "sp2", "q": "Was gefällt Ihnen an Ihrer Arbeit als KI-Ingenieur, und was ist anstrengend?", "hint": "Ich finde, dass … · Mir gefällt, dass … · Anstrengend ist, dass …"}, {"type": "speak", "id": "sp3", "q": "Ihre Frau fragt: „Warum kommst du heute so spät nach Hause?“ Erklären Sie es ihr.", "sayText": "Warum kommst du heute so spät nach Hause?", "hint": "Weil die Besprechung … · weil ich noch … musste"}, {"type": "speak", "id": "sp4", "q": "Was denken Sie: Sollen Studierende neben dem Studium arbeiten? Sagen Sie Ihre Meinung und begründen Sie sie.", "hint": "B1 Sprechen, Teil 3. Ich bin der Meinung, dass … · Einerseits … andererseits … · Für mich ist wichtig, dass …", "timer": 60}]}, {"id": "abschluss", "name": "Abschluss", "min": 5, "final": true, "intro": "Today's rule in one line, and your task for this evening.", "blocks": ["<h2>Merksatz<\/h2><p class='formula'>weil / dass → verb at the END · denn → normal order · deshalb → verb right after<\/p><div class='ex'><div><span class='de' data-saytext='Ich lerne heute Abend, weil ich morgen eine Prüfung habe.'>Ich lerne heute Abend, weil ich morgen eine Prüfung <b class='v'>habe<\/b>.<\/span><\/div><div><span class='de' data-saytext='Ich habe morgen eine Prüfung. Deshalb lerne ich heute Abend.'>Ich habe morgen eine Prüfung. Deshalb <b class='v'>lerne<\/b> ich heute Abend.<\/span><\/div><\/div><h3>Your 5-minute task for this evening<\/h3><p>Write <b>5 sentences<\/b> about today, and say them out loud. At least <b>3 with weil or dass<\/b> and <b>1 with deshalb<\/b>. For example: <i>Heute war ich müde, weil … · Ich glaube, dass … · Deshalb …<\/i><\/p>"], "items": [{"type": "write", "id": "abend", "n": "★", "q": "5 Sätze mit weil, dass und deshalb", "label": "Abendaufgabe", "min": 30, "max": 70, "ph": "Heute …"}, {"type": "check", "id": "selbst", "q": "How confident are you today?", "o": ["I put the verb at the end after weil and dass", "I know the difference between weil, denn and deshalb", "I can put a separable verb at the end (weil ich früh aufstehe)", "I can start a sentence with a weil clause (Weil …, verb …)", "I have learned at least 10 of the 15 words"]}]}]};
+(function(){
+const L=LESSON, KEY='b1kurs-tag-'+L.day, DOC='lektionen/tag-'+String(L.day).padStart(2,'0');
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>Array.from(r.querySelectorAll(s));
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={sec:L.sections[0].id,ans:{},done:{},plays:{},finished:false,started:Date.now()};
+try{const o=JSON.parse(localStorage.getItem(KEY)||'null');if(o&&o.ans)S=Object.assign(S,o)}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){};queuePush()};
+
+/* header */
+document.title='B1-Kurs Tag '+L.day;
+$('#hTitle').textContent='Tag '+L.day+' · '+L.title;
+$('#hSub').textContent=L.topic+' · ca. '+L.minutes+' Min. · Tag '+L.day+' von 60';
+$('#ringtx').textContent=L.day;
+$('#ringfg').style.strokeDashoffset=String(113-113*L.day/60);
+
+const svgX='<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 4.5L15.5 15.5"/><path d="M15.5 4.5L4.5 15.5"/></svg>';
+const svgSpk='<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 4V5L7 9H3zm13.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg>';
+const svgMic='<svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v7a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.9V22h2v-3.1A7 7 0 0 0 19 12h-2z"/></svg>';
+const svgPlay='<svg viewBox="0 0 24 24"><path d="M7 4.5v15l13-7.5z"/></svg>';
+const SAY={};let sayN=0;
+const sayBtn=(text,voice)=>{const k='s'+(sayN++);SAY[k]={text,voice:voice||'airy'};return `<button class="say" data-say="${k}" aria-label="Anhören">${svgSpk}</button>`};
+const words=s=>(String(s||'').trim().match(/\S+/g)||[]).length;
+
+/* item renderers */
+function qhead(it){return `<div class="qt"><span class="qn">${esc(it.n||'')}</span><span>${it.q||''}${it.hint?`<span class="hint">${it.hint}</span>`:''}</span>${it.say?sayBtn(it.say):''}</div>`}
+function itemHtml(it){
+  if(it.type==='mc'||it.type==='rf'){
+    const o=it.type==='rf'?[['R','Richtig'],['F','Falsch']]:it.o;
+    return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="opts${it.type==='rf'||it.row?' row':''}">${o.map(([v,l])=>`<label class="opt"><input type="radio" name="${it.id}" value="${v}" data-id="${it.id}"><span class="box">${svgX}</span><span>${it.type==='rf'?esc(l):`<span class="letter">${v})</span>${l}`}</span></label>`).join('')}</div></div>`}
+  if(it.type==='text') return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="line"><input id="in-${it.id}" data-id="${it.id}" autocomplete="off" spellcheck="false" placeholder="${esc(it.ph||'')}" aria-label="Antwort ${esc(it.n||'')}"></div></div>`;
+  if(it.type==='order') return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="tiles" data-tiles="${it.id}">${it.tiles.map((t,i)=>`<button class="tile" data-tile="${it.id}" data-i="${i}">${esc(t)}</button>`).join('')}</div><div class="built" data-built="${it.id}"><span></span><button class="linkbtn" data-clear="${it.id}">zurücksetzen</button></div></div>`;
+  if(it.type==='write') return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="pad lined"><div class="ph"><span>${esc(it.label||'Ihr Text')}</span><span class="wc" data-wc="${it.id}" data-min="${it.min||0}" data-max="${it.max||0}">0 Wörter</span></div><textarea id="in-${it.id}" data-id="${it.id}" spellcheck="false" placeholder="${esc(it.ph||'')}" aria-label="${esc(it.label||'Ihr Text')}"></textarea></div></div>`;
+  if(it.type==='speak') return `<div class="q" id="i-${it.id}"><div class="examiner"><div class="avatar">FW</div><div class="bubble"><p>${it.q}</p>${sayBtn(it.sayText||it.q.replace(/<[^>]+>/g,''))}</div></div>${it.hint?`<p class="tiny" style="margin:0 0 0 52px">${it.hint}</p>`:''}<div class="pad" style="margin-left:0"><div class="ph"><span>Ihre Antwort${it.timer?` · Ziel: ${it.timer} Sekunden sprechen`:''}</span><span style="display:flex;gap:8px;align-items:center">${it.timer?`<button class="timer" data-timer="${it.id}" data-sec="${it.timer}">▶ ${it.timer}s</button>`:''}<span class="wc" data-wc="${it.id}">0 Wörter</span><button class="ibtn mic" data-mic="${it.id}" hidden aria-label="Sprechen">${svgMic}</button></span></div><textarea id="in-${it.id}" data-id="${it.id}" spellcheck="false" placeholder="Sprechen Sie (🎙) oder tippen Sie …" aria-label="Antwort"></textarea><div class="ghost" data-ghost="${it.id}"></div></div></div>`;
+  if(it.type==='check') return `<div class="q" id="i-${it.id}">${it.q?`<div class="qt"><span>${it.q}</span></div>`:''}<div class="checks">${it.o.map((l,i)=>`<label class="opt"><input type="checkbox" data-id="${it.id}" value="${i}"><span class="box">${svgX}</span><span>${l}</span></label>`).join('')}</div></div>`;
+  if(it.type==='html') return `<div class="card prose">${it.html}</div>`;
+  return '';
+}
+function cardsHtml(sec){
+  return `<div class="cards">${sec.cards.map((c,i)=>{const id=sec.id+'-c'+i;return `<div><button class="fc" data-fc="${i}" aria-label="Karte ${esc(c.de)} umdrehen"><div class="in"><div class="f"><span class="art">${esc(c.art||'')}</span><span class="w">${esc(c.de)}</span><span class="pl">${esc(c.pl||'')}</span><span class="turn">Tippen zum Umdrehen</span></div><div class="b"><span class="en2">${esc(c.en)}</span><span class="exs">${esc(c.ex)}</span><span class="turn">${esc(c.de)}</span></div></div></button><div class="rate"><button data-rate="${id}" data-v="ja" class="y">✓ kann ich</button><button data-rate="${id}" data-v="nein" class="n">noch nicht</button>${sayBtn((c.art?c.art+' ':'')+c.de+'. '+c.ex,'airy')}</div></div>`}).join('')}</div>`;
+}
+function audioHtml(a){
+  return `<div class="card" style="display:flex;flex-direction:column;gap:12px"><div><h2 style="margin:0">${esc(a.title)}</h2><p class="tiny" style="margin:4px 0 0">${esc(a.kind)}</p></div>
+  <div class="audio" id="au-${a.id}"><button class="play" data-play="${a.id}" aria-label="${esc(a.title)} abspielen">${svgPlay}</button><div class="wave">${Array.from({length:26},(_,i)=>`<i style="animation-delay:${(i*73%900)/1000}s"></i>`).join('')}</div><div class="ainfo"><b data-pst="${a.id}">Bereit</b><div class="dots" data-pd="${a.id}">${Array.from({length:a.max||2},()=>'<i></i>').join('')}</div></div></div>
+  <div class="transcript" id="tr-${a.id}" hidden></div>
+  <div style="display:flex;flex-direction:column;gap:10px">${a.items.map(itemHtml).join('')}</div></div>`;
+}
+
+/* build sections */
+$('#steps').innerHTML=L.sections.map(s=>`<button class="step" data-go="${s.id}"><div class="rail"><i></i></div><span>${esc(s.name)}</span></button>`).join('');
+$('#main').innerHTML=L.sections.map((s,i)=>{
+  let h=`<section class="sec" id="sec-${s.id}"><div class="shead"><div class="eb">Teil ${i+1} von ${L.sections.length} · ca. ${s.min} Min.</div><h1>${esc(s.name)}</h1>${s.intro?`<p>${s.intro}</p>`:''}</div>`;
+  (s.blocks||[]).forEach(b=>{h+=`<div class="card prose">${b}</div>`});
+  if(s.cards) h+=cardsHtml(s);
+  if(s.audio) h+=s.audio.map(audioHtml).join('');
+  if(s.reading) h+=`<article class="card reading">${s.reading}</article>`;
+  (s.items||[]).forEach(it=>h+=itemHtml(it));
+  if(s.final) h+=`<div class="card donebox" id="finalBox"></div>`;
+  const nx=L.sections[i+1];
+  h+=`<div class="nav"><span>${i>0?`<button class="btn ghostb" data-go="${L.sections[i-1].id}">← ${esc(L.sections[i-1].name)}</button>`:''}</span>${nx?`<button class="btn" data-next="${s.id}">Erledigt · weiter zu ${esc(nx.name)} →</button>`:''}</div></section>`;
+  return h;
+}).join('');
+/* inline say buttons inside blocks: <span data-saytext="...">  */
+$$('[data-saytext]').forEach(el=>{el.insertAdjacentHTML('afterend',' '+sayBtn(el.dataset.saytext))});
+
+/* restore values */
+function fill(){
+  $$('input[type=radio][data-id]').forEach(i=>i.checked=S.ans[i.dataset.id]===i.value);
+  $$('input[type=checkbox][data-id]').forEach(i=>i.checked=(S.ans[i.dataset.id]||[]).includes(i.value));
+  $$('input:not([type=radio]):not([type=checkbox])[data-id],textarea[data-id]').forEach(t=>{t.value=S.ans[t.dataset.id]||'';wc(t)});
+  $$('[data-built]').forEach(b=>paintBuilt(b.dataset.built));
+  $$('[data-rate]').forEach(b=>b.classList.toggle('sel',S.ans[b.dataset.rate]===b.dataset.v));
+}
+function wc(t){const el=$(`[data-wc="${t.dataset.id}"]`);if(!el)return;const n=words(t.value),mi=+el.dataset.min||0,ma=+el.dataset.max||0;el.textContent=n+(n===1?' Wort':' Wörter')+(ma?` · Ziel ${mi}–${ma}`:'');el.classList.remove('ok','over');if(ma){if(n>=mi&&n<=ma+5)el.classList.add('ok');else if(n>ma+5)el.classList.add('over')}}
+function paintBuilt(id){
+  const seq=S.ans['order-'+id]||[];const it=findItem(id);const b=$(`[data-built="${id}"]`);
+  b.querySelector('span').textContent=seq.map(i=>it.tiles[i]).join(' ');b.classList.toggle('has',seq.length>0);
+  $$(`[data-tile="${id}"]`).forEach(t=>t.classList.toggle('used',seq.includes(+t.dataset.i)));
+  S.ans[id]=seq.map(i=>it.tiles[i]).join(' ');
+}
+const ALL=[];L.sections.forEach(s=>{(s.items||[]).forEach(i=>ALL.push(i));(s.audio||[]).forEach(a=>a.items.forEach(i=>ALL.push(i)))});
+const findItem=id=>ALL.find(i=>i.id===id);
+
+document.addEventListener('change',e=>{const i=e.target;if(!i.dataset||!i.dataset.id)return;
+  if(i.type==='radio'){S.ans[i.dataset.id]=i.value;save()}
+  if(i.type==='checkbox'){const v=new Set(S.ans[i.dataset.id]||[]);i.checked?v.add(i.value):v.delete(i.value);S.ans[i.dataset.id]=[...v];save()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.id&&(t.tagName==='TEXTAREA'||t.tagName==='INPUT')&&t.type!=='radio'&&t.type!=='checkbox'){S.ans[t.dataset.id]=t.value;wc(t);save()}});
+document.addEventListener('click',e=>{
+  const t=e.target.closest('[data-tile]');if(t){const id=t.dataset.tile,seq=S.ans['order-'+id]||[];seq.push(+t.dataset.i);S.ans['order-'+id]=seq;paintBuilt(id);save();return}
+  const c=e.target.closest('[data-clear]');if(c){S.ans['order-'+c.dataset.clear]=[];paintBuilt(c.dataset.clear);save();return}
+  const f=e.target.closest('[data-fc]');if(f){f.classList.toggle('flip');return}
+  const r=e.target.closest('[data-rate]');if(r){S.ans[r.dataset.rate]=r.dataset.v;$$(`[data-rate="${r.dataset.rate}"]`).forEach(b=>b.classList.toggle('sel',b===r));save();return}
+  const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
+  const n=e.target.closest('[data-next]');if(n){S.done[n.dataset.next]=true;const i=L.sections.findIndex(s=>s.id===n.dataset.next);go(L.sections[i+1].id);save();return}
+});
+
+/* navigation */
+function go(id){S.sec=id;save();render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){
+  $$('.sec').forEach(s=>s.classList.toggle('show',s.id==='sec-'+S.sec));
+  $$('.step').forEach(b=>{b.classList.toggle('active',b.dataset.go===S.sec);b.classList.toggle('done',!!S.done[b.dataset.go])});
+  if(L.sections.find(s=>s.id===S.sec&&s.final)) paintFinal();
+}
+
+/* final */
+function stats(){const ids=ALL.filter(i=>i.type!=='html'&&i.type!=='check');const done=ids.filter(i=>{const v=S.ans[i.id];return v&&(typeof v!=='string'||v.trim())}).length;return {done,total:ids.length}}
+function paintFinal(){
+  const st=stats();
+  $('#finalBox').innerHTML=S.finished?`<span class="stamp">✓ Abgegeben</span><div class="big">Stark, Bilal! Tag ${L.day} ist geschafft.</div><p>${st.done} von ${st.total} Aufgaben bearbeitet.</p><div class="chatcue">Schreiben Sie jetzt im Chat <code>fertig</code>. Dann korrigiere ich alles und trage Ihren Fortschritt ein.</div><p class="tiny" style="margin-top:10px">${dbOk?'✓ Ihre Antworten sind gespeichert.':'Die Antworten sind nur in diesem Browser gespeichert.'}</p><p style="margin-top:10px"><button class="linkbtn" id="unfinish">Noch etwas ändern</button></p>`
+  :`<div class="big">Fast fertig!</div><p>Sie haben <b>${st.done} von ${st.total}</b> Aufgaben bearbeitet.${st.done<st.total?' Offene Aufgaben können Sie noch nachholen.':''}</p><button class="btn" id="finishBtn">Lektion abgeben</button>`;
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#finishBtn')){S.finished=true;S.done[S.sec]=true;S.finishedAt=new Date().toISOString();save();push(true);render()}
+  if(e.target.closest('#unfinish')){S.finished=false;save();render()}
+});
+
+/* capabilities */
+const use=n=>(window.claude&&typeof window.claude.use==='function')?window.claude.use(n).catch(()=>null):Promise.resolve(null);
+let db=null,tts=null,dict=null,dbOk=false,pushT=null;
+function setSync(t,on){const c=$('#sync');c.textContent=t;c.classList.toggle('on',!!on)}
+use('db').then(async d=>{db=d;if(!db){setSync('offline');return}
+  try{const snap=await Promise.race([db.doc(DOC).get(),new Promise((_,r)=>setTimeout(()=>r(0),10000))]);
+    if(snap&&snap.exists&&!Object.keys(S.ans).length){const r=snap.data();S.ans=r.answers||{};S.done=r.done||{};S.plays=r.plays||{};S.finished=!!r.finished;fill();render();paintPlaysAll()}
+    dbOk=true;setSync('gespeichert',true);
+  }catch(e){setSync('offline')}
+});
+function queuePush(){clearTimeout(pushT);pushT=setTimeout(()=>push(false),1500)}
+async function push(){if(!db)return;try{await db.doc(DOC).set({day:L.day,title:L.title,answers:S.ans,done:S.done,plays:S.plays,finished:!!S.finished,finishedAt:S.finishedAt||null,startedAt:new Date(S.started).toISOString(),updatedAt:new Date().toISOString()});dbOk=true;setSync('gespeichert',true);$('#saved').textContent='Zuletzt gespeichert: '+new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}catch(e){dbOk=false;setSync('nicht gespeichert')}}
+use('tts').then(t=>{tts=t});
+let activeKey=null;
+use('dictation').then(d=>{dict=d;if(!d)return;$$('.mic').forEach(m=>m.hidden=false);
+  d.onPartial(({text})=>{const g=activeKey&&$(`[data-ghost="${activeKey}"]`);if(g)g.textContent=text});
+  d.onFinal(({text})=>{if(!activeKey)return;const ta=$('#in-'+activeKey);if(!ta)return;ta.value+=(ta.value&&!/\s$/.test(ta.value)?' ':'')+text.trim();ta.dispatchEvent(new Event('input',{bubbles:true}));const g=$(`[data-ghost="${activeKey}"]`);if(g)g.textContent=''});
+  d.onState(({state})=>{$$('.mic').forEach(m=>m.classList.toggle('rec',state!=='idle'&&m.dataset.mic===activeKey));if(state==='idle')$$('.ghost').forEach(g=>g.textContent='')});
+});
+document.addEventListener('click',e=>{const m=e.target.closest('[data-mic]');if(!m||!dict)return;const key=m.dataset.mic;
+  if(dict.active()){if(activeKey===key){dict.stop().catch(()=>{});return}activeKey=key;$$('.mic').forEach(x=>x.classList.toggle('rec',x.dataset.mic===key));return}
+  activeKey=key;dict.start({language:'de-DE'}).catch(err=>{if(err&&err.code==='not_granted')$$('.mic').forEach(x=>x.hidden=true)})});
+
+/* speech */
+function browserSpeak(lines){return new Promise((res,rej)=>{if(!('speechSynthesis' in window))return rej();const sy=speechSynthesis;sy.cancel();const vs=sy.getVoices().filter(v=>/^de/i.test(v.lang));const pitch={airy:1.15,rounded:.85,glassy:1,buttery:1};lines.forEach((l,i)=>{const u=new SpeechSynthesisUtterance(l.text);u.lang='de-DE';u.rate=.92;u.pitch=pitch[l.voice]||1;if(vs.length)u.voice=vs[(l.voice==='rounded'&&vs[1])?1:0];if(i===lines.length-1)u.onend=()=>res();u.onerror=rej;sy.speak(u)})})}
+async function speak(lines,rate){if(tts){try{await tts.speak(lines.map(l=>({text:l.text,voice:l.voice||'airy',language:'de'})),{language:'de',rate:rate||.95});return 'ok'}catch(e){if(e&&['stopped','busy','rate_limited'].includes(e.code))return 'stopped'}}try{await browserSpeak(lines);return 'ok'}catch(e){return 'fail'}}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-say]');if(!b)return;e.stopPropagation();b.disabled=true;await speak([SAY[b.dataset.say]],.9);b.disabled=false},true);
+const AUD={};L.sections.forEach(s=>(s.audio||[]).forEach(a=>AUD[a.id]=a));
+function paintPlays(id){const a=AUD[id],u=S.plays[id]||0,mx=a.max||2;$$(`[data-pd="${id}"] i`).forEach((d,i)=>d.classList.toggle('u',i<u));const btn=$(`[data-play="${id}"]`);if(!btn.closest('.audio').classList.contains('playing')){btn.disabled=u>=mx;$(`[data-pst="${id}"]`).textContent=u>=mx?(mx===1?'Einmal gehört':'Zweimal gehört'):u===0?'Bereit · '+(mx===1?'nur einmal':'zweimal hören'):'Noch einmal hören'}}
+const paintPlaysAll=()=>Object.keys(AUD).forEach(paintPlays);
+let playing=false;
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-play]');if(!b||playing)return;const id=b.dataset.play,a=AUD[id];if((S.plays[id]||0)>=(a.max||2))return;
+  playing=true;S.plays[id]=(S.plays[id]||0)+1;save();const box=$('#au-'+id);box.classList.add('playing');b.disabled=true;$(`[data-pst="${id}"]`).textContent='Läuft …';
+  const r=await speak(a.lines);box.classList.remove('playing');playing=false;
+  if(r==='fail'){const tr=$('#tr-'+id);tr.hidden=false;tr.innerHTML='<p><b>Audio ist hier nicht verfügbar.</b> Lesen Sie den Text einmal laut.</p>'+a.lines.map(l=>`<p>${a.lines.length>1?`<b>${esc(l.who)}:</b> `:''}${esc(l.text)}</p>`).join('');S.plays[id]=a.max||2;save()}
+  paintPlays(id)});
+
+/* speaking timers */
+document.addEventListener('click',e=>{const b=e.target.closest('[data-timer]');if(!b)return;if(b._iv){clearInterval(b._iv);b._iv=null;b.classList.remove('run');b.textContent='▶ '+b.dataset.sec+'s';return}
+  let t=+b.dataset.sec;b.classList.add('run');b.textContent='■ '+t+'s';b._iv=setInterval(()=>{t--;b.textContent='■ '+t+'s';if(t<=0){clearInterval(b._iv);b._iv=null;b.classList.remove('run');b.textContent='✓ Zeit!'}},1000)});
+
+fill();render();paintPlaysAll();
+})();
+</script>

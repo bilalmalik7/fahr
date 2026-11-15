@@ -3,7 +3,7 @@
 Claude updates this file after every lesson and commits it. Newest day at the top.
 
 ## Status
-- **Current day:** 1 (done) → **next: Tag 2**, Nebensatz with weil and dass
+- **Current day:** 1 (done) · **Tag 2 sent** (Nebensatz with weil and dass), waiting for "fertig"
 - **Words learned:** 15 introduced, 12 self-rated as known (still unsure: erledigen, sich beeilen, Landwirt; Feierabend was wrong in the test)
 - **Last result:** Tag 1, 36.5 / 52 (70 %)
 - **On track?** Yes. Controlled exercises are already good. Free writing and speaking are the weak point.
@@ -12,6 +12,7 @@ Claude updates this file after every lesson and commits it. Newest day at the to
 | Day | Topic | Link | Status | Result |
 |---|---|---|---|---|
 | 1 | Verb in position 2 | https://claude.ai/artifact/2JbyBQf3YGgbE3nFsdZ3cC | marked | 70 % |
+| 2 | Nebensatz with weil and dass | https://claude.ai/artifact/8UZBGBiQkkSFEpavoT1dUB | sent | |
 
 ## Error log
 How often each error type has appeared (baseline counts included). Tick it off once it no longer appears in 3 lessons in a row.
