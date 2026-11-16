@@ -1,0 +1,147 @@
+{
+  "day": 3,
+  "title": "Perfekt mit haben oder sein",
+  "topic": "Wochenende, Freizeit, Cricket",
+  "minutes": 75,
+  "sections": [
+    {
+      "id": "warmup", "name": "Aufwärmen", "min": 7,
+      "intro": "Yesterday's biggest mistake: <b>a modal verb inside a weil/dass clause</b>. Remember: <b>„arbeiten kann“</b>, infinitive first, modal last. Correct these sentences from Tag 2.",
+      "items": [
+        {"type": "text", "id": "w1", "n": "1", "q": "Ich lerne Deutsch, weil ich kann hier arbeiten.", "ph": "…, weil ich …"},
+        {"type": "text", "id": "w2", "n": "2", "q": "Ich glaube, dass man muss jeden Tag üben.", "ph": "…, dass man …"},
+        {"type": "text", "id": "w3", "n": "3", "q": "Wir kann am Samstag Cricket spielen.", "hint": "können: ich kann · du kannst · wir …?", "ph": "Wir …"},
+        {"type": "text", "id": "w4", "n": "4", "q": "Ich finde, dass du hat recht.", "hint": "Two mistakes: the verb ending and the position.", "ph": "Ich finde, dass …"},
+        {"type": "text", "id": "w5", "n": "5", "q": "Ich habe Kopfschmerzen. Dass finde ich nicht gut.", "hint": "das or dass?", "ph": "… finde ich nicht gut."},
+        {"type": "text", "id": "wv1", "n": "6", "q": "„Nach dem ______ treffe ich meine Freunde.“ (end of the working day, 3rd try 😉)", "ph": "das Wort"},
+        {"type": "text", "id": "wv2", "n": "7", "q": "„Die Besprechung ______ heute ______.“ (is cancelled)", "ph": "… …"},
+        {"type": "text", "id": "wv3", "n": "8", "q": "„Ich habe schon drei Jahre ______ mit KI.“ (experience, not explanation!)", "ph": "das Wort"}
+      ]
+    },
+    {
+      "id": "grammatik", "name": "Grammatik", "min": 15,
+      "intro": "In spoken German you use the <b>Perfekt</b> to talk about the past. It follows the same word-order logic as the last two days: <b>helper verb in position 2, participle at the end</b>.",
+      "blocks": [
+        "<h2>The form</h2><div class='formula'>… + haben / sein (position 2) + … + Partizip II (end)</div><div class='tw'><table class='pos'><thead><tr><th>Position 1</th><th>Position 2</th><th>Middle</th><th>End</th></tr></thead><tbody><tr><td>Am Samstag</td><td class='v'>habe</td><td>ich mit Freunden Cricket</td><td class='e'>gespielt.</td></tr><tr><td>Danach</td><td class='v'>sind</td><td>wir in ein Restaurant</td><td class='e'>gegangen.</td></tr><tr><td>Meine Frau</td><td class='v'>hat</td><td>Biryani</td><td class='e'>gekocht.</td></tr><tr><td>Am Sonntag</td><td class='v'>bin</td><td>ich um zehn Uhr</td><td class='e'>aufgestanden.</td></tr><tr><td>Abends</td><td class='v'>habe</td><td>ich meine Eltern in Pakistan</td><td class='e'>angerufen.</td></tr></tbody></table></div><p>In a <b>weil clause</b> the helper verb goes last: <i>Ich bin müde, weil ich spät ins Bett <u>gegangen bin</u>.</i></p>",
+        "<h2>haben or sein?</h2><p><b>sein</b> is used with:</p><ul><li><b>Movement from A to B:</b> gehen, fahren, fliegen, kommen, laufen, reisen → <i>Ich <b>bin</b> nach Bremen gefahren.</i></li><li><b>A change of state:</b> aufstehen, aufwachen, einschlafen, werden → <i>Ich <b>bin</b> früh aufgestanden.</i></li><li>Plus <b>sein, bleiben, passieren</b> → <i>Wir <b>sind</b> zu Hause geblieben.</i></li></ul><p><b>haben</b> is used with <b>everything else</b>, which is about 80 % of verbs: <i>Ich <b>habe</b> gegessen, gearbeitet, telefoniert, ferngesehen.</i></p><p class='tip'><b>Your trap from the A2 exam:</b> <i>~~Ich habe … gegangen~~</i> → Ich <b>bin</b> gegangen. And <i>~~ist nicht gekommt~~</i> → ist nicht <b>gekommen</b>.</p>",
+        "<h2>How to build the Partizip II</h2><div class='tw'><table class='pos'><thead><tr><th>Type</th><th>Pattern</th><th>Examples</th></tr></thead><tbody><tr><td>regular</td><td>ge- … -t</td><td>gemacht, gekocht, gespielt, gearbeitet</td></tr><tr><td>irregular</td><td>ge- … -en</td><td>gegessen, getrunken, gesehen, geschrieben, gekommen, gefahren</td></tr><tr><td>separable</td><td>prefix + ge + verb</td><td>auf<b>ge</b>standen, an<b>ge</b>rufen, ein<b>ge</b>kauft, fern<b>ge</b>sehen</td></tr><tr><td>be- / ver- / er- / -ieren</td><td><b>no</b> ge-</td><td>besucht, verdient, erklärt, telefoniert, studiert</td></tr></tbody></table></div><p class='tip'><b>Tip:</b> with <b>sein, haben</b> and modal verbs, Germans prefer the short past form, even when speaking: <i>Ich <b>war</b> krank. Ich <b>hatte</b> keine Zeit. Ich <b>musste</b> arbeiten.</i> (More on Tag 9.)</p>"
+      ],
+      "items": [
+        {"type": "mc", "id": "g1", "n": "1", "q": "Am Samstag ___ ich nach Hamburg gefahren.", "o": [["a","habe"],["b","bin"],["c","hat"]]},
+        {"type": "mc", "id": "g2", "n": "2", "q": "Wir ___ den ganzen Nachmittag Cricket gespielt.", "o": [["a","haben"],["b","sind"],["c","hat"]]},
+        {"type": "mc", "id": "g3", "n": "3", "q": "Ich bin heute um sieben Uhr ___ .", "o": [["a","aufgestanden"],["b","geaufstanden"],["c","aufgestehen"]]},
+        {"type": "mc", "id": "g4", "n": "4", "q": "Meine Frau hat am Sonntag ihre Freundin ___ .", "o": [["a","gebesucht"],["b","besucht"],["c","besuchen"]]},
+        {"type": "order", "id": "g5", "n": "5", "q": "Put the words in order.", "hint": "Start with the capital letter.", "tiles": ["gekocht.","ich","Am Wochenende","Biryani","habe"]},
+        {"type": "order", "id": "g6", "n": "6", "q": "Put the words in order.", "hint": "Start with the capital letter.", "tiles": ["ins Kino","sind","gegangen.","Gestern","wir"]},
+        {"type": "order", "id": "g7", "n": "7", "q": "Put the words in order.", "hint": "weil clause: the helper verb goes last!", "tiles": ["gegangen bin.","Ich bin müde,","ich","spät ins Bett","weil"]},
+        {"type": "text", "id": "g8", "n": "8", "q": "Put it in the Perfekt: <i>Ich rufe meine Eltern an.</i>", "ph": "Ich habe …"},
+        {"type": "text", "id": "g9", "n": "9", "q": "Put it in the Perfekt: <i>Wir fahren mit dem Zug nach Berlin.</i>", "hint": "haben or sein?", "ph": "Wir …"},
+        {"type": "text", "id": "g10", "n": "10", "q": "Make a sentence in the Perfekt: <i>letzten Samstag / ich / mit Freunden / Cricket spielen</i>", "hint": "Start with „Letzten Samstag …“. Watch position 2!", "ph": "Letzten Samstag …"}
+      ]
+    },
+    {
+      "id": "wortschatz", "name": "Wortschatz", "min": 10,
+      "intro": "15 words for free time and the weekend. <b>New rule:</b> look at the English side first, <b>say the German word out loud</b>, and only then turn the card. Click <b>„kann ich“</b> only if you got it right.",
+      "cards": [
+        {"art": "der", "de": "Ausflug", "pl": "die Ausflüge", "en": "trip, outing", "ex": "Am Sonntag haben wir einen Ausflug an den Dümmer gemacht."},
+        {"art": "", "de": "unternehmen", "pl": "unternimmt · hat unternommen", "en": "to do (something in your free time)", "ex": "Was hast du am Wochenende unternommen?"},
+        {"art": "die", "de": "Mannschaft", "pl": "die Mannschaften", "en": "team", "ex": "Unsere Mannschaft hat am Samstag gespielt."},
+        {"art": "der", "de": "Verein", "pl": "die Vereine", "en": "club", "ex": "Ich spiele in einem Cricketverein."},
+        {"art": "das", "de": "Spiel", "pl": "die Spiele", "en": "game, match", "ex": "Das Spiel hat drei Stunden gedauert."},
+        {"art": "", "de": "gewinnen", "pl": "gewinnt · hat gewonnen", "en": "to win", "ex": "Wir haben gegen Bremen gewonnen."},
+        {"art": "", "de": "verlieren", "pl": "verliert · hat verloren", "en": "to lose", "ex": "Leider haben wir knapp verloren."},
+        {"art": "", "de": "sich treffen (mit)", "pl": "trifft sich · hat sich getroffen", "en": "to meet (up with)", "ex": "Ich habe mich mit Freunden getroffen."},
+        {"art": "", "de": "sich ausruhen", "pl": "ruht sich aus · hat sich ausgeruht", "en": "to rest, relax", "ex": "Am Sonntag habe ich mich ausgeruht."},
+        {"art": "", "de": "spazieren gehen", "pl": "geht spazieren · ist spazieren gegangen", "en": "to go for a walk", "ex": "Wir sind am Abend spazieren gegangen."},
+        {"art": "", "de": "einladen", "pl": "lädt ein · hat eingeladen", "en": "to invite", "ex": "Wir haben unsere Nachbarn zum Essen eingeladen."},
+        {"art": "der", "de": "Gast", "pl": "die Gäste", "en": "guest", "ex": "Am Samstag hatten wir sechs Gäste."},
+        {"art": "", "de": "grillen", "pl": "grillt · hat gegrillt", "en": "to have a barbecue", "ex": "Nach dem Spiel haben wir gegrillt."},
+        {"art": "", "de": "fernsehen", "pl": "sieht fern · hat ferngesehen", "en": "to watch TV (verb!)", "ex": "Am Abend haben wir ferngesehen."},
+        {"art": "die", "de": "Stimmung", "pl": "die Stimmungen", "en": "mood, atmosphere", "ex": "Die Stimmung auf dem Fest war super."}
+      ],
+      "items": [
+        {"type": "text", "id": "v1", "n": "1", "q": "„Unsere ______ hat das Spiel gewonnen.“ (team)", "ph": "das Wort"},
+        {"type": "text", "id": "v2", "n": "2", "q": "„Was hast du am Wochenende ______?“ (done, in your free time)", "ph": "Partizip II"},
+        {"type": "text", "id": "v3", "n": "3", "q": "„Leider haben wir das Spiel ______.“ (lost)", "ph": "Partizip II"},
+        {"type": "text", "id": "v4", "n": "4", "q": "„Am Sonntag habe ich nichts gemacht, ich habe mich nur ______.“ (rested)", "ph": "Partizip II"},
+        {"type": "text", "id": "v5", "n": "5", "q": "Translate: <i>We went for a walk.</i>", "hint": "haben or sein?", "ph": "Wir …"}
+      ]
+    },
+    {
+      "id": "hoeren", "name": "Hören", "min": 10,
+      "intro": "B1 Hören, Teil 1: short texts, <b>each heard twice</b>. Each text has one Richtig/Falsch task and one a/b/c task. Read both tasks first!",
+      "audio": [
+        {"id": "h1", "title": "Text 1", "kind": "Sie hören eine Nachricht auf der Mailbox.", "max": 2,
+         "lines": [{"who": "Ali", "voice": "rounded", "text": "Hallo Bilal, hier ist Ali. Schade, dass du am Samstag nicht beim Spiel warst! Wir haben gegen Bremen gewonnen, hundertachtzig zu hundertzwanzig. Nächsten Sonntag spielen wir in Münster. Der Bus fährt um acht Uhr am Vereinsheim ab. Kannst du mir bitte bis Mittwoch sagen, ob du mitkommst? Tschüss!"}],
+         "items": [
+           {"type": "rf", "id": "h1a", "n": "1", "q": "Bilal war am Samstag beim Spiel."},
+           {"type": "mc", "id": "h1b", "n": "2", "q": "Was soll Bilal bis Mittwoch machen?", "o": [["a","zum Vereinsheim kommen"],["b","Ali sagen, ob er mitfährt"],["c","den Bus bezahlen"]]}
+         ]},
+        {"id": "h2", "title": "Text 2", "kind": "Sie hören einen Tipp im Radio.", "max": 2,
+         "lines": [{"who": "Radio", "voice": "glassy", "text": "Und hier unser Tipp fürs Wochenende: Am Samstag findet auf dem Marktplatz in Osnabrück das Lichterfest statt. Von sechzehn bis zweiundzwanzig Uhr gibt es Musik, Essen aus aller Welt und Spiele für Kinder. Der Eintritt ist frei. Am Sonntag geht das Fest weiter, ist aber wegen eines Fußballspiels schon um achtzehn Uhr zu Ende."}],
+         "items": [
+           {"type": "rf", "id": "h2a", "n": "3", "q": "Für das Fest muss man Eintritt bezahlen."},
+           {"type": "mc", "id": "h2b", "n": "4", "q": "Wann endet das Fest am Sonntag?", "o": [["a","um 16 Uhr"],["b","um 18 Uhr"],["c","um 22 Uhr"]]}
+         ]},
+        {"id": "h3", "title": "Text 3", "kind": "Sie hören ein Gespräch zwischen Nachbarn im Treppenhaus.", "max": 2,
+         "lines": [
+           {"who": "Frau Schulz", "voice": "airy", "text": "Guten Morgen, Herr Weber! Wie war Ihr Wochenende?"},
+           {"who": "Herr Weber", "voice": "rounded", "text": "Danke, sehr schön! Am Samstag sind meine Frau und ich nach Bremen gefahren und haben unsere Tochter besucht. Am Sonntag haben wir uns dann zu Hause ausgeruht."},
+           {"who": "Frau Schulz", "voice": "airy", "text": "Wie schön! Wir sind leider zu Hause geblieben, weil mein Mann krank war. Er hat fast das ganze Wochenende geschlafen."}
+         ],
+         "items": [
+           {"type": "rf", "id": "h3a", "n": "5", "q": "Herr Weber hat am Samstag seine Tochter besucht."},
+           {"type": "mc", "id": "h3b", "n": "6", "q": "Warum ist Frau Schulz zu Hause geblieben?", "o": [["a","Sie war krank."],["b","Ihr Mann war krank."],["c","Das Wetter war schlecht."]]}
+         ]}
+      ]
+    },
+    {
+      "id": "lesen", "name": "Lesen", "min": 10,
+      "intro": "B1 Lesen, Teil 1: a blog post with 6 statements. While you read, also notice the <b>Perfekt forms</b>. Which ones use <i>sein</i>?",
+      "reading": "<h2>Cricket in Deutschland? Ja, das gibt es!</h2><p class='blogmeta'>Blog von Imran · 3. November</p><p>Als ich vor zwei Jahren nach Deutschland gekommen bin, habe ich mein Cricket sehr vermisst. In Pakistan habe ich jedes Wochenende mit meinen Freunden gespielt. Hier kennt niemand diesen Sport, dachte ich. Dann hat mir ein Kollege von einem Verein in Hannover erzählt.</p><p>Beim ersten Training war ich sehr nervös, weil ich niemanden kannte. Aber die Leute waren super freundlich. Die Mannschaft ist sehr international: Wir haben Spieler aus Indien, Afghanistan, England und sogar zwei Deutsche.</p><p>Im Sommer haben wir fast jeden Samstag ein Spiel. Letzte Woche haben wir gegen Hamburg gespielt und leider knapp verloren. Danach haben wir trotzdem zusammen gegrillt und gefeiert. Im Winter trainieren wir in einer Halle, weil es draußen zu kalt und zu nass ist.</p><p>Durch den Verein habe ich viele Freunde gefunden, und mein Deutsch ist viel besser geworden. Im Team sprechen wir nämlich nur Deutsch!</p>",
+      "items": [
+        {"type": "rf", "id": "l1", "n": "7", "q": "Imran hat schon in Pakistan Cricket gespielt."},
+        {"type": "rf", "id": "l2", "n": "8", "q": "Imran hat den Verein im Internet gefunden."},
+        {"type": "rf", "id": "l3", "n": "9", "q": "Beim ersten Training hat Imran sich unsicher gefühlt."},
+        {"type": "rf", "id": "l4", "n": "10", "q": "In der Mannschaft spielen nur Leute aus Asien."},
+        {"type": "rf", "id": "l5", "n": "11", "q": "Nach dem Spiel gegen Hamburg hat die Mannschaft gefeiert."},
+        {"type": "rf", "id": "l6", "n": "12", "q": "Im Winter macht der Verein eine Pause."}
+      ]
+    },
+    {
+      "id": "schreiben", "name": "Schreiben", "min": 17,
+      "intro": "<b>New method against E13:</b> first write 2–3 keywords for each point, <b>then</b> write the email. That way no point gets forgotten. Then check for 5 minutes.",
+      "blocks": [
+        "<h2>Aufgabe</h2><p>Your friend <b>Marco</b> from your German course writes: <i>„Hey, wie war dein Wochenende? Bei mir war es total langweilig …“</i></p><p>Write him an email (<b>60–80 words</b>):</p><ol><li>What did you do on <b>Saturday</b>?</li><li>What did you do on <b>Sunday</b>, and how was it?</li><li>Suggest something you could do together next weekend, with a day and time.</li></ol><p class='tiny'><b>Requirements:</b> at least <b>5 sentences in the Perfekt</b> (with haben <i>and</i> sein), at least <b>1 weil</b>. Use <b>du</b>. Start and end like a letter (Lieber Marco, … / Viele Grüße).</p>"
+      ],
+      "items": [
+        {"type": "text", "id": "p1", "n": "1", "q": "Keywords for point 1 (Saturday)", "ph": "z. B. Cricket, Restaurant, …"},
+        {"type": "text", "id": "p2", "n": "2", "q": "Keywords for point 2 (Sunday + how was it)", "ph": "z. B. ausgeruht, Eltern angerufen, …"},
+        {"type": "text", "id": "p3", "n": "3", "q": "Keywords for point 3 (suggestion + day + time)", "ph": "z. B. Samstag 15 Uhr, Lichterfest"},
+        {"type": "write", "id": "s1", "n": "S", "q": "Ihre E-Mail an Marco", "label": "An: marco.r@mail.de · Betreff: Mein Wochenende", "min": 60, "max": 80, "ph": "Lieber Marco, …"},
+        {"type": "check", "id": "s1check", "q": "Check it (honestly!):", "o": ["Points 1, 2 and 3 are covered","At least 5 Perfekt sentences, including at least one with sein (gefahren, gegangen, aufgestanden, geblieben …)","The participle is at the very END of the sentence","weil clause: helper verb last (… gegangen bin)","Greeting and closing are there, du the whole way through","Capital letters, umlauts, no English words, 60–80 words"]}
+      ]
+    },
+    {
+      "id": "sprechen", "name": "Sprechen", "min": 10,
+      "intro": "Press 🔊, then answer with 🎙. <b>Today's goal:</b> tell everything in the <b>Perfekt</b>, and use <b>sein</b> for gehen, fahren, kommen and aufstehen. Speak slowly. 🐢",
+      "items": [
+        {"type": "speak", "id": "sp1", "q": "Was haben Sie letztes Wochenende gemacht? Erzählen Sie vom Samstag und vom Sonntag.", "hint": "Am Samstag bin ich … · Danach habe ich … · Am Sonntag …", "timer": 60},
+        {"type": "speak", "id": "sp2", "q": "Erzählen Sie von Ihrem letzten Cricketspiel oder von einem Spiel, das Sie gesehen haben.", "hint": "Wir haben gegen … gespielt · gewonnen / verloren · Danach sind wir …"},
+        {"type": "speak", "id": "sp3", "q": "Ihre Frau fragt: „Wo warst du denn gestern Abend so lange?“ Erklären Sie es ihr.", "sayText": "Wo warst du denn gestern Abend so lange?", "hint": "Speak to your wife with du! Ich bin … gegangen · Ich habe … getroffen · weil …"},
+        {"type": "speak", "id": "sp4", "q": "Was haben Sie gestern nach dem Feierabend gemacht? Nennen Sie mindestens vier Dinge.", "hint": "Zuerst … · Dann … · Danach … · Am Ende … (verb in position 2!)", "timer": 45}
+      ]
+    },
+    {
+      "id": "abschluss", "name": "Abschluss", "min": 5, "final": true,
+      "intro": "Today's rule in one line, and your task for this evening.",
+      "blocks": [
+        "<h2>Merksatz</h2><p class='formula'>haben / sein in position 2 … Partizip II at the END · sein = A → B or a change</p><div class='ex'><div><span class='de' data-saytext='Gestern bin ich nach dem Feierabend spazieren gegangen.'>Gestern <b class='v'>bin</b> ich nach dem Feierabend spazieren <b>gegangen</b>.</span></div><div><span class='de' data-saytext='Danach habe ich mit meiner Frau gekocht.'>Danach <b class='v'>habe</b> ich mit meiner Frau <b>gekocht</b>.</span></div></div><h3>Your 5-minute task for this evening</h3><p>Write a short diary entry about today: <b>5 sentences in the Perfekt</b>, at least <b>2 with sein</b> and <b>1 with weil</b>. Then read it aloud.</p>"
+      ],
+      "items": [
+        {"type": "write", "id": "abend", "n": "★", "q": "Mein Tag im Perfekt", "label": "Abendaufgabe", "min": 30, "max": 70, "ph": "Heute bin ich …"},
+        {"type": "check", "id": "selbst", "q": "How confident are you today?", "o": ["I know when to use sein (A → B, change of state)","I can build the Partizip II (ge-…-t / ge-…-en / aufgestanden / besucht)","I put the participle at the end","In a weil clause I put the helper verb last (… gegangen bin)","Modal verb in a weil clause: „arbeiten kann“ ✓"]}
+      ]
+    }
+  ]
+}

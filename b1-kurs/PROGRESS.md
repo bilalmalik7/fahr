@@ -3,7 +3,7 @@
 Claude updates this file after every lesson and commits it. Newest day at the top.
 
 ## Status
-- **Current day:** 2 (done) → **next: Tag 3**, Perfekt with haben or sein
+- **Current day:** 2 (done) · **Tag 3 sent** (Perfekt with haben or sein), waiting for "fertig"
 - **Words learned:** 30 introduced. Tag 2 test 5/5, but Feierabend, ausfallen and erledigen were wrong **again** in the warm-up. His self-ratings are too optimistic, so from Tag 3 he says the word aloud *before* turning the card.
 - **Last result:** Tag 2, 40 / 55 (73 %) · Tag 1 70 %
 - **On track?** Yes for reading and listening (12/12 in Lesen across both days). Writing and speaking: the rules are known (grammar 9/10 twice) but not used in free production yet. Main block: **modal verbs inside weil/dass clauses** (weil ich kann arbeiten).
@@ -13,6 +13,7 @@ Claude updates this file after every lesson and commits it. Newest day at the to
 |---|---|---|---|---|
 | 1 | Verb in position 2 | https://claude.ai/artifact/2JbyBQf3YGgbE3nFsdZ3cC | marked | 70 % |
 | 2 | Nebensatz with weil and dass | https://claude.ai/artifact/8UZBGBiQkkSFEpavoT1dUB | marked | 73 % |
+| 3 | Perfekt with haben or sein | https://claude.ai/artifact/FDCa7FUiuimTmJv5fKdhUr | sent | |
 
 ## Error log
 How often each error type has appeared (baseline counts included). Tick it off once it no longer appears in 3 lessons in a row.
