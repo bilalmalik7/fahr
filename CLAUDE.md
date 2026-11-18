@@ -24,7 +24,7 @@ Always deliver the whole day, with every part:
 8. **Abschluss:** what to repeat tomorrow, plus a 5-minute task for the evening.
 
 ### Format
-- Build each lesson from the template: write `b1-kurs/tage/tag-NN.json` (same structure as `tag-01.json`; item types: mc, rf, text, order, write, speak, check; sections may have blocks, cards, audio, reading, final), write the answers to `tag-NN.key.json`, then run `python3 b1-kurs/tage/build.py NN` and publish `tag-NN.html` as an Artifact with `capabilities: {db:{}, tts:{}, dictation:{}}`. The page saves his answers to `lektionen/tag-NN`. Answers never go into the page.
+- Build each lesson from the template: write `b1-kurs/tage/tag-NN.json` (same structure as `tag-01.json`; item types: mc, rf, text, order, write, speak, shadow, check; from Tag 4 every lesson has a "Nachsprechen" section of 6 shadow sentences built from his errors, and the writing task is split into one write box per task point; sections may have blocks, cards, audio, reading, final), write the answers to `tag-NN.key.json`, then run `python3 b1-kurs/tage/build.py NN` and publish `tag-NN.html` as an Artifact with `capabilities: {db:{}, tts:{}, dictation:{}}`. The page saves his answers to `lektionen/tag-NN`. Answers never go into the page.
 - Add every lesson's link to the "Lessons" table in `PROGRESS.md`.
 - In chat: 3–4 lines on what today brings, plus the link. Then wait for "fertig".
 - On "fertig": read his answers with `ArtifactData`, mark them like an examiner (points, corrections with the rule, praise for what is correct), and give the feedback in chat. Explanations in **simple English**; corrections and examples in German.

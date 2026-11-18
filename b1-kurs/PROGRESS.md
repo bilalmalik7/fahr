@@ -3,7 +3,7 @@
 Claude updates this file after every lesson and commits it. Newest day at the top.
 
 ## Status
-- **Current day:** 3 (done) → **next: Tag 4**, modal verb + infinitive at the end
+- **Current day:** 3 (done) · **Tag 4 sent** (modal verbs), waiting for "fertig"
 - **Words learned:** 45 introduced. Feierabend, ausfallen, Erfahrung finally correct (3rd try). Unsure: sich ausruhen, Stimmung.
 - **Last result:** Tag 3, 45.5 / 55 (83 %) · Tag 2 73 % · Tag 1 70 %
 - **On track?** Yes, rising. Controlled tasks are now almost perfect (Tag 3: 35.5/35 in warm-up, grammar, vocab, Hören, Lesen). Free speech and writing are still around 55 %. **Change from Tag 4:** add a shadowing part (repeat model sentences after Claude's voice) so correct patterns become automatic in speech.
@@ -15,6 +15,7 @@ Claude updates this file after every lesson and commits it. Newest day at the to
 | 1 | Verb in position 2 | https://claude.ai/artifact/2JbyBQf3YGgbE3nFsdZ3cC | marked | 70 % |
 | 2 | Nebensatz with weil and dass | https://claude.ai/artifact/8UZBGBiQkkSFEpavoT1dUB | marked | 73 % |
 | 3 | Perfekt with haben or sein | https://claude.ai/artifact/FDCa7FUiuimTmJv5fKdhUr | marked | 83 % |
+| 4 | Modal verbs, infinitive at the end | https://claude.ai/artifact/LGTyt2gTUG69s2CG1cMNx8 | sent | |
 
 ## Error log
 How often each error type has appeared (baseline counts included). Tick it off once it no longer appears in 3 lessons in a row.

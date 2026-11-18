@@ -148,6 +148,7 @@ textarea{width:100%;border:0;background:transparent;color:var(--ink);font:inheri
 @keyframes barw{0%,100%{height:18%}50%{height:95%}}
 .ainfo{font-size:14px;color:var(--muted)}.ainfo b{color:var(--ink)}
 .dots{display:flex;gap:5px;margin-top:4px}.dots i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--accent)}.dots i.u{background:var(--accent)}
+.reveal{background:var(--ok-soft);border-radius:8px;padding:8px 12px}
 .transcript{background:var(--warn-soft);border-radius:8px;padding:12px 14px;font-size:15px}
 .reading{font-size:17px;line-height:1.75;max-width:68ch}
 .reading h2{font-size:22px}
@@ -218,6 +219,7 @@ function itemHtml(it){
   if(it.type==='order') return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="tiles" data-tiles="${it.id}">${it.tiles.map((t,i)=>`<button class="tile" data-tile="${it.id}" data-i="${i}">${esc(t)}</button>`).join('')}</div><div class="built" data-built="${it.id}"><span></span><button class="linkbtn" data-clear="${it.id}">zurücksetzen</button></div></div>`;
   if(it.type==='write') return `<div class="q" id="i-${it.id}">${qhead(it)}<div class="pad lined"><div class="ph"><span>${esc(it.label||'Ihr Text')}</span><span class="wc" data-wc="${it.id}" data-min="${it.min||0}" data-max="${it.max||0}">0 Wörter</span></div><textarea id="in-${it.id}" data-id="${it.id}" spellcheck="false" placeholder="${esc(it.ph||'')}" aria-label="${esc(it.label||'Ihr Text')}"></textarea></div></div>`;
   if(it.type==='speak') return `<div class="q" id="i-${it.id}"><div class="examiner"><div class="avatar">FW</div><div class="bubble"><p>${it.q}</p>${sayBtn(it.sayText||it.q.replace(/<[^>]+>/g,''))}</div></div>${it.hint?`<p class="tiny" style="margin:0 0 0 52px">${it.hint}</p>`:''}<div class="pad" style="margin-left:0"><div class="ph"><span>Ihre Antwort${it.timer?` · Ziel: ${it.timer} Sekunden sprechen`:''}</span><span style="display:flex;gap:8px;align-items:center">${it.timer?`<button class="timer" data-timer="${it.id}" data-sec="${it.timer}">▶ ${it.timer}s</button>`:''}<span class="wc" data-wc="${it.id}">0 Wörter</span><button class="ibtn mic" data-mic="${it.id}" hidden aria-label="Sprechen">${svgMic}</button></span></div><textarea id="in-${it.id}" data-id="${it.id}" spellcheck="false" placeholder="Sprechen Sie (🎙) oder tippen Sie …" aria-label="Antwort"></textarea><div class="ghost" data-ghost="${it.id}"></div></div></div>`;
+  if(it.type==='shadow') return `<div class="q" id="i-${it.id}"><div class="qt"><span class="qn">${esc(it.n||'')}</span><span>Listen, then repeat${it.hint?`<span class="hint">${it.hint}</span>`:''}</span>${sayBtn(it.de,'airy')}<button class="linkbtn" data-reveal="${it.id}">Show text</button></div><div class="reveal" data-rv="${it.id}" hidden><b>${esc(it.de)}</b><br><span class="tiny">${esc(it.en||'')}</span></div><div class="pad"><div class="ph"><span>What you repeated</span><span style="display:flex;gap:8px;align-items:center"><span class="wc" data-wc="${it.id}">0 Wörter</span><button class="ibtn mic" data-mic="${it.id}" hidden aria-label="Sprechen">${svgMic}</button></span></div><textarea id="in-${it.id}" data-id="${it.id}" spellcheck="false" placeholder="🎙 Repeat the sentence out loud (or type it from memory) …" aria-label="Nachgesprochen" style="min-height:60px"></textarea><div class="ghost" data-ghost="${it.id}"></div></div></div>`;
   if(it.type==='check') return `<div class="q" id="i-${it.id}">${it.q?`<div class="qt"><span>${it.q}</span></div>`:''}<div class="checks">${it.o.map((l,i)=>`<label class="opt"><input type="checkbox" data-id="${it.id}" value="${i}"><span class="box">${svgX}</span><span>${l}</span></label>`).join('')}</div></div>`;
   if(it.type==='html') return `<div class="card prose">${it.html}</div>`;
   return '';
@@ -274,6 +276,7 @@ document.addEventListener('input',e=>{const t=e.target;if(t.dataset&&t.dataset.i
 document.addEventListener('click',e=>{
   const t=e.target.closest('[data-tile]');if(t){const id=t.dataset.tile,seq=S.ans['order-'+id]||[];seq.push(+t.dataset.i);S.ans['order-'+id]=seq;paintBuilt(id);save();return}
   const c=e.target.closest('[data-clear]');if(c){S.ans['order-'+c.dataset.clear]=[];paintBuilt(c.dataset.clear);save();return}
+  const rv=e.target.closest('[data-reveal]');if(rv){const el=$(`[data-rv="${rv.dataset.reveal}"]`);el.hidden=!el.hidden;rv.textContent=el.hidden?'Show text':'Hide text';return}
   const f=e.target.closest('[data-fc]');if(f){f.classList.toggle('flip');return}
   const r=e.target.closest('[data-rate]');if(r){S.ans[r.dataset.rate]=r.dataset.v;$$(`[data-rate="${r.dataset.rate}"]`).forEach(b=>b.classList.toggle('sel',b===r));save();return}
   const g=e.target.closest('[data-go]');if(g){go(g.dataset.go);return}
